@@ -16,6 +16,8 @@ app.use('/request-type', (req, res, next) => {
 app.use('/public', express.static('public'));
 app.use('/public', serveIndex('public'));
 
+app.use('/nav', express.static('nav'));
+
 app.get('/', (req, res) => {
   res.send('Successful response.');
 });
