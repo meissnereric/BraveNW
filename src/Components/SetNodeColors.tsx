@@ -72,15 +72,25 @@ class SetNodeColors extends React.PureComponent {
       
             return neighbors;
         };
-
-        s.graph.nodes().forEach(function(n) {
+        console.log(s)
+        graph.nodes().forEach(function(n) {
             n.originalColor = n.color;
+            console.log(n.color)
         });
-        s.graph.edges().forEach(function(e) {
+        graph.edges().forEach(function(e) {
             e.originalColor = e.color;
+            console.log(e.color)
         });
 
         s.bind('clickNode', function(e) {
+            graph.nodes().forEach(function(n) {
+                n.originalColor = n.color;
+            });
+            graph.edges().forEach(function(e) {
+                e.originalColor = e.color;
+            });
+
+            console.log(e.data.node.originalColor)
             var nodeId = e.data.node.id
             var toKeep = neighbors(graph, nodeId)
             toKeep[nodeId] = e.data.node
