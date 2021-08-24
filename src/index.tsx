@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './Stylesheets/App.css';
+import './Stylesheets/index.css';
+import './Stylesheets/styles.css';
+import './Stylesheets/tooltips.css';
+import './Stylesheets/pure-min.css';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
