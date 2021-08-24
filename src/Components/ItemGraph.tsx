@@ -1,5 +1,6 @@
 import React from 'react';
 import {Sigma, LoadGEXF, RandomizeNodePositions} from 'react-sigma';
+import SetNodeColors from './SetNodeColors';
 
 var sigmaSettings = {
     batchEdgesDrawing: true,
@@ -31,9 +32,8 @@ class GraphWrapper extends React.Component {
                 <Sigma
                     settings={sigmaSettings}
                     style={sigmaStyle}
-                    // onClickNode={this.clickNode}
-                    // onClickStage={this.clickStage}
                     >
+                    <SetNodeColors path='red'/>
                     <LoadGEXF path="../data/filtered_recipe_graph_8_21_2021.gexf" />
                     <RandomizeNodePositions/>
                 </Sigma>
