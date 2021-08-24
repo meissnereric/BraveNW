@@ -1,7 +1,20 @@
 const express = require('express');
 const serveIndex = require('serve-index');
 
+const kafka = require('./kafka.js');
+
+id = 'KafkerJSApp'
+brokerAddress = ['localhost:9092']
+topic = 'testJSTopic'
+messages = [
+    { value: 'Hello KafkaJS user!' },
+  ]
+consumerGroup = 'testJSGroup'
+
+kafka.start(id, brokerAddress, topic, messages, consumerGroup)
+
 const app = express();
+
 
 app.use((req, res, next) => {
   console.log('Time: ', Date.now());
