@@ -17,6 +17,8 @@ class NavBar extends React.Component {
                         <li className="pure-menu-item pure-menu-selected"><Link to='/network' className="pure-menu-link">Recipe Network</Link></li>
                         <li className="pure-menu-item"><Link to="/about" className="pure-menu-link"> About </Link></li>
                         <li className="pure-menu-item"><Link to='/infographics' className='pure-menu-link'>Crafting Infographics</Link></li>
+                        <li className="pure-menu-item"><Link to="/item_list" className="pure-menu-link">Item List</Link></li>
+
                     </ul>
                 </div>
             </div>

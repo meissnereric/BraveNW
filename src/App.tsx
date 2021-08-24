@@ -6,6 +6,7 @@ import Home from './Components/Home'
 import About from './Components/About'
 import Infographics from './Components/Infographics'
 import Network from './Components/Network'
+import GraphWrapper from './Components/ItemGraph';
 
 class App extends React.Component {
   render() {
@@ -18,6 +19,7 @@ class App extends React.Component {
                 <Route exact path="/about" component={About}></Route>
                 <Route exact path="/infographics" component={Infographics}></Route>
                 <Route exact path="/network" component={Network}></Route>
+                <Route exact path="/item_list" component={GraphWrapper}></Route>
               </Switch>
           </BrowserRouter>
       </div>
