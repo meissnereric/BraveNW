@@ -1,6 +1,7 @@
 import React from 'react';
 import {Sigma, LoadGEXF, RandomizeNodePositions} from 'react-sigma';
 import SetNodeColors from './SetNodeColors';
+import SigmaSidebar from './SigmaSideBar';
 
 var sigmaSettings = {
     batchEdgesDrawing: true,
@@ -22,9 +23,28 @@ const sigmaStyle = {
     height: '400px',
     maxWidth: 'inherit'
 }
+type State = {
+    adjNodes:any, hasNodes: boolean
+}
+class GraphWrapper extends React.Component <{}, State> {
+    constructor(props) {
+        super(props)
+        this.state = {
+            adjNodes: null,
+            hasNodes: false
+        }
+        //makes it update this components state when called from outside itself
+        this.getAdjNodes = this.getAdjNodes.bind(this) 
 
-class GraphWrapper extends React.Component {
-
+    }
+    componentDidUpdate(){
+        if(this.state.adjNodes != null){
+            
+        }
+    }
+    getAdjNodes(toKeep){
+        this.setState({adjNodes: toKeep, hasNodes: true})
+    }
 
     render() {
         return (
@@ -33,10 +53,11 @@ class GraphWrapper extends React.Component {
                     settings={sigmaSettings}
                     style={sigmaStyle}
                     >
-                    <SetNodeColors path='red'/>
-                    <LoadGEXF path="../data/filtered_recipe_graph_8_21_2021.gexf" />
+                    <SetNodeColors path='red' adjNodesGetter={this.getAdjNodes} />
+                    <LoadGEXF path="../data/filtered_recipe_graph_8_21_2021.gexf"  />
                     <RandomizeNodePositions/>
                 </Sigma>
+                <SigmaSidebar cards={this.state.adjNodes}/>
             </div>
         )
     }

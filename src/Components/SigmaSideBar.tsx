@@ -1,47 +1,51 @@
-// import React from "react";
-// import valueLabelGetter from "../../api/DataGetter";
+import React from "react";
+import valueLabelGetter from "../../api/DataGetter";
+
+class Card extends React.Component <{label: any}, {}> {
+    constructor(props){
+        super(props)
+    }
+    render(){
+        return (
+                <h1>{this.props.label}</h1>
+        )
+    }
+}
 
 
-// interface IvalueLabel {
-//     id: string,
-//     label: string,
-//     rarity: number,
-//     value: number
-// }
+class SigmaSidebar extends React.Component <{cards: any},{}> {
+    constructor(props: any) {
+        super(props)
+        this.state = {hasCards: false}
+    }
 
+    renderCards(){
+        // I'm trying to get this to work quickly, after it's in good shape i'll take 
+        // out the stupid double loop
+        let c = []
+        let rc = []
+        if(this.props.cards){
+            console.log("%%%%%%%%%")
+            console.log(this.props.cards)
+            Object.values(this.props.cards).forEach(element => {
+                //c.push(element.label) //it's super dumb that this doesn't work
+                c.push(element)
+            });
+        c.forEach(element => {
+            rc.push(<Card label={element.label}/>) //but this does
+        });
+        }
+        return rc
+    }
 
-// class Card extends React.Component {
-//     render(){
-//         return (
-//             <div>
-//                 <ul>
-//                     <li>{this.props.data.id}</li>
-//                     <li>{this.props.data.label}</li>
-//                     <li>{this.props.data.rarity}</li>
-//                     <li>{this.props.data.value}</li>
-//                 </ul> 
-//             </div>
-//         )
-//     }
-// }
+    render() {
+        return(
+        <div>
+            {this.renderCards()}
+        </div>
+        )
+    }
 
+}
 
-// class SigmaSidebar extends React.Component {
-//     constructor(props: any) {
-//         super(props)
-//         this.state = {
-//             value: null
-//         }
-//     }
-    
-//     private _getCardData(id: string) {
-//         return valueLabelGetter(id)
-//     }
-
-//     renderCard(valueLabel: IvalueLabel): Card{
-//         return <Card data={valueLabel}/>
-//     }
-
-// }
-const SigmaSidebar = 1
  export default SigmaSidebar

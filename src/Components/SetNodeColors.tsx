@@ -16,6 +16,7 @@ type Props = {
     onGraphLoaded?: () => void,
     children?: string,
     sigma?: sigma
+    adjNodesGetter?: any
 };
 
 
@@ -59,19 +60,20 @@ class SetNodeColors extends React.PureComponent {
     }
 
 
-    _load(url: string) {
 
+    _load(url: string) {
         var s = this.props.sigma
         var graph = s.graph
+    
         var neighbors = function(graph, nodeId) {
             var adjNodes = graph.adjacentNodes(nodeId)
-            var neighbors = {}
+            var neighbors = []
             adjNodes.forEach(element => {
                 neighbors[element.id] = element
             });
-      
             return neighbors;
         };
+        
         console.log(s)
         graph.nodes().forEach(function(n) {
             n.originalColor = n.color;
@@ -82,7 +84,7 @@ class SetNodeColors extends React.PureComponent {
             console.log(e.color)
         });
 
-        s.bind('clickNode', function(e) {
+        s.bind('clickNode', (e) => {
             graph.nodes().forEach(function(n) {
                 n.originalColor = n.color;
             });
@@ -92,8 +94,13 @@ class SetNodeColors extends React.PureComponent {
 
             console.log(e.data.node.originalColor)
             var nodeId = e.data.node.id
-            var toKeep = neighbors(graph, nodeId)
+
+            console.log(this)
+            var toKeep = neighbors(graph, nodeId) 
             toKeep[nodeId] = e.data.node
+
+            // pass data to GraphWrapper
+            this.props.adjNodesGetter(toKeep)
 
             s.graph.nodes().forEach(function(n) {
               if (toKeep[n.id])
