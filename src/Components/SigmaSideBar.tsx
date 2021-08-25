@@ -1,16 +1,20 @@
 import React from "react";
 import valueLabelGetter from "../../api/DataGetter";
 
-class Card extends React.Component <{label: any}, {}> {
+class Card extends React.Component <{label: any, nodeId: any}, {}> {
     render(){
+        var url = "https://nwdb.info/db/item/" + this.props.nodeId
         return (
-                <li>{this.props.label}</li>
+                <li>
+                    <a href={url}>{this.props.label}</a>
+                    {/* {this.props.label} */}
+                </li>
         )
     }
 }
 
 
-class SigmaSidebar extends React.Component <{cards: any},{}> {
+class SigmaSidebar extends React.Component <{nodes: any, edges: any}, {}> {
     constructor(props: any) {
         super(props)
         this.state = {hasCards: false}
@@ -21,15 +25,20 @@ class SigmaSidebar extends React.Component <{cards: any},{}> {
         // out the stupid double loop
         let c = []
         let rc = []
-        if(this.props.cards){
+        if(this.props.edges){
             console.log("%%%%%%%%%")
-            console.log(this.props.cards)
-            Object.values(this.props.cards).forEach(element => {
+            console.log(this.props.edges)
+
+        }
+        if(this.props.nodes){
+            console.log("%%%%%%%%%")
+            console.log(this.props.nodes)
+            Object.values(this.props.nodes).forEach(element => {
                 //c.push(element.label) //it's super dumb that this doesn't work
                 c.push(element)
             });
         c.forEach(element => {
-            rc.push(<Card label={element.label}/>) //but this does
+            rc.push(<Card label={element.label} nodeId={element.id}/>) //but this does
         });
         }
         return rc

@@ -294,7 +294,11 @@ a.pure-button-primary {
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     right: 0;
-    background-color: #111; /* Black */
+    background-color: #5e6e9b; /* Black */
     overflow-x: auto; /* Disable horizontal scroll */
     padding-top: 20px;
+}
+
+.sideBar a {
+    color: #182549;
 }
