@@ -299,9 +299,9 @@ a.pure-button-primary {
     padding-top: 20px;
 }
 
-.sideBar a {
+/* .sideBar a {
     color: #182549;
-}
+} */
 
 .infographic img {
     display: block;
@@ -313,4 +313,24 @@ a.pure-button-primary {
 
 .clickedNode {
     /* background-color: #aaa; */
+}
+
+.rarity0 {
+    color: #000000
+}
+.rarity1 {
+    color: #C8C8C8
+}
+.rarity2 {
+    color: #07C02F
+}
+.rarity3 {
+    color: #00CBE9
+}
+.rarity4 {
+    color: #FF16F7
+}
+.rarity5 {
+    color: #EA5B1C
+
 }

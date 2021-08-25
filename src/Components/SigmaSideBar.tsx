@@ -4,26 +4,30 @@ import useScript from '../hooks/useScript';
 import Button from '@material-ui/core/Button';
 import { lighten } from "@material-ui/core";
 
-let rareColors = {
-    "0": "#C8C8C8",
-    "1": "#C8C8C8",
-    "2": "#07C02F",
-    "3": "#00CBE9",
-    "4": "#FF16F7",
-    "5": "#EA5B1C"
-    
-}
+const rareColors = [
+    "black",
+    "#C8C8C8",
+    "#07C02F",
+    "#00CBE9",
+    "#FF16F7",
+    "#EA5B1C",  
+]
 
 function Card(props) {
     const label = props.label
     const nodeId = props.nodeId
     const rarity = props.rarity
+    const rarityClass = "rarity" + rarity.toString()
+    // console.log("***")
+    // console.log(label)
     // console.log("rarity: ", rarity)
+    // console.log("chosenColor: " + rarityClass)
+    // console.log("***")
     // console.log("color: ", rareColors[rarity])
     var url = "https://nwdb.info/db/item/" + nodeId
     return (
         <li style={{margin: 15}}>
-            <a href={url} style={{color: rareColors[rarity]}}>{label}</a>
+            <a href={url} className={rarityClass}>{label}</a>
         </li>
     )
 }
