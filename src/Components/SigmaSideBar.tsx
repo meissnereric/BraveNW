@@ -2,12 +2,9 @@ import React from "react";
 import valueLabelGetter from "../../api/DataGetter";
 
 class Card extends React.Component <{label: any}, {}> {
-    constructor(props){
-        super(props)
-    }
     render(){
         return (
-                <h1>{this.props.label}</h1>
+                <li>{this.props.label}</li>
         )
     }
 }
@@ -40,8 +37,10 @@ class SigmaSidebar extends React.Component <{cards: any},{}> {
 
     render() {
         return(
-        <div>
+        <div className="sideBar">
+            <ul>
             {this.renderCards()}
+            </ul>
         </div>
         )
     }
