@@ -2,18 +2,32 @@ import React from "react";
 import valueLabelGetter from "../../api/DataGetter";
 import useScript from '../hooks/useScript';
 import Button from '@material-ui/core/Button';
+import { lighten } from "@material-ui/core";
+
+let rareColors = {
+    "0": "#C8C8C8",
+    "1": "#C8C8C8",
+    "2": "#07C02F",
+    "3": "#00CBE9",
+    "4": "#FF16F7",
+    "5": "#EA5B1C"
+    
+}
 
 function Card(props) {
     const label = props.label
     const nodeId = props.nodeId
-
+    const rarity = props.rarity
+    // console.log("rarity: ", rarity)
+    // console.log("color: ", rareColors[rarity])
     var url = "https://nwdb.info/db/item/" + nodeId
     return (
-        <li>
-            <a href={url}>{label}</a>
+        <li style={{margin: 15}}>
+            <a href={url} style={{color: rareColors[rarity]}}>{label}</a>
         </li>
     )
 }
+
 
 
 function RenderCards(props) {
@@ -37,11 +51,18 @@ function RenderCards(props) {
             //c.push(element.label) //it's super dumb that this doesn't work
             c.push(element)
         });
+    
     c.forEach(element => {
-        rc.push(<Card label={element.label} nodeId={element.id}/>) //but this does
+        
+        rc.push(<Card label={element.label} nodeId={element.id} rarity={element.attributes.rarity}/>) //but this does
+        
     });
     }
-    return (<div>{rc}</div>)
+    let clicked = rc.pop()
+    return (<div>
+            <div className="clickedNode">{clicked}</div>
+            {rc}
+            </div>)
 
     console.log(nodes)
     return (
@@ -62,7 +83,7 @@ function SigmaSidebar(props) {
     useScript('https://nwdb.info/embed.js');
     return (
         <div className="sideBar">
-            <ul>
+            <ul style={{listStyleType: "none", padding: 0, margin: 0}}>
                 <RenderCards nodes={nodes} edges={edges} />
             </ul>
         </div>

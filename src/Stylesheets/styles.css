@@ -310,3 +310,7 @@ a.pure-button-primary {
     width: auto;
     height: auto;
   }
+
+.clickedNode {
+    /* background-color: #aaa; */
+}
