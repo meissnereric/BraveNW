@@ -40,7 +40,7 @@ export default function Legend() {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Tradeskill</TableCell>
+            <TableCell>Tradeskill (Edge Color)</TableCell>
             <TableCell align="right">Color Hex</TableCell>
           </TableRow>
         </TableHead>

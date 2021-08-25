@@ -69,7 +69,8 @@ function SigmaSidebar(props) {
     useScript('https://nwdb.info/embed.js');
     return (
         <div className="sideBar">
-            <ul style={{listStyleType: "none", padding: 0, margin: 0}}>
+            <a style={{backgroundColor: '#6A6A6A', color: 'black'}}> <b>Hover over items to display a tooltip with their information! </b></a>
+            <ul style={{listStyleType: "none", padding: 0, margin: 0, backgroundColor: '#6A6A6A',}}>
                 <RenderCards nodes={nodes} edges={edges} />
             </ul>
         </div>
