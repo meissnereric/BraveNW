@@ -7,7 +7,6 @@ class Card extends React.Component <{label: any, nodeId: any}, {}> {
         return (
                 <li>
                     <a href={url}>{this.props.label}</a>
-                    {/* {this.props.label} */}
                 </li>
         )
     }
@@ -26,13 +25,12 @@ class SigmaSidebar extends React.Component <{nodes: any, edges: any}, {}> {
         let c = []
         let rc = []
         if(this.props.edges){
-            console.log("%%%%%%%%%")
-            console.log(this.props.edges)
-
+            // console.log("%%%%Edges%%%%%")
+            // console.log(this.props.edges)
         }
         if(this.props.nodes){
-            console.log("%%%%%%%%%")
-            console.log(this.props.nodes)
+            // console.log("%%%%%Nodes%%%%")
+            // console.log(this.props.nodes)
             Object.values(this.props.nodes).forEach(element => {
                 //c.push(element.label) //it's super dumb that this doesn't work
                 c.push(element)

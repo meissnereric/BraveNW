@@ -302,3 +302,11 @@ a.pure-button-primary {
 .sideBar a {
     color: #182549;
 }
+
+.infographic img {
+    display: block;
+    max-width:800px;
+    max-height:800px;
+    width: auto;
+    height: auto;
+  }

@@ -3,28 +3,42 @@ import React from 'react';
 // import Nav from 'react-bootstrap/Nav';
 
 import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import TemporaryDrawer from './SigmaDrawer';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    },
+  }));
 
 
-class NavBar extends React.Component {
-    render() {
-        return (
-            <div className="header">
-                <div className="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
-                
-                <a className="pure-menu-heading"><Link to="/">Brave New World</Link></a>
+  export default function NavBar() {
+    const classes = useStyles();
 
-                    <ul className="pure-menu-list">
-                        <li className="pure-menu-item pure-menu-selected"><Link to='/network' className="pure-menu-link">Recipe Network</Link></li>
-                        <li className="pure-menu-item"><Link to="/about" className="pure-menu-link"> About </Link></li>
-                        <li className="pure-menu-item"><Link to='/infographics' className='pure-menu-link'>Crafting Infographics</Link></li>
-                        <li className="pure-menu-item"><Link to="/item_list" className="pure-menu-link">Item List</Link></li>
-
-                    </ul>
-                </div>
-            </div>
-        )
-    }
+    return(
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography variant="h6" className={classes.title}>
+                        <Link to='/'>BraveNW</Link>
+                    </Typography>
+                    <Button color="inherit"><Link to='/item_list'>Recipe Network</Link></Button>
+                    <Button color="inherit"><Link to='/infographics'>Infographic</Link></Button>
+                    <Button color="inherit"><Link to='/about'>About</Link></Button>
+                </Toolbar>
+            </AppBar>
+    )
 
 }
-
-export default NavBar;

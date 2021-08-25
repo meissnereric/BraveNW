@@ -3,6 +3,7 @@ import {Sigma, LoadGEXF, RandomizeNodePositions} from 'react-sigma';
 import SetNodeColors from './SetNodeColors';
 // import SigmaLegend from './SigmaLegend';
 import SigmaSidebar from './SigmaSideBar';
+import { Grid } from '@material-ui/core';
 
 
 var sigmaSettings = {
@@ -22,11 +23,8 @@ var sigmaSettings = {
 const sigmaContainerName = 'sigma-container'
 const gephiFile = 'data/filtered_recipe_graph_8_21_2021.gexf'
 const sigmaStyle = {
-    height: '400px',
+    height: 800,
     maxWidth: 'inherit'
-    // maxHeight: 'inherit',
-    // width: '100%',
-    // border: 'solid'
 }
 
 type State = {
@@ -41,7 +39,7 @@ class GraphWrapper extends React.Component <{}, State> {
             adjNodes: null,
             hasNodes: false,
             adjEdges: null,
-            hasEdges: null,
+            hasEdges: false,
             filePath: "../data/filtered_recipe_graph_8_21_2021.gexf"
         }
         //makes it update this components state when called from outside itself
@@ -65,6 +63,7 @@ class GraphWrapper extends React.Component <{}, State> {
     render() {
         return (
             <div>
+            <Grid item>
                 <Sigma
                     settings={sigmaSettings}
                     style={sigmaStyle}
@@ -74,6 +73,7 @@ class GraphWrapper extends React.Component <{}, State> {
                     <RandomizeNodePositions/>
                 </Sigma>
                 <SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>
+            </Grid>
             </div>
         )
     }

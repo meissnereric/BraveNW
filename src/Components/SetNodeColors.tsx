@@ -76,17 +76,14 @@ class SetNodeColors extends React.PureComponent {
 
     _clickNode(props, s, e) {
         this._initColors(s)
-
-        console.log(e.data.node.originalColor)
         var nodeId = e.data.node.id
 
-        console.log("%%%%%%%%%%%%%%%%%%%%%%ClickNode%%%%%%%%%%%%%%%%%%%%%%")
-        console.log(this)
+        // console.log("%%%%%%%%%%%%%%%%%%%%%%ClickNode%%%%%%%%%%%%%%%%%%%%%%")
+        // console.log(this)
         var res = this._neighbors(s.graph, nodeId)
         var toKeepNodes = res[0]
         var toKeepEdges = res[1]
         toKeepNodes[nodeId] = e.data.node
-
         // pass data to GraphWrapper
         props.adjNodesGetter(toKeepNodes)
         props.adjEdgesGetter(toKeepEdges)
@@ -115,10 +112,11 @@ class SetNodeColors extends React.PureComponent {
     // node and edge with its original color.
     _clickStage = function (props, s, e) {
         this._initColors(s)
+
         // pass data to GraphWrapper
-        console.log("%%%%%%%%%%%%%%%%%%%%%%%%ClickStage%%%%%%%%%%%%%%%%%%%%")
-        console.log(this)
-        console.log(props)
+        // console.log("%%%%%%%%%%%%%%%%%%%%%%%%ClickStage%%%%%%%%%%%%%%%%%%%%")
+        // console.log(this)
+        // console.log(props)
         props.adjNodesGetter({})
         props.adjEdgesGetter({})
         s.graph.nodes().forEach(function (n) {

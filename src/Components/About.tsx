@@ -1,12 +1,20 @@
 import React from "react";
 
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 class About extends React.Component{
     render(){
         return(
-            <div className="pure-g">
-              <div className="pure-u-1 pure-u-md-1-8"></div>
-              <div id='sigma-container' className="pure-u-1 pure-u-md-6-8">Infographics</div>
-              <div className="pure-u-1 pure-u-md-1-8"></div>
+            <div>
+                
+                <Grid item>
+                <Tooltip disableFocusListener disableTouchListener title="Add">
+                    <Button>Hover</Button>
+                </Tooltip>
+                </Grid>
             </div>
         )
     }

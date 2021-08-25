@@ -8,7 +8,6 @@ import './Stylesheets/pure-min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-
 {/* <script async src="https://nwdb.info/embed.js"></script> */}
 
 ReactDOM.render(
