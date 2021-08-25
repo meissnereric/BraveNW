@@ -1,57 +1,72 @@
 import React from "react";
 import valueLabelGetter from "../../api/DataGetter";
+import useScript from '../hooks/useScript';
+import Button from '@material-ui/core/Button';
 
-class Card extends React.Component <{label: any, nodeId: any}, {}> {
-    render(){
-        var url = "https://nwdb.info/db/item/" + this.props.nodeId
-        return (
-                <li>
-                    <a href={url}>{this.props.label}</a>
-                </li>
-        )
-    }
+function Card(props) {
+    const label = props.label
+    const nodeId = props.nodeId
+
+    var url = "https://nwdb.info/db/item/" + nodeId
+    return (
+        <li>
+            <a href={url}>{label}</a>
+        </li>
+    )
 }
 
 
-class SigmaSidebar extends React.Component <{nodes: any, edges: any}, {}> {
-    constructor(props: any) {
-        super(props)
-        this.state = {hasCards: false}
-    }
+function RenderCards(props) {
+    const nodes = props.nodes
+    const edges = props.edges
 
-    renderCards(){
-        // I'm trying to get this to work quickly, after it's in good shape i'll take 
-        // out the stupid double loop
-        let c = []
-        let rc = []
-        if(this.props.edges){
-            // console.log("%%%%Edges%%%%%")
-            // console.log(this.props.edges)
-        }
-        if(this.props.nodes){
-            // console.log("%%%%%Nodes%%%%")
-            // console.log(this.props.nodes)
-            Object.values(this.props.nodes).forEach(element => {
-                //c.push(element.label) //it's super dumb that this doesn't work
-                c.push(element)
-            });
-        c.forEach(element => {
-            rc.push(<Card label={element.label} nodeId={element.id}/>) //but this does
+    
+    var places = ['right'] as any
+
+    
+    let c = []
+    let rc = []
+    if(props.edges){
+        console.log("%%%%Edges%%%%%")
+        console.log(props.edges)
+    }
+    if(props.nodes){
+        console.log("%%%%%Nodes%%%%")
+        console.log(props.nodes)
+        Object.values(props.nodes).forEach(element => {
+            //c.push(element.label) //it's super dumb that this doesn't work
+            c.push(element)
         });
-        }
-        return rc
+    c.forEach(element => {
+        rc.push(<Card label={element.label} nodeId={element.id}/>) //but this does
+    });
     }
+    return (<div>{rc}</div>)
 
-    render() {
-        return(
+    console.log(nodes)
+    return (
+        <div>
+
+        {places.map((anchor) => (
+            <React.Fragment key={anchor}>
+            <Card label="oakfleshbalmt320" nodeId="oakfleshbalmt3"/>
+            </React.Fragment>
+        ))}
+        </div>
+    );
+}
+
+function SigmaSidebar(props) {
+    const nodes = props.nodes
+    const edges = props.nodes
+    useScript('https://nwdb.info/embed.js');
+    return (
         <div className="sideBar">
             <ul>
-            {this.renderCards()}
+                <RenderCards nodes={nodes} edges={edges} />
             </ul>
         </div>
-        )
-    }
-
+    )
 }
 
- export default SigmaSidebar
+export default SigmaSidebar

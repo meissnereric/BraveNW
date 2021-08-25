@@ -3,7 +3,7 @@ import {Sigma, LoadGEXF, RandomizeNodePositions} from 'react-sigma';
 import SetNodeColors from './SetNodeColors';
 // import SigmaLegend from './SigmaLegend';
 import SigmaSidebar from './SigmaSideBar';
-import { Grid } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 
 
 var sigmaSettings = {
@@ -64,6 +64,9 @@ class GraphWrapper extends React.Component <{}, State> {
         return (
             <div>
             <Grid item>
+                <Container>
+                    Legend goes here.
+                </Container>
                 <Sigma
                     settings={sigmaSettings}
                     style={sigmaStyle}
