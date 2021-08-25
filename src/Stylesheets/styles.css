@@ -288,11 +288,11 @@ a.pure-button-primary {
 
 
 .sideBar {
-    height: 100%; /* Full-height: remove this if you want "auto" height */
-    width: auto; /* Set the width of the sidebar */
+    height: 94%; /* Full-height: remove this if you want "auto" height */
+    width: 16%; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
+    bottom: 0; /* Stay at the top */
     right: 0;
     background-color: #5e6e9b; /* Black */
     overflow-x: auto; /* Disable horizontal scroll */
@@ -303,7 +303,7 @@ a.pure-button-primary {
     color: #182549;
 } */
 
-.infographic img {
+/* .infographic img {
     display: block;
     max-width:800px;
     max-height:800px;
@@ -313,7 +313,7 @@ a.pure-button-primary {
 
 .clickedNode {
     /* background-color: #aaa; */
-}
+/* } */
 
 .rarity0 {
     color: #000000

@@ -9,12 +9,25 @@ class About extends React.Component{
     render(){
         return(
             <div>
+            {/* <Grid item>
+            <Tooltip disableFocusListener disableTouchListener title="Add">
+                <Button>Hover</Button>
+            </Tooltip>
+            </Grid> */}
+            
+                <h1> Social Media </h1>
+
+                <h2><a href="https://discord.gg/FVVFvGNj">Website Discord</a></h2>
+                <h2><a href="twitch.tv/Tanek17">Tanek17's Twitch</a></h2>
+                <h2><a href="https://www.twitch.tv/enbielievable">Enbielievable's Twitch</a></h2>
+
+                <h1>Github</h1>
+                You can find all the code used to run the website <a href="https://github.com/meissnereric/BraveNW">here</a> and 
+                all the code to generate the graph <a href="https://github.com/meissnereric/NewWorldRecipeGraph">here</a>. 
                 
-                <Grid item>
-                <Tooltip disableFocusListener disableTouchListener title="Add">
-                    <Button>Hover</Button>
-                </Tooltip>
-                </Grid>
+                <h2>Bugs</h2>
+                If you find any bugs, please report them either in our <a href="https://discord.gg/FVVFvGNj">Discord</a> or 
+                in the <a href="https://github.com/meissnereric/BraveNW/issues">Issues</a> section of the Githubs.
             </div>
         )
     }

@@ -1,5 +1,4 @@
 import React from "react";
-import valueLabelGetter from "../../api/DataGetter";
 import useScript from '../hooks/useScript';
 import Button from '@material-ui/core/Button';
 import { lighten } from "@material-ui/core";
@@ -37,10 +36,6 @@ function Card(props) {
 function RenderCards(props) {
     const nodes = props.nodes
     const edges = props.edges
-
-    
-    var places = ['right'] as any
-
     
     let c = []
     let rc = []
@@ -52,7 +47,6 @@ function RenderCards(props) {
         console.log("%%%%%Nodes%%%%")
         console.log(props.nodes)
         Object.values(props.nodes).forEach(element => {
-            //c.push(element.label) //it's super dumb that this doesn't work
             c.push(element)
         });
     
@@ -67,18 +61,6 @@ function RenderCards(props) {
             <div className="clickedNode">{clicked}</div>
             {rc}
             </div>)
-
-    console.log(nodes)
-    return (
-        <div>
-
-        {places.map((anchor) => (
-            <React.Fragment key={anchor}>
-            <Card label="oakfleshbalmt320" nodeId="oakfleshbalmt3"/>
-            </React.Fragment>
-        ))}
-        </div>
-    );
 }
 
 function SigmaSidebar(props) {

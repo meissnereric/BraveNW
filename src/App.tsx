@@ -6,19 +6,35 @@ import Home from './Components/Home'
 import About from './Components/About'
 import Infographics from './Components/Infographics'
 import GraphWrapper from './Components/ItemGraph';
+import Grid from '@material-ui/core/Grid';
+import '@fontsource/roboto';
+
 
 class App extends React.Component {
   render() {
     return (
       <div className="#">
           <BrowserRouter>
-            <NavBar/>
-            <Switch>
-                <Route exact path="/" component={Home}></Route>
-                <Route exact path="/about" component={About}></Route>
-                <Route exact path="/infographics" component={Infographics}></Route>
-                <Route exact path="/item_list" component={GraphWrapper}></Route>
-              </Switch>
+          <Grid
+            container
+            // direction="row"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+          >
+            <Grid item xs={12}>
+              <NavBar/>
+            </Grid>
+            <Grid item xs={12}>
+              <Switch>
+                {/* Route the home page to recipe graph for now during testing. */}
+                  <Route exact path="/" component={GraphWrapper}></Route> 
+                  <Route exact path="/about" component={About}></Route>
+                  <Route exact path="/infographics" component={Infographics}></Route>
+                  <Route exact path="/item_list" component={GraphWrapper}></Route>
+                </Switch>
+            </Grid>
+          </Grid>
+          
           </BrowserRouter>
       </div>
     )
