@@ -8,13 +8,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 class About extends React.Component{
     render(){
         return(
-            <div>
-            {/* <Grid item>
-            <Tooltip disableFocusListener disableTouchListener title="Add">
-                <Button>Hover</Button>
-            </Tooltip>
-            </Grid> */}
-            
+            <div>         
                 <h1> Social Media </h1>
 
                 <h2><a href="https://discord.gg/FVVFvGNj">Website Discord</a></h2>

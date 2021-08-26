@@ -89,7 +89,7 @@ class GraphWrapper extends React.Component <{}, State> {
                 <Grid item xs={2}> 
                     <Legend />
                 </Grid>
-                <Grid item>
+                <Grid item xs={8}>
                     <Sigma
                         settings={sigmaSettings}
                         style={sigmaStyle}
@@ -99,7 +99,7 @@ class GraphWrapper extends React.Component <{}, State> {
                         <RandomizeNodePositions/>
                     </Sigma>
                 </Grid>
-                <Grid item>
+                <Grid item xs={2}>
                     <SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>
                 </Grid>
             </Grid>
