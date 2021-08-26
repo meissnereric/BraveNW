@@ -25,9 +25,14 @@ class About extends React.Component{
                 You can find all the code used to run the website <a href="https://github.com/meissnereric/BraveNW">here</a> and 
                 all the code to generate the graph <a href="https://github.com/meissnereric/NewWorldRecipeGraph">here</a>. 
                 
+                <h2>Data</h2>
+                All data is taken gratefully from <a href="https://nwdb.info">nwdb.info</a>.
+
                 <h2>Bugs</h2>
                 If you find any bugs, please report them either in our <a href="https://discord.gg/FVVFvGNj">Discord</a> or 
                 in the <a href="https://github.com/meissnereric/BraveNW/issues">Issues</a> section of the Githubs.
+            
+            
             </div>
         )
     }

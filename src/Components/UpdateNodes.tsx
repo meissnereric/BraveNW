@@ -15,12 +15,47 @@ type State = {
 type Props = {
     path: string,
     onGraphLoaded?: () => void,
-    children?: string,
+    children?: any,
     sigma?: sigma
     adjNodesGetter?: any
     adjEdgesGetter?: any
+    checkedList?: any
 };
 
+const rarityMap = {
+    0: 'Unknown',
+    1: 'Commmon',
+    2: 'Uncommon',
+    3: 'Rare',
+    4: 'Epic',
+    5: 'Legendary'
+}
+
+function _filterEdges (edge, checkedList) {
+    var t = false
+    checkedList.forEach(function (checked) {
+        if(checked.filterType == 'Tradeskill'){
+            if(edge.attributes.tradeskill == checked.filterValue){
+                console.log("Returning true in tradeskill check" )
+                t= true
+            }
+        }
+    })
+    return t
+}
+
+function _filterNodes (node, checkedList) {
+    var t = false
+    checkedList.forEach(function (checked) {
+        if(checked.filterType == 'Rarity'){
+            if(rarityMap[node.attributes.rarity] == checked.filterValue){
+                console.log("Returning true in rarity check")
+                t= true
+            }
+        }
+    })
+    return t
+}
 
 /**
 LoadGEXF component, interface for parsers.json sigma plugin. Can be used within Sigma component.
@@ -32,10 +67,11 @@ Child's componentWillMount should be used to enable plugins on loaded graph.
 **/
 
 
-class SetNodeColors extends React.PureComponent {
+class UpdateNodes extends React.PureComponent {
     state: State;
     props: Props;
     onLoad: () => void;
+
 
     constructor(props: Props) {
         super(props)
@@ -44,35 +80,61 @@ class SetNodeColors extends React.PureComponent {
     }
 
     componentDidMount() {
+        console.log("UpdateNodes componentDidMount")
         this._load(this.props)
+        // this._initColors(this.props.sigma)
     }
 
     componentWillReceiveProps(props: Props) {
+        console.log("UpdateNodes componentWillReceiveProps")
         // reload only if path changes
         if (this.props.path !== props.path) {
             this.setState({ loaded: false })
-            this._load(props.path)
+            console.log("UpdateNodes componentWillReceiveProps inner path thing")
+            this._load(props)
         }
+        console.log(this.props.sigma)
+        console.log(props.sigma)
+        var checkedList = this.props.checkedList
+
+        var f = 0
+        var t = 0
+        props.sigma.graph.nodes().forEach(function (n) {
+            var isFiltered = _filterNodes(n, checkedList)
+            if(isFiltered){
+                t++;
+            }
+            else{
+                f++
+            }
+            n.hidden = !isFiltered
+        });
+        console.log(t, f)
+
+        var f = 0
+        var t = 0
+        props.sigma.graph.edges().forEach(function (e) {
+            var isFiltered = !_filterEdges(e, checkedList)
+            if(isFiltered){
+                t++;
+            }
+            else{
+                f++
+            }
+            e.hidden = isFiltered
+        });
+        console.log(t, f)
+        this.props.sigma.refresh()
     }
 
     render() {
-        if (!this.state.loaded)
+        if (!this.state.loaded){
+            console.log("State not loaded in render in UpdateNodes.")
             return null
+        }
         return <div>{embedProps(this.props.children, { sigma: this.props.sigma })}</div>
     }
 
-    _initColors(s){
-        if(!this.state.initColors){
-            s.graph.nodes().forEach(function (n) {
-                n.originalColor = n.color;
-            });
-            s.graph.edges().forEach(function (e) {
-                e.originalColor = e.color;
-            });
-            this.setState({initColors: true})
-        }
-
-    }
 
     _clickNode(props, s, e) {
         this._initColors(s)
@@ -146,17 +208,38 @@ class SetNodeColors extends React.PureComponent {
     };
 
     _saveOriginalColors = function (s) {
+        console.log("original colors saving")
         s.graph.nodes().forEach(function (n) {
             n.originalColor = n.color;
-            console.log(n.color)
         });
         s.graph.edges().forEach(function (e) {
             e.originalColor = e.color;
-            console.log(e.color)
         });
     }
 
+    _initColors = function (s) {
+        if(!this.state.initColors){
+            console.log("Saving original colors in initColors")
+            s.graph.nodes().forEach(function (n) {
+                n.originalColor = n.color;
+                // console.log(" initColors Node color: ")
+                // console.log(n.color)
+                // console.log(n.originalColor)
+            });
+            s.graph.edges().forEach(function (e) {
+                e.originalColor = e.color;
+                // console.log("initColors Edge color: ")
+                // console.log(e.color)
+                // console.log(e.originalColor)
+            });
+            this.setState({initColors: true})
+            console.log("initColors nodes")
+            console.log(s.graph.nodes())
+        }
+
+    }
     _load(props) {
+        // console.log(props)
         var s = props.sigma
         this._saveOriginalColors(s)
 
@@ -175,4 +258,4 @@ class SetNodeColors extends React.PureComponent {
 
 }
 
-export default SetNodeColors;
+export default UpdateNodes;
