@@ -1,10 +1,7 @@
 import React from 'react';
-import {Sigma, LoadGEXF, RandomizeNodePositions} from 'react-sigma';
-import SetNodeColors from './SetNodeColors';
+import {Sigma, LoadGEXF} from 'react-sigma';
+import UpdateNodes from './UpdateNodes';
 import SigmaSidebar from './SigmaSideBar';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import Legend from './SigmaLegend';
@@ -34,24 +31,11 @@ const sigmaStyle = {
 type State = {
     adjNodes:any, hasNodes: boolean,
     adjEdges:any, hasEdges: boolean,
-    filePath:string
+    filePath:string,
+    checkedList: any
 }
 
-
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     root: {
-//       flexGrow: 1,
-//     },
-//     paper: {
-//       padding: theme.spacing(2),
-//       textAlign: 'center',
-//       color: theme.palette.text.secondary,
-//     },
-//   }),
-// );
-
-class GraphWrapper extends React.Component <{}, State> {
+class ItemGraph extends React.Component <{}, State> {
 
     constructor(props) {
         super(props)
@@ -60,12 +44,15 @@ class GraphWrapper extends React.Component <{}, State> {
             hasNodes: false,
             adjEdges: null,
             hasEdges: false,
-            filePath: "../data/filtered_recipe_graph_8_21_2021.gexf"
+            filePath: "../data/filtered_recipe_graph_8_21_2021.gexf",
+            checkedList: []
         }
         //makes it update this components state when called from outside itself
         this.getAdjNodes = this.getAdjNodes.bind(this) 
         //makes it update this components state when called from outside itself
         this.getAdjEdges = this.getAdjEdges.bind(this) 
+        //makes it update this components state when called from outside itself
+        this.updateItemFilters = this.updateItemFilters.bind(this) 
 
     }
     componentDidUpdate(){
@@ -79,24 +66,28 @@ class GraphWrapper extends React.Component <{}, State> {
     getAdjEdges(toKeepEdges){
         this.setState({adjEdges: toKeepEdges, hasEdges: true})
     }
+    updateItemFilters(cList){
+        console.log("updateItemFilters")
+        console.log(cList)
+        this.setState({checkedList: cList})
+    }
 
     render() {
-        // const { classes } = this.props;
         return (
-            // <div className={classes.root}>
             <div>
             <Grid container spacing={3}>
                 <Grid item xs={2}> 
-                    <Legend />
+                    <Legend updateItemFilters={this.updateItemFilters}/>
                 </Grid>
                 <Grid item xs={8}>
                     <Sigma
                         settings={sigmaSettings}
                         style={sigmaStyle}
                         >
-                        <SetNodeColors path='red' adjNodesGetter={this.getAdjNodes} adjEdgesGetter={this.getAdjEdges} />
-                        <LoadGEXF path={this.state.filePath} />
-                        <RandomizeNodePositions/>
+                        <LoadGEXF path={this.state.filePath}>
+                        </LoadGEXF>
+                        <UpdateNodes path='red' checkedList={this.state.checkedList} adjNodesGetter={this.getAdjNodes} adjEdgesGetter={this.getAdjEdges}>
+                        </UpdateNodes>
                     </Sigma>
                 </Grid>
                 <Grid item xs={2}>
@@ -109,10 +100,4 @@ class GraphWrapper extends React.Component <{}, State> {
   
 }
 
-
-// GraphWrapper.propTypes = {
-//     classes: PropTypes.object.isRequired,
-//   };
-  
-// export default withStyles(useStyles)(GraphWrapper);
-export default GraphWrapper
+export default ItemGraph
