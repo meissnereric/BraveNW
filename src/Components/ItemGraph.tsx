@@ -32,7 +32,7 @@ type State = {
     adjNodes:any, hasNodes: boolean,
     adjEdges:any, hasEdges: boolean,
     filePath:string,
-    checkedList: any
+    shownFilter: any
 }
 
 class ItemGraph extends React.Component <{}, State> {
@@ -45,7 +45,7 @@ class ItemGraph extends React.Component <{}, State> {
             adjEdges: null,
             hasEdges: false,
             filePath: "../data/filtered_recipe_graph_8_21_2021.gexf",
-            checkedList: []
+            shownFilter: false
         }
         //makes it update this components state when called from outside itself
         this.getAdjNodes = this.getAdjNodes.bind(this) 
@@ -66,10 +66,9 @@ class ItemGraph extends React.Component <{}, State> {
     getAdjEdges(toKeepEdges){
         this.setState({adjEdges: toKeepEdges, hasEdges: true})
     }
-    updateItemFilters(cList){
-        console.log("updateItemFilters")
-        console.log(cList)
-        this.setState({checkedList: cList})
+    updateItemFilters(sFilter){
+        this.setState({shownFilter: sFilter})
+        console.log(["Item graph state shown filter", this.state.shownFilter])
     }
 
     render() {
@@ -86,7 +85,7 @@ class ItemGraph extends React.Component <{}, State> {
                         >
                         <LoadGEXF path={this.state.filePath}>
                         </LoadGEXF>
-                        <UpdateNodes path='red' checkedList={this.state.checkedList} adjNodesGetter={this.getAdjNodes} adjEdgesGetter={this.getAdjEdges}>
+                        <UpdateNodes path='red' shownFilter={this.state.shownFilter} adjNodesGetter={this.getAdjNodes} adjEdgesGetter={this.getAdjEdges}>
                         </UpdateNodes>
                     </Sigma>
                 </Grid>

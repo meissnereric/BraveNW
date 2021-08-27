@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from "react";
 import useScript from '../hooks/useScript';
 import Button from '@material-ui/core/Button';
@@ -11,12 +13,12 @@ import { classicNameResolver, isClassExpression } from "typescript";
 
 
 const rColors = [
-     "rgb(200, 200, 200)",
-     "rgb(7, 192, 47)",
-     "rgb(0, 203, 233)",
-     "rgb(255, 22, 247)",
-     "rgb(255, 135, 23)",
-     "rgb(200, 200, 200)"
+    "rgb(200, 200, 200)",
+    "rgb(7, 192, 47)",
+    "rgb(0, 203, 233)",
+    "rgb(255, 22, 247)",
+    "rgb(255, 135, 23)",
+    "rgb(200, 200, 200)"
 ]
 
 const labelFixer = (label: string) => {
@@ -28,53 +30,53 @@ const labelFixer = (label: string) => {
 }
 
 const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-    //   flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(1),
-      margin: 'auto',
-      marginTop: 5,
-      marginBottom: 5
-      //maxWidth: 500,
-    },
-    image: {
-      width: 60,
-      height: 60,
-    },
-    img: {
-      margin: 'auto',
-      display: 'block',
-      maxWidth: '100%',
-      maxHeight: '100%',
-    },
-    overflowXAuto: {
-        overflowX: "auto"
-    },
-    sideBar: {
-        // padding: theme.spacing(5,5),
-        height: "94%",
-        //width: "16%",
-        // position: "fixed",
-        zIndex: 1,
-        bottom: 0,
-        right: 0,
-        overflow: "auto",
-        
+    createStyles({
+        root: {
+            //   flexGrow: 1,
+        },
+        paper: {
+            padding: theme.spacing(1),
+            margin: 'auto',
+            marginTop: 5,
+            marginBottom: 5
+            //maxWidth: 500,
+        },
+        image: {
+            width: 60,
+            height: 60,
+        },
+        img: {
+            margin: 'auto',
+            display: 'block',
+            maxWidth: '100%',
+            maxHeight: '100%',
+        },
+        overflowXAuto: {
+            overflowX: "auto"
+        },
+        sideBar: {
+            // padding: theme.spacing(5,5),
+            height: "94%",
+            //width: "16%",
+            // position: "fixed",
+            zIndex: 1,
+            bottom: 0,
+            right: 0,
+            overflow: "auto",
 
 
-        //backgroundColor: "#5e6e9b"
-    },
-    textGrid: {
-        display: "flex",
-        alignItems: "center",
-    },
-    sidebarBackground: {
-        backgroundColor: "#666666",
 
-    }
-  }),
+            //backgroundColor: "#5e6e9b"
+        },
+        textGrid: {
+            display: "flex",
+            alignItems: "center",
+        },
+        sidebarBackground: {
+            backgroundColor: "#666666",
+
+        }
+    }),
 );
 
 function Card(props) {
@@ -83,34 +85,29 @@ function Card(props) {
     const nodeId = props.nodeId
     const rarity = props.rarity
     const rColor = rColors[rarity]
-    console.log("***")
-    console.log(label)
-    console.log("rarity: ", rarity)
-    console.log("color: ", rColors[rarity])
-    console.log("***")
     var url = "https://nwdb.info/db/item/" + nodeId
     return (
         //TODO: Fix text wrapping on labels
         //TODO: Add 
         <div className={classes.root}>
-            <a href={url} style={{textDecoration: "none"}}>
-            <Paper className={classes.paper} style={{backgroundColor: rColor}}>
-                <Grid container spacing={1} className={classes.sidebarBackground}>
-                    <Grid item>
-                        <ButtonBase className={classes.image}>
-                            <img className={classes.img} alt="complex" src="" /> 
-                        </ButtonBase>
-                    </Grid>
-                    <Grid item xs={12} sm container>
+            <a href={url} style={{ textDecoration: "none" }}>
+                <Paper className={classes.paper} style={{ backgroundColor: rColor }}>
+                    <Grid container spacing={1} className={classes.sidebarBackground}>
+                        <Grid item>
+                            <ButtonBase className={classes.image}>
+                                <img className={classes.img} alt="Img" src="" />
+                            </ButtonBase>
+                        </Grid>
+                        <Grid item xs={12} sm container>
                             <Grid item xs className={classes.textGrid}>
-                                <Typography style={{color: rColor }}>{label}</Typography>
+                                <Typography style={{ color: rColor }}>{label}</Typography>
                             </Grid>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Paper>
+                </Paper>
             </a>
         </div>
-        
+
     )
 }
 
@@ -119,46 +116,59 @@ function Card(props) {
 function RenderCards(props) {
     const nodes = props.nodes
     const edges = props.edges
-    
-    let c = []
-    let rc = []
-    if(props.edges){
-        console.log("%%%%Edges%%%%%")
-        console.log(props.edges)
+
+    let ingredients = []
+    let isIngredientFor = []
+    let targetCard = null
+    if (props.nodes){
+        let targetNode = Object.values(props.nodes)[props.length -1]
+
+        // Stupid hack to set targetNode to the final node in the list lol.
+        for (let node of Object.values(props.nodes)) {
+            targetNode = node
+        }
+
+        for (let node of Object.values(props.nodes)) {
+            // The target card of the recipe
+            if (targetNode.id == node.id) {
+                targetCard = <Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />
+                continue // verify this does what I think it does here?
+            }
+            if (props.edges) {
+                for (let edge of Object.values(props.edges)) {
+                    // Ingredients that make TargetNode
+                    if (targetNode.id == edge.target) {
+                        ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                    }
+
+                    // Items that TargetNode is an ingredient for
+                    if (targetNode.id == edge.source) {
+                        isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                    }
+                }
+            }
+        }
     }
-    if(props.nodes){
-        console.log("%%%%%Nodes%%%%")
-        console.log(props.nodes)
-        Object.values(props.nodes).forEach(element => {
-            c.push(element)
-        });
-    
-    c.forEach(element => {
-        
-        rc.push(<Card label={element.label} nodeId={element.id} rarity={element.attributes.rarity}/>) //but this does
-        
-    });
-    }
-    let clicked = rc.pop()
     return (
-            <div>
-                {clicked}
-                {rc}
-            </div>
-            )
+        <div>
+            Target: {targetCard}
+            Ingredients: {ingredients}
+            Used In: {isIngredientFor}
+        </div>
+    )
 }
 
 function SigmaSidebar(props) {
     const classes = useStyles()
     const nodes = props.nodes
-    const edges = props.nodes
+    const edges = props.edges
     useScript('https://nwdb.info/embed.js');
     return (
-       
-            <Grid container className={classes.sideBar} spacing={1}>
-                <RenderCards nodes={nodes} edges={edges} />
-            </Grid>
- 
+
+        <Grid container className={classes.sideBar} spacing={1}>
+            <RenderCards nodes={nodes} edges={edges} />
+        </Grid>
+
     )
 }
 

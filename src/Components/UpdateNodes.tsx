@@ -19,41 +19,34 @@ type Props = {
     sigma?: sigma
     adjNodesGetter?: any
     adjEdgesGetter?: any
-    checkedList?: any
+    shownFilter?: any
 };
 
 const rarityMap = {
     0: 'Unknown',
-    1: 'Commmon',
+    1: 'Common',
     2: 'Uncommon',
     3: 'Rare',
     4: 'Epic',
     5: 'Legendary'
 }
 
-function _filterEdges (edge, checkedList) {
+function _filterNodes (node, shownFilter) {
+    const rmapvalue = rarityMap[node.attributes.rarity]
+    
+    const rarityType = shownFilter['Rarity'][rmapvalue]
     var t = false
-    checkedList.forEach(function (checked) {
-        if(checked.filterType == 'Tradeskill'){
-            if(edge.attributes.tradeskill == checked.filterValue){
-                console.log("Returning true in tradeskill check" )
-                t= true
-            }
-        }
-    })
+    if(rarityType['isShown']){
+        t=true
+    }
     return t
 }
 
-function _filterNodes (node, checkedList) {
+function _filterEdges (edge, shownFilter) {
     var t = false
-    checkedList.forEach(function (checked) {
-        if(checked.filterType == 'Rarity'){
-            if(rarityMap[node.attributes.rarity] == checked.filterValue){
-                console.log("Returning true in rarity check")
-                t= true
-            }
-        }
-    })
+    if(shownFilter['Tradeskill'][edge.attributes.tradeskill]['isShown']){
+        t=true
+    }
     return t
 }
 
@@ -80,27 +73,31 @@ class UpdateNodes extends React.PureComponent {
     }
 
     componentDidMount() {
-        console.log("UpdateNodes componentDidMount")
+        console.info("UpdateNodes componentDidMount")
         this._load(this.props)
-        // this._initColors(this.props.sigma)
     }
 
     componentWillReceiveProps(props: Props) {
-        console.log("UpdateNodes componentWillReceiveProps")
+        console.info("UpdateNodes componentWillReceiveProps")
         // reload only if path changes
         if (this.props.path !== props.path) {
             this.setState({ loaded: false })
-            console.log("UpdateNodes componentWillReceiveProps inner path thing")
+            console.info("UpdateNodes componentWillReceiveProps inner path thing")
             this._load(props)
         }
-        console.log(this.props.sigma)
-        console.log(props.sigma)
-        var checkedList = this.props.checkedList
+        console.info(this.props.sigma)
+        console.info(props.sigma)
+        var shownFilter = this.props.shownFilter
+        console.info(["UpdateNodes shown filter", shownFilter])
+        if(!shownFilter){
+            console.warn("Shown filter not initialized yet, will not filter nodes.")
+            return
+        }
 
         var f = 0
         var t = 0
         props.sigma.graph.nodes().forEach(function (n) {
-            var isFiltered = _filterNodes(n, checkedList)
+            var isFiltered = _filterNodes(n, shownFilter)
             if(isFiltered){
                 t++;
             }
@@ -109,12 +106,12 @@ class UpdateNodes extends React.PureComponent {
             }
             n.hidden = !isFiltered
         });
-        console.log(t, f)
+        console.info(t, f)
 
         var f = 0
         var t = 0
         props.sigma.graph.edges().forEach(function (e) {
-            var isFiltered = !_filterEdges(e, checkedList)
+            var isFiltered = !_filterEdges(e, shownFilter)
             if(isFiltered){
                 t++;
             }
@@ -123,13 +120,13 @@ class UpdateNodes extends React.PureComponent {
             }
             e.hidden = isFiltered
         });
-        console.log(t, f)
+        console.info(t, f)
         this.props.sigma.refresh()
     }
 
     render() {
         if (!this.state.loaded){
-            console.log("State not loaded in render in UpdateNodes.")
+            console.warn("State not loaded in render in UpdateNodes.")
             return null
         }
         return <div>{embedProps(this.props.children, { sigma: this.props.sigma })}</div>
@@ -140,8 +137,6 @@ class UpdateNodes extends React.PureComponent {
         this._initColors(s)
         var nodeId = e.data.node.id
 
-        // console.log("%%%%%%%%%%%%%%%%%%%%%%ClickNode%%%%%%%%%%%%%%%%%%%%%%")
-        // console.log(this)
         var res = this._neighbors(s.graph, nodeId)
         var toKeepNodes = res[0]
         var toKeepEdges = res[1]
@@ -175,10 +170,6 @@ class UpdateNodes extends React.PureComponent {
     _clickStage = function (props, s, e) {
         this._initColors(s)
 
-        // pass data to GraphWrapper
-        // console.log("%%%%%%%%%%%%%%%%%%%%%%%%ClickStage%%%%%%%%%%%%%%%%%%%%")
-        // console.log(this)
-        // console.log(props)
         props.adjNodesGetter({})
         props.adjEdgesGetter({})
         s.graph.nodes().forEach(function (n) {
@@ -208,7 +199,7 @@ class UpdateNodes extends React.PureComponent {
     };
 
     _saveOriginalColors = function (s) {
-        console.log("original colors saving")
+        console.info("original colors saving")
         s.graph.nodes().forEach(function (n) {
             n.originalColor = n.color;
         });
@@ -219,22 +210,16 @@ class UpdateNodes extends React.PureComponent {
 
     _initColors = function (s) {
         if(!this.state.initColors){
-            console.log("Saving original colors in initColors")
+            console.info("Saving original colors in initColors")
             s.graph.nodes().forEach(function (n) {
                 n.originalColor = n.color;
-                // console.log(" initColors Node color: ")
-                // console.log(n.color)
-                // console.log(n.originalColor)
             });
             s.graph.edges().forEach(function (e) {
                 e.originalColor = e.color;
-                // console.log("initColors Edge color: ")
-                // console.log(e.color)
-                // console.log(e.originalColor)
             });
             this.setState({initColors: true})
-            console.log("initColors nodes")
-            console.log(s.graph.nodes())
+            console.info("initColors nodes")
+            console.info(s.graph.nodes())
         }
 
     }
