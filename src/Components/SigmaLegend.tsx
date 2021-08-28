@@ -9,6 +9,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import Popover from '@material-ui/core/Popover';
+
 const useStyles = makeStyles({
   table: {
     minWidth: 50,
