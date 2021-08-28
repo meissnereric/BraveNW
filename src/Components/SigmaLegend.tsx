@@ -76,13 +76,25 @@ isShownFilter = {
 */
 var isShownFilter = {}
 
+const rowsSplitter = (rows) => {
+  let rarity = []
+  let tradeskill = []
+  rows.forEach(element => {
+    if (element.filterType === "Rarity"){
+      rarity.push(element)
+    }
+    if (element.filterType === "Tradeskill")
+    tradeskill.push(element)
+  });
+  return {rarity, tradeskill}
+}
 
 export default function Legend(props) {
   const classes = useStyles();
   const updateItemFilters = props.updateItemFilters
   const [firstRender, setFirstRender] = React.useState(true);
   const [shownFilter, setShownFilter] = React.useState(isShownFilter);    
-
+  const splitRows = rowsSplitter(rows)
   if(firstRender){
     rows.map((row) => (rowToShownFilter(row.filterType, row.filterValue, row.colorHex, isShownFilter)))
     updateItemFilters(shownFilter)
@@ -104,7 +116,7 @@ export default function Legend(props) {
 
   return (
 
-    <SimpleDropdown ddName="Filter" ddContent={
+    
       <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
@@ -117,7 +129,41 @@ export default function Legend(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {console.log("$$$$", rows, "$$$$")}
+          {console.log("****", splitRows, "****")}
+          <SimpleDropdown ddName="Rarity" ddContent={
+            splitRows.rarity.map((row) => (
+              <TableRow key={row.filterValue}>
+                
+                <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
+                  <Checkbox
+                    defaultChecked
+                    id={row.filterType}
+                    name={row.filterValue}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                  />{row.filterValue}</TableCell>
+                <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
+              </TableRow>
+            ))
+          } />
+          <SimpleDropdown ddName="Tradeskill" ddContent={
+            splitRows.tradeskill.map((row) => (
+              <TableRow key={row.filterValue}>
+                
+                <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
+                  <Checkbox
+                    defaultChecked
+                    id={row.filterType}
+                    name={row.filterValue}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                  />{row.filterValue}</TableCell>
+                <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
+              </TableRow>
+            ))
+          }/>
+          {/* {rows.map((row) => (
             <TableRow key={row.filterValue}>
               <TableCell component="th" scope="row">
                 {row.filterType}
@@ -132,11 +178,11 @@ export default function Legend(props) {
                 />{row.filterValue}</TableCell>
               <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
             </TableRow>
-          ))}
+          ))} */}
         </TableBody>
       </Table>
     </TableContainer>
-    } />
+   
 
 
     // <TableContainer component={Paper}>

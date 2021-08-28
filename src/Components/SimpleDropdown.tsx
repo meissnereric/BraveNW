@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      height: 180,
+      //height: 180,
     },
     container: {
       display: 'flex',
@@ -50,8 +50,6 @@ export default function SimpleDropdown(props: {ddName: string, ddContent: any}) 
                 </Paper>
             </Grow>
         </div>
-    </div>
-
-    
+    </div>  
   );
 }
