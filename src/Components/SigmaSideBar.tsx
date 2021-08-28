@@ -23,7 +23,7 @@ import { classicNameResolver, isClassExpression } from "typescript";
 //       color: props => props.color,
 //     },
 //   });
-  
+
 // Material UI gradient coloring
 // const useStyles = makeStyles({
 //     root: {
@@ -161,8 +161,8 @@ function RenderCards(props) {
     let ingredients = []
     let isIngredientFor = []
     let targetCard = null
-    if (props.nodes){
-        let targetNode = Object.values(props.nodes)[props.length -1]
+    if (props.nodes) {
+        let targetNode = Object.values(props.nodes)[props.length - 1]
 
         // Stupid hack to set targetNode to the final node in the list lol.
         for (let node of Object.values(props.nodes)) {
@@ -170,21 +170,28 @@ function RenderCards(props) {
         }
 
         for (let node of Object.values(props.nodes)) {
+            var nodeWritten = false
             // The target card of the recipe
-            if (targetNode.id == node.id) {
+            if (targetNode.id == node.id && !nodeWritten) {
                 targetCard = <Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />
-                continue // verify this does what I think it does here?
+                nodeWritten=true 
             }
-            if (props.edges) {
-                for (let edge of Object.values(props.edges)) {
-                    // Ingredients that make TargetNode
-                    if (targetNode.id == edge.target) {
-                        ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
-                    }
+            else {
+                if (props.edges && !nodeWritten) {
+                    for (let edge of Object.values(props.edges)) {
+                        // Ingredients that make TargetNode
+                        if (targetNode.id == edge.target && !nodeWritten) {
+                            ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                            nodeWritten=true 
+                        }
+                        else {
 
-                    // Items that TargetNode is an ingredient for
-                    if (targetNode.id == edge.source) {
-                        isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                            // Items that TargetNode is an ingredient for
+                            if (targetNode.id == edge.source && !nodeWritten) {
+                                isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                                nodeWritten=true 
+                            }
+                        }
                     }
                 }
             }
