@@ -10,6 +10,9 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+
 const useStyles = makeStyles((theme : Theme) => ({
     root: {
       flexGrow: 1,
@@ -19,34 +22,27 @@ const useStyles = makeStyles((theme : Theme) => ({
       marginRight: theme.spacing(1),
     },
     title: {
+      // flexGrow: 1,
+    },
+    grow: {
       flexGrow: 1,
     },
+
   }));
 
 
   export default function NavBar() {
-    const classes = useStyles();
+    const classes = useStyles(); 
+
 
     return(
             <AppBar position="static">
-                <Toolbar className={classes.root}>
-                    <Grid container spacing={1}>
-                      <Grid item xs={2}>
-                        <Typography variant="h6" className={classes.title}>
-                          <Button variant="contained" className={classes.title}><Link to='/'>BraveNW</Link></Button>
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={7} />
-                      <Grid item xs={1}>
-                        <Button variant="contained"><Link to='/item_list'>Recipe Network</Link></Button>
-                      </Grid>
-                      <Grid item xs={1}>
-                        <Button variant="contained"><Link to='/infographics'>Infographic</Link></Button>
-                      </Grid>
-                      <Grid item xs={1}>
-                        <Button variant="contained"><Link to='/about'>About</Link></Button>
-                      </Grid>
-                    </Grid>
+                <Toolbar className={classes.root}>   
+                  <Button variant="contained" className={classes.title} component={Link} to="/">Home</Button>
+                  <div className={classes.grow}></div>
+                  <Button variant="contained" component={Link} to="/item_list">Recipe Network</Button>
+                  <Button variant="contained" component={Link} to='/infographics'>Infographic</Button>
+                  <Button variant="contained" component={Link} to='/about'>About</Button>
                 </Toolbar>
             </AppBar>
     )

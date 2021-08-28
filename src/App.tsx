@@ -21,9 +21,13 @@ class App extends React.Component {
             justifyContent="flex-start"
             alignItems="flex-start"
           >
+            
             <Grid item xs={12}>
+            
               <NavBar/>
+              
             </Grid>
+             
             <Grid item xs={12}>
               <Switch>
                 {/* Route the home page to recipe graph for now during testing. */}
@@ -33,9 +37,10 @@ class App extends React.Component {
                   <Route exact path="/item_list" component={ItemGraph}></Route>
                 </Switch>
             </Grid>
+           
           </Grid>
-          
           </BrowserRouter>
+         
       </div>
     )
   }
