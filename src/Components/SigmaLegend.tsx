@@ -8,6 +8,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import Grid from '@material-ui/core/Grid'
 
 import SimpleDropdown from './SimpleDropdown';
 
@@ -117,71 +120,52 @@ export default function Legend(props) {
   return (
 
     
-      <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              Filter Type</TableCell>
-            <TableCell>
-              Filter Value</TableCell>
-            <TableCell align="right">Color Hex (if applicable)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {console.log("$$$$", rows, "$$$$")}
-          {console.log("****", splitRows, "****")}
-          <SimpleDropdown ddName="Rarity" ddContent={
-            splitRows.rarity.map((row) => (
-              <TableRow key={row.filterValue}>
-                
-                <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
-                  <Checkbox
+      
+        <Grid container>
+          {/* {console.log("$$$$", rows, "$$$$")}
+          {console.log("****", splitRows, "****")} */}
+          <Grid item xs={12}>
+          <SimpleDropdown ddName="Rarity" 
+            ddContent={
+              splitRows.rarity.map((row) => (
+                <FormControlLabel
+                  style={{ backgroundColor: row.colorHex, color: 'white' }}
+                  control={
+                    <Checkbox
                     defaultChecked
                     id={row.filterType}
                     name={row.filterValue}
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />{row.filterValue}</TableCell>
-                <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
-              </TableRow>
-            ))
-          } />
+                    />
+                  }
+                    label={row.filterValue}        
+                />
+              ))
+            }
+          />
+          </Grid>
+          <Grid item xs={12}>
           <SimpleDropdown ddName="Tradeskill" ddContent={
             splitRows.tradeskill.map((row) => (
-              <TableRow key={row.filterValue}>
-                
-                <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
-                  <Checkbox
-                    defaultChecked
-                    id={row.filterType}
-                    name={row.filterValue}
-                    onChange={handleChange}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />{row.filterValue}</TableCell>
-                <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
-              </TableRow>
-            ))
-          }/>
-          {/* {rows.map((row) => (
-            <TableRow key={row.filterValue}>
-              <TableCell component="th" scope="row">
-                {row.filterType}
-              </TableCell>
-              <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
+             <FormControlLabel
+              control={
                 <Checkbox
                   defaultChecked
                   id={row.filterType}
                   name={row.filterValue}
                   onChange={handleChange}
                   inputProps={{ 'aria-label': 'primary checkbox' }}
-                />{row.filterValue}</TableCell>
-              <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
-            </TableRow>
-          ))} */}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                />
+              }
+              label={row.filterValue}        
+             />
+            ))
+          }/>
+          </Grid>
+        </Grid>
+     
+  
    
 
 
