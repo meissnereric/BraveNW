@@ -9,8 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-import Popover from '@material-ui/core/Popover';
+import SimpleDropdown from './SimpleDropdown';
 
 const useStyles = makeStyles({
   table: {
@@ -104,7 +103,9 @@ export default function Legend(props) {
   };
 
   return (
-    <TableContainer component={Paper}>
+
+    <SimpleDropdown ddName="Filter" ddContent={
+      <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -135,5 +136,39 @@ export default function Legend(props) {
         </TableBody>
       </Table>
     </TableContainer>
+    } />
+
+
+    // <TableContainer component={Paper}>
+    //   <Table className={classes.table} aria-label="simple table">
+    //     <TableHead>
+    //       <TableRow>
+    //         <TableCell>
+    //           Filter Type</TableCell>
+    //         <TableCell>
+    //           Filter Value</TableCell>
+    //         <TableCell align="right">Color Hex (if applicable)</TableCell>
+    //       </TableRow>
+    //     </TableHead>
+    //     <TableBody>
+    //       {rows.map((row) => (
+    //         <TableRow key={row.filterValue}>
+    //           <TableCell component="th" scope="row">
+    //             {row.filterType}
+    //           </TableCell>
+    //           <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
+    //             <Checkbox
+    //               defaultChecked
+    //               id={row.filterType}
+    //               name={row.filterValue}
+    //               onChange={handleChange}
+    //               inputProps={{ 'aria-label': 'primary checkbox' }}
+    //             />{row.filterValue}</TableCell>
+    //           <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
+    //         </TableRow>
+    //       ))}
+    //     </TableBody>
+    //   </Table>
+    // </TableContainer>
   );
 }
