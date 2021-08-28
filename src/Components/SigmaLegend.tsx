@@ -118,9 +118,6 @@ export default function Legend(props) {
   };
 
   return (
-
-    
-      
         <Grid container>
           {/* {console.log("$$$$", rows, "$$$$")}
           {console.log("****", splitRows, "****")} */}
@@ -149,6 +146,7 @@ export default function Legend(props) {
           <SimpleDropdown ddName="Tradeskill" ddContent={
             splitRows.tradeskill.map((row) => (
              <FormControlLabel
+             style={{ backgroundColor: row.colorHex, color: 'white' }}
               control={
                 <Checkbox
                   defaultChecked
@@ -164,41 +162,5 @@ export default function Legend(props) {
           }/>
           </Grid>
         </Grid>
-     
-  
-   
-
-
-    // <TableContainer component={Paper}>
-    //   <Table className={classes.table} aria-label="simple table">
-    //     <TableHead>
-    //       <TableRow>
-    //         <TableCell>
-    //           Filter Type</TableCell>
-    //         <TableCell>
-    //           Filter Value</TableCell>
-    //         <TableCell align="right">Color Hex (if applicable)</TableCell>
-    //       </TableRow>
-    //     </TableHead>
-    //     <TableBody>
-    //       {rows.map((row) => (
-    //         <TableRow key={row.filterValue}>
-    //           <TableCell component="th" scope="row">
-    //             {row.filterType}
-    //           </TableCell>
-    //           <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
-    //             <Checkbox
-    //               defaultChecked
-    //               id={row.filterType}
-    //               name={row.filterValue}
-    //               onChange={handleChange}
-    //               inputProps={{ 'aria-label': 'primary checkbox' }}
-    //             />{row.filterValue}</TableCell>
-    //           <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
-    //         </TableRow>
-    //       ))}
-    //     </TableBody>
-    //   </Table>
-    // </TableContainer>
   );
 }
