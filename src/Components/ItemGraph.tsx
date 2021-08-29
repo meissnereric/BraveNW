@@ -21,7 +21,6 @@ var sigmaSettings = {
     labelThreshold: 12
 }
 const sigmaContainerName = 'sigma-container'
-const gephiFile = 'data/filtered_recipe_graph_8_21_2021.gexf'
 const sigmaStyle = {
     height: 800,
     width: 800,
@@ -45,7 +44,9 @@ class ItemGraph extends React.Component <{}, State> {
             hasNodes: false,
             adjEdges: null,
             hasEdges: false,
-            filePath: "../data/filtered_recipe_graph_8_21_2021.gexf",
+            filePath: "../data/pretty_graph_8_28_2021.gexf",
+            // filePath: "../data/filtered_recipe_graph_8_21_2021.gexf",
+
             shownFilter: false
         }
         //makes it update this components state when called from outside itself
