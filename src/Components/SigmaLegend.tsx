@@ -146,7 +146,7 @@ export default function Legend(props) {
           <SimpleDropdown ddName="Tradeskill" ddContent={
             splitRows.tradeskill.map((row) => (
              <FormControlLabel
-             style={{ backgroundColor: row.colorHex, color: 'white' }}
+              style={{ backgroundColor: row.colorHex, color: 'white' }}
               control={
                 <Checkbox
                   defaultChecked

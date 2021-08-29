@@ -1,10 +1,11 @@
 import React from "react";
-import SimpleDropdown from "./SimpleDropdown";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
+// import SimpleTabs from "./SimpleTabPanel";
+import TabManager from "./SimpleTabPanel"
 class About extends React.Component{
     render(){
         return(
@@ -24,9 +25,7 @@ class About extends React.Component{
 
                 <h2>Bugs</h2>
                 If you find any bugs, please report them either in our <a href="https://discord.gg/FVVFvGNj">Discord</a> or 
-                in the <a href="https://github.com/meissnereric/BraveNW/issues">Issues</a> section of the Githubs.
-                 <SimpleDropdown ddName="lols" ddContent='haha'></SimpleDropdown>
-              
+                in the <a href="https://github.com/meissnereric/BraveNW/issues">Issues</a> section of the Githubs.  
             </div>
         )
     }
