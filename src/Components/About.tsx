@@ -4,8 +4,7 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
-// import SimpleTabs from "./SimpleTabPanel";
-import TabManager from "./SimpleTabPanel"
+
 class About extends React.Component{
     render(){
         return(

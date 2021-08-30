@@ -33,7 +33,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function asignId(index: any) {
+function assignId(index: any) {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
@@ -52,7 +52,7 @@ const createTabs = (tabInfo: any) => {
   let createdTabs = {tabs: [], panels: []}
   let c = 0 // for assinging tab id
   tabInfo.forEach(e => {
-      createdTabs.tabs.push(<Tab label={e.label} {...asignId(c)}/>)
+      createdTabs.tabs.push(<Tab label={e.label} {...assignId(c)}/>)
       createdTabs.panels.push(<TabPanel value={c} index={c}>{e.tabContent}</TabPanel>)
  
     c++
@@ -74,7 +74,7 @@ export default class TabManager extends React.Component<{tabsData: any},{value: 
     let createdTabs = {tabs: [], panels: []}
     let c = 0 // for assinging tab id
     tabInfo.forEach(e => {
-        createdTabs.tabs.push(<Tab label={e.label} {...asignId(c)}/>)
+        createdTabs.tabs.push(<Tab label={e.label} {...assignId(c)}/>)
         createdTabs.panels.push(<TabPanel value={this.state.value} index={c}>{e.tabContent}</TabPanel>)
    
       c++
@@ -103,47 +103,3 @@ export default class TabManager extends React.Component<{tabsData: any},{value: 
     )
   }
 }
-
-// export default function SimpleTabs(props) {
-//     const tabsData = props.tabsData 
-//     const createdTabs = createTabs(tabsData)
-//   const classes = useStyles();
-//   // the displayed TabPanel is the one with corresponding assigned id
-//   const [value, setValue] = React.useState(createdTabs.tabs.length);
-
-//   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-//     setValue(newValue);
-//   };
-
-//   return (
-//     <div className={classes.root}>
-//       <AppBar position="static">
-//         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-//             {console.log(tabsData)}
-//             {console.log(value)}
-//             {createdTabs.tabs}
-            
-//             {/* <Tab label="test"></Tab>
-//           <Tab label="Item One" {...asignId(0)} />
-//           <Tab label="Item Two" {...asignId(1)} />
-//           <Tab label="Item Three" {...asignId(2)} /> */}
-//         </Tabs>
-//       </AppBar>
-//       {createdTabs.panels}
-//         {/* {tabsData.map((e) => {
-//                 <TabPanel value={e.value} index={e.index}>
-//                     {e.tabContent}
-//                 </TabPanel>
-//         })}
-//       <TabPanel value={value} index={0}>
-//         Item One
-//       </TabPanel>
-//       <TabPanel value={value} index={1}>
-//         Item Two
-//       </TabPanel>
-//       <TabPanel value={value} index={2}>
-//         Item Three
-//       </TabPanel> */}
-//     </div>
-//   );
-// }
