@@ -8,12 +8,22 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import SearchIcon from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
-const useStyles = makeStyles({
+
+const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 50,
   },
-});
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
+}));
 
 function createData(filterType: string, filterValue: string, colorHex: string) {
   return { filterType, filterValue, colorHex };
@@ -39,6 +49,7 @@ const rows = [
   createData('Tradeskill', 'Leatherworking', "#FFA202"),
   createData('Tradeskill', 'Weaving', "#FFA202"),
   createData('Tradeskill', 'Woodworking', "#999999"),
+  createData('Tradeskill', 'Item Category', "#000000"),
 ];
 
 const DEFAULT_SHOWN = true
@@ -78,8 +89,10 @@ var isShownFilter = {}
 export default function Legend(props) {
   const classes = useStyles();
   const updateItemFilters = props.updateItemFilters
+  const updateSearchText = props.updateSearchText
   const [firstRender, setFirstRender] = React.useState(true);
-  const [shownFilter, setShownFilter] = React.useState(isShownFilter);    
+  const [shownFilter, setShownFilter] = React.useState(isShownFilter);   
+  const [searchText, setSearchText] = React.useState("");    
 
   if(firstRender){
     rows.map((row) => (rowToShownFilter(row.filterType, row.filterValue, row.colorHex, isShownFilter)))
@@ -87,31 +100,77 @@ export default function Legend(props) {
     setFirstRender(false)
   }
 
-  console.log(["Legend shown filter: ", shownFilter])
+  // console.log(["Legend shown filter: ", shownFilter])
+
+  const handleCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    var checked = event.target.checked
+      for (const [fType, fTypeValue] of Object.entries(shownFilter)) {
+        for (const [fValue, fValueValue] of Object.entries(fTypeValue)) {
+          shownFilter[fType][fValue]['isShown'] = checked
+        }
+      }
+    setShownFilter(shownFilter);
+    updateItemFilters(shownFilter)
+    console.log(["handleCheckAll after change", shownFilter])
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     var checked = event.target.checked
 
     var fType = event.target.id
     var fValue = event.target.name
+    // console.log(["HandleChange before change", event.target.checked, shownFilter[fType][fValue]['isShown']])
 
     shownFilter[fType][fValue]['isShown'] = checked
     setShownFilter(shownFilter);
     updateItemFilters(shownFilter)
+    console.log(["HandleChange after change", event.target.checked, shownFilter[fType][fValue]['isShown']])
+
+  };
+
+  const handleSearchBar = (event: React.ChangeEvent<HTMLInputElement>) => {
+    var value = event.target.value.toLowerCase()
+    setSearchText(value);
+    updateSearchText(value)
+    console.log(["handleSearchBar after change", value, searchText])
+
   };
 
   return (
     <TableContainer component={Paper}>
+      <Table className={classes.root}>
+        <TableBody>
+          <TableRow>
+            <TableCell>
+              <TextField id="filled-basic" label="Search"
+                         variant="filled" color="primary"
+                         onChange={handleSearchBar}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <SearchIcon />
+                              </InputAdornment>
+                            ),
+                          }}  />
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>
               Filter Type</TableCell>
             <TableCell>
-              Filter Value</TableCell>
+            <Checkbox
+                  defaultChecked
+                  onChange={handleCheckAll}
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                /> Filter Value</TableCell>
             <TableCell align="right">Color Hex (if applicable)</TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.filterValue}>
@@ -120,7 +179,7 @@ export default function Legend(props) {
               </TableCell>
               <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
                 <Checkbox
-                  defaultChecked
+                  checked={shownFilter[row.filterType][row.filterValue]['isShown']}
                   id={row.filterType}
                   name={row.filterValue}
                   onChange={handleChange}

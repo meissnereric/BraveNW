@@ -32,7 +32,8 @@ type State = {
     adjNodes:any, hasNodes: boolean,
     adjEdges:any, hasEdges: boolean,
     filePath:string,
-    shownFilter: any
+    shownFilter: any,
+    searchText: string
 }
 
 class ItemGraph extends React.Component <{}, State> {
@@ -44,10 +45,9 @@ class ItemGraph extends React.Component <{}, State> {
             hasNodes: false,
             adjEdges: null,
             hasEdges: false,
-            filePath: "../data/pretty_graph_8_28_2021.gexf",
-            // filePath: "../data/filtered_recipe_graph_8_21_2021.gexf",
-
-            shownFilter: false
+            filePath: "../data/pretty_graph_smaller_8_28_2021.gexf",
+            shownFilter: false,
+            searchText: ""
         }
         //makes it update this components state when called from outside itself
         this.getAdjNodes = this.getAdjNodes.bind(this) 
@@ -55,6 +55,8 @@ class ItemGraph extends React.Component <{}, State> {
         this.getAdjEdges = this.getAdjEdges.bind(this) 
         //makes it update this components state when called from outside itself
         this.updateItemFilters = this.updateItemFilters.bind(this) 
+        //makes it update this components state when called from outside itself
+        this.updateSearchText = this.updateSearchText.bind(this) 
 
     }
     componentDidUpdate(){
@@ -72,29 +74,33 @@ class ItemGraph extends React.Component <{}, State> {
         this.setState({shownFilter: sFilter})
         console.log(["Item graph state shown filter", this.state.shownFilter])
     }
+    updateSearchText(sText){
+        this.setState({searchText: sText})
+        console.log(["ItemGraph sText SearchText", sText, this.state.searchText])
+    }
 
     render() {
         return (
             <div>
-            <Grid container spacing={3}>
-                <Grid item xs={3}> 
-                    <Legend updateItemFilters={this.updateItemFilters}/>
+                <Grid container spacing={3}>
+                    <Grid item xs={3}> 
+                        <Legend updateItemFilters={this.updateItemFilters} updateSearchText={this.updateSearchText}/>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <Sigma
+                            settings={sigmaSettings}
+                            style={sigmaStyle}
+                            >
+                            <LoadGEXF path={this.state.filePath}>
+                            </LoadGEXF>
+                            <UpdateNodes path='red' shownFilter={this.state.shownFilter} searchText={this.state.searchText} adjNodesGetter={this.getAdjNodes} adjEdgesGetter={this.getAdjEdges}>
+                            </UpdateNodes>
+                        </Sigma>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>
+                    </Grid>
                 </Grid>
-                <Grid item xs={7}>
-                    <Sigma
-                        settings={sigmaSettings}
-                        style={sigmaStyle}
-                        >
-                        <LoadGEXF path={this.state.filePath}>
-                        </LoadGEXF>
-                        <UpdateNodes path='red' shownFilter={this.state.shownFilter} adjNodesGetter={this.getAdjNodes} adjEdgesGetter={this.getAdjEdges}>
-                        </UpdateNodes>
-                    </Sigma>
-                </Grid>
-                <Grid item xs={2}>
-                    <SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>
-                </Grid>
-            </Grid>
             </div>
         )
     }

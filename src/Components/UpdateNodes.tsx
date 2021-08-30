@@ -7,6 +7,10 @@ export function embedProps(elements, extraProps) {
         (element) => React.cloneElement(element, extraProps))
 }
 
+function isEmpty(str) {
+    return (!str || str.length === 0 );
+}
+
 type State = {
     loaded: boolean,
     initColors: boolean
@@ -20,9 +24,11 @@ type Props = {
     adjNodesGetter?: any
     adjEdgesGetter?: any
     shownFilter?: any
+    searchText?: string
 };
 
 const rarityMap = {
+    "-1": 'Unknown',
     0: 'Unknown',
     1: 'Common',
     2: 'Uncommon',
@@ -31,34 +37,41 @@ const rarityMap = {
     5: 'Legendary'
 }
 
-function _filterNodes (node, shownFilter) {
+function _showNode (node, shownFilter, searchText) {
+    var filterTrue = false
+    var searchTrue = false
+    var nameSearch = false
+    var idSearch = false
+    var name = ""
+    var ID = ""
+    var searchLongEnough = (searchText.length > 0)
     const rmapvalue = rarityMap[node.attributes.rarity]
-    
-    const rarityType = shownFilter['Rarity'][rmapvalue]
-    var t = false
-    if(rarityType['isShown']){
-        t=true
+    name = node.label
+    ID = node.id
+    nameSearch = name.toLowerCase().includes(searchText)
+    idSearch = ID.toLowerCase().includes(searchText)
+
+    if( searchLongEnough && (nameSearch || idSearch) ){
+        searchTrue = true
     }
-    return t
+
+    const rarityType = shownFilter['Rarity'][rmapvalue]
+    if(rarityType['isShown']){
+        filterTrue=true
+    }
+    return searchTrue || filterTrue
 }
 
-function _filterEdges (edge, shownFilter) {
+function _showEdge (edge, shownFilter) {
     var t = false
     if(shownFilter['Tradeskill'][edge.attributes.tradeskill]['isShown']){
         t=true
     }
+    // if(edge.source.hidden && edge.target.hidden){
+    //     t=false
+    // }
     return t
 }
-
-/**
-LoadGEXF component, interface for parsers.json sigma plugin. Can be used within Sigma component.
-Can be composed with other plugins: on load it mounts all child components (e.g. other sigma plugins). 
-Child's componentWillMount should be used to enable plugins on loaded graph.
- @param {string} path   path to the GEXF file
- @param {Function} onGraphLoaded        Optional callback for graph update
-[see sigma plugin page for more details](https://github.com/jacomyal/sigma.js/tree/master/plugins/sigma.neo4j.cypher)
-**/
-
 
 class UpdateNodes extends React.PureComponent {
     state: State;
@@ -86,7 +99,10 @@ class UpdateNodes extends React.PureComponent {
             this._load(props)
         }
         console.info(this.props.sigma)
-        console.info(props.sigma)
+
+        var searchText = this.props.searchText
+        console.info(["UpdateNodes search text", searchText])
+
         var shownFilter = this.props.shownFilter
         console.info(["UpdateNodes shown filter", shownFilter])
         if(!shownFilter){
@@ -94,33 +110,34 @@ class UpdateNodes extends React.PureComponent {
             return
         }
 
+
         var f = 0
         var t = 0
         props.sigma.graph.nodes().forEach(function (n) {
-            var isFiltered = _filterNodes(n, shownFilter)
-            if(isFiltered){
+            var isShown = _showNode(n, shownFilter, searchText)
+            if(isShown){
                 t++;
             }
             else{
                 f++
             }
-            n.hidden = !isFiltered
+            n.hidden = !isShown
         });
-        console.info(t, f)
+        console.info("Nodes true: ", t, "Nodes false: ", f)
 
         var f = 0
         var t = 0
         props.sigma.graph.edges().forEach(function (e) {
-            var isFiltered = !_filterEdges(e, shownFilter)
-            if(isFiltered){
+            var isShown = !_showEdge(e, shownFilter)
+            if(isShown){
                 t++;
             }
             else{
                 f++
             }
-            e.hidden = isFiltered
+            e.hidden = !isShown
         });
-        console.info(t, f)
+        console.info("Edges true: ", t, "Edges false: ", f)
         this.props.sigma.refresh()
     }
 
