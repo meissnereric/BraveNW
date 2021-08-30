@@ -12,6 +12,47 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { classicNameResolver, isClassExpression } from "typescript";
 
 
+// Material UI Style Customization by parameters
+// const useStyles = makeStyles({
+//     // style rule
+//     foo: props => ({
+//       backgroundColor: props.backgroundColor,
+//     }),
+//     bar: {
+//       // CSS property
+//       color: props => props.color,
+//     },
+//   });
+
+// Material UI gradient coloring
+// const useStyles = makeStyles({
+//     root: {
+//         background: (props) =>
+//         props.color === 'red'
+//             ? 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+//             : 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+//         border: 0,
+//         borderRadius: 3,
+//         boxShadow: (props) =>
+//         props.color === 'red'
+//             ? '0 3px 5px 2px rgba(255, 105, 135, .3)'
+//             : '0 3px 5px 2px rgba(33, 203, 243, .3)',
+//         color: 'white',
+//         height: 48,
+//         padding: '0 30px',
+//         margin: 8,
+//     },
+// });
+
+// function MyComponent() {
+// // Simulated props for the purpose of the example
+//     const props = { backgroundColor: 'black', color: 'white' };
+//     // Pass the props as the first argument of useStyles()
+//     const classes = useStyles(props);
+
+//     return <div className={`${classes.foo} ${classes.bar}`} />
+// }
+
 const rColors = [
     "rgb(200, 200, 200)",
     "rgb(7, 192, 47)",
@@ -120,8 +161,8 @@ function RenderCards(props) {
     let ingredients = []
     let isIngredientFor = []
     let targetCard = null
-    if (props.nodes){
-        let targetNode = Object.values(props.nodes)[props.length -1]
+    if (props.nodes) {
+        let targetNode = Object.values(props.nodes)[props.length - 1]
 
         // Stupid hack to set targetNode to the final node in the list lol.
         for (let node of Object.values(props.nodes)) {
@@ -129,21 +170,28 @@ function RenderCards(props) {
         }
 
         for (let node of Object.values(props.nodes)) {
+            var nodeWritten = false
             // The target card of the recipe
-            if (targetNode.id == node.id) {
+            if (targetNode.id == node.id && !nodeWritten) {
                 targetCard = <Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />
-                continue // verify this does what I think it does here?
+                nodeWritten=true 
             }
-            if (props.edges) {
-                for (let edge of Object.values(props.edges)) {
-                    // Ingredients that make TargetNode
-                    if (targetNode.id == edge.target) {
-                        ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
-                    }
+            else {
+                if (props.edges && !nodeWritten) {
+                    for (let edge of Object.values(props.edges)) {
+                        // Ingredients that make TargetNode
+                        if (targetNode.id == edge.target && !nodeWritten) {
+                            ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                            nodeWritten=true 
+                        }
+                        else {
 
-                    // Items that TargetNode is an ingredient for
-                    if (targetNode.id == edge.source) {
-                        isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                            // Items that TargetNode is an ingredient for
+                            if (targetNode.id == edge.source && !nodeWritten) {
+                                isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                                nodeWritten=true 
+                            }
+                        }
                     }
                 }
             }

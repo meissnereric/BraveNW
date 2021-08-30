@@ -21,11 +21,11 @@ var sigmaSettings = {
     labelThreshold: 12
 }
 const sigmaContainerName = 'sigma-container'
-const gephiFile = 'data/filtered_recipe_graph_8_21_2021.gexf'
 const sigmaStyle = {
     height: 800,
     width: 800,
-    maxWidth: 'inherit'
+    maxWidth: 'inherit',
+    'background-color': 'black'
 }
 
 type State = {
@@ -44,7 +44,9 @@ class ItemGraph extends React.Component <{}, State> {
             hasNodes: false,
             adjEdges: null,
             hasEdges: false,
-            filePath: "../data/filtered_recipe_graph_8_21_2021.gexf",
+            filePath: "../data/pretty_graph_8_28_2021.gexf",
+            // filePath: "../data/filtered_recipe_graph_8_21_2021.gexf",
+
             shownFilter: false
         }
         //makes it update this components state when called from outside itself
@@ -75,10 +77,10 @@ class ItemGraph extends React.Component <{}, State> {
         return (
             <div>
             <Grid container spacing={3}>
-                <Grid item xs={2}> 
+                <Grid item xs={3}> 
                     <Legend updateItemFilters={this.updateItemFilters}/>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={7}>
                     <Sigma
                         settings={sigmaSettings}
                         style={sigmaStyle}

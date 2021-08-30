@@ -8,6 +8,10 @@ import Infographics from './Components/Infographics'
 import ItemGraph from './Components/ItemGraph';
 import Grid from '@material-ui/core/Grid';
 import '@fontsource/roboto';
+import Theming from './Components/Theming';
+import { CssBaseline } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
+
 
 
 class App extends React.Component {
@@ -15,30 +19,29 @@ class App extends React.Component {
     return (
       <div className="#">
           <BrowserRouter>
-          <Grid
-            container
-            // direction="row"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-          >
-            
-            <Grid item xs={12}>
-            
-              <NavBar/>
-              
-            </Grid>
-             
-            <Grid item xs={12}>
-              <Switch>
-                {/* Route the home page to recipe graph for now during testing. */}
-                  <Route exact path="/" component={ItemGraph}></Route> 
-                  <Route exact path="/about" component={About}></Route>
-                  <Route exact path="/infographics" component={Infographics}></Route>
-                  <Route exact path="/item_list" component={ItemGraph}></Route>
-                </Switch>
-            </Grid>
-           
-          </Grid>
+            <ThemeProvider theme={Theming.theme}>
+              <CssBaseline />
+              <Grid
+                container
+                // direction="row"
+                justifyContent="flex-start"
+                alignItems="flex-start"
+              >
+                <Grid item xs={12}>
+                  <NavBar/>
+                </Grid>
+                <Grid item xs={12}>
+                  <Switch>
+                    {/* Route the home page to recipe graph for now during testing. */}
+                      <Route exact path="/" component={ItemGraph}></Route> 
+                      <Route exact path="/about" component={About}></Route>
+                      <Route exact path="/infographics" component={Infographics}></Route>
+                      <Route exact path="/item_list" component={ItemGraph}></Route>
+                    </Switch>
+                </Grid>
+              </Grid>
+            </ThemeProvider>
+          
           </BrowserRouter>
          
       </div>
