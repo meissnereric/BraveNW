@@ -13,7 +13,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Grid from '@material-ui/core/Grid'
 
 import SimpleDropdown from './SimpleDropdown';
-
+import TabManager from './SimpleTabPanel';
 const useStyles = makeStyles({
   table: {
     minWidth: 50,
@@ -122,45 +122,51 @@ export default function Legend(props) {
           {/* {console.log("$$$$", rows, "$$$$")}
           {console.log("****", splitRows, "****")} */}
           <Grid item xs={12}>
-          <SimpleDropdown ddName="Rarity" 
-            ddContent={
-              splitRows.rarity.map((row) => (
-                <FormControlLabel
-                  style={{ backgroundColor: row.colorHex, color: 'white' }}
-                  control={
-                    <Checkbox
-                    defaultChecked
-                    id={row.filterType}
-                    name={row.filterValue}
-                    onChange={handleChange}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                    />
-                  }
-                    label={row.filterValue}        
-                />
-              ))
-            }
-          />
-          </Grid>
-          <Grid item xs={12}>
-          <SimpleDropdown ddName="Tradeskill" ddContent={
-            splitRows.tradeskill.map((row) => (
-             <FormControlLabel
-              style={{ backgroundColor: row.colorHex, color: 'white' }}
-              control={
-                <Checkbox
-                  defaultChecked
-                  id={row.filterType}
-                  name={row.filterValue}
-                  onChange={handleChange}
-                  inputProps={{ 'aria-label': 'primary checkbox' }}
-                />
+            <SimpleDropdown 
+              ddName="Filter" 
+              ddContent={
+              <TabManager tabsData={[
+                {
+                  label: "Rarity",
+                    tabContent: splitRows.rarity.map((row) => (
+                      <FormControlLabel
+                        style={{ backgroundColor: row.colorHex, color: 'white' }}
+                        control={
+                          <Checkbox
+                          defaultChecked
+                          id={row.filterType}
+                          name={row.filterValue}
+                          onChange={handleChange}
+                          inputProps={{ 'aria-label': 'primary checkbox' }}
+                          />
+                        }
+                        label={row.filterValue}        
+                      />
+                    )),
+               },
+               {label: "Tradeskills",
+                tabContent: splitRows.tradeskill.map((row) => (
+                  <FormControlLabel
+                    style={{ backgroundColor: row.colorHex, color: 'white' }}
+                    control={
+                      <Checkbox
+                      defaultChecked
+                      id={row.filterType}
+                      name={row.filterValue}
+                      onChange={handleChange}
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                      />
+                    }
+                      label={row.filterValue}        
+                  />
+                )),
               }
-              label={row.filterValue}        
+
+              ]} 
              />
-            ))
-          }/>
+            }/>
+         
           </Grid>
-        </Grid>
-  );
-}
+          </Grid>
+  )
+          }
