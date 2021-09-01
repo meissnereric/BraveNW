@@ -187,11 +187,13 @@ function RenderCards(props) {
         }
     }
     return (
-        <div>
+        <Grid xs={12}>
+        
             Target: {targetCard}
             Ingredients: {ingredients}
             Used In: {isIngredientFor}
-        </div>
+        
+        </Grid>
     )
 }
 

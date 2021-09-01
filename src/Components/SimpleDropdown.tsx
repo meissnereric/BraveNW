@@ -8,9 +8,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       //height: 180,
+
     },
     container: {
       display: 'flex',
+      visability: 'hidden'
     },
     paper: {
       margin: theme.spacing(1),
@@ -28,9 +30,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-export default function SimpleDropdown(props: {ddName: string, ddContent: any}) {
+export default function SimpleDropdown(props: {ddName: string, ddContent: any, extraContent?: any}) {
     const ddName = props.ddName
     const ddContent = props.ddContent
+    const extra = props.extraContent
     const classes = useStyles();
     const [checked, setChecked] = React.useState(false);
 
@@ -40,10 +43,11 @@ export default function SimpleDropdown(props: {ddName: string, ddContent: any}) 
 
   return (
     <div className={classes.root}>
-
+      
         <Button onClick={handleChange} variant="contained">{ddName}</Button>
+        {extra}
         {/* {checkboxFactory(checked, handleChange.bind(this), "Filter")} */}
-        <div className={classes.container}>
+        <div className={classes.container} id="wtfuxpro">
             <Grow in={checked}>
                 <Paper elevation={4} className={classes.paper}>
                     {ddContent}
