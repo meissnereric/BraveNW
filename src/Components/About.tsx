@@ -1,9 +1,9 @@
 import React from "react";
-
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 
 class About extends React.Component{
     render(){
@@ -24,9 +24,7 @@ class About extends React.Component{
 
                 <h2>Bugs</h2>
                 If you find any bugs, please report them either in our <a href="https://discord.gg/FVVFvGNj">Discord</a> or 
-                in the <a href="https://github.com/meissnereric/BraveNW/issues">Issues</a> section of the Githubs.
-            
-            
+                in the <a href="https://github.com/meissnereric/BraveNW/issues">Issues</a> section of the Githubs.  
             </div>
         )
     }

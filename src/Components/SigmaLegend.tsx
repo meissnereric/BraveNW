@@ -11,9 +11,16 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import Grid from '@material-ui/core/Grid'
+
+import SimpleDropdown from './SimpleDropdown';
+import TabManager from './SimpleTabPanel';
 
 
 const useStyles = makeStyles((theme) => ({
+
   table: {
     minWidth: 50,
   },
@@ -100,13 +107,27 @@ for (let row of Object.values(rows)) {
   addRowToShownFilter(row.filterType, row.filterValue, row.colorHex, initShownFilter)
 }
 
+const rowsSplitter = (rows) => {
+  let rarity = []
+  let tradeskill = []
+  rows.forEach(element => {
+    if (element.filterType === "Rarity"){
+      rarity.push(element)
+    }
+    if (element.filterType === "Tradeskill")
+    tradeskill.push(element)
+  });
+  return {rarity, tradeskill}
+}
+
 export default function Legend(props) {
   const classes = useStyles();
   const updateItemFilters = props.updateItemFilters
   const updateSearchText = props.updateSearchText
   const [shownFilter, setShownFilter] = React.useState(initShownFilter);   
   const [searchText, setSearchText] = React.useState("");
-  
+  const splitRows = rowsSplitter(rows)
+
   React.useEffect(() => {
     updateItemFilters(shownFilter)
     updateSearchText(searchText)
@@ -149,59 +170,55 @@ export default function Legend(props) {
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.root}>
-        <TableBody>
-          <TableRow>
-            <TableCell>
-              <TextField id="filled-basic" label="Search"
-                         variant="filled" color="primary"
-                         onChange={handleSearchBar}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <SearchIcon />
-                              </InputAdornment>
-                            ),
-                          }}  />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              Filter Type</TableCell>
-            <TableCell>
-            <Checkbox
-                  defaultChecked
-                  onChange={handleCheckAll}
-                  inputProps={{ 'aria-label': 'primary checkbox' }}
-                /> Filter Value</TableCell>
-            <TableCell align="right">Color Hex (if applicable)</TableCell>
-          </TableRow>
-        </TableHead>
+        <Grid container>
+          {/* {console.log("$$$$", rows, "$$$$")}
+          {console.log("****", splitRows, "****")} */}
+          <Grid item xs={12}>
+            <SimpleDropdown 
+              ddName="Filter" 
+              ddContent={
+              <TabManager tabsData={[
+                {
+                  label: "Rarity",
+                    tabContent: splitRows.rarity.map((row) => (
+                      <FormControlLabel
+                        style={{ backgroundColor: row.colorHex, color: 'white' }}
+                        control={
+                          <Checkbox
+                          defaultChecked
+                          id={row.filterType}
+                          name={row.filterValue}
+                          onChange={handleChange}
+                          inputProps={{ 'aria-label': 'primary checkbox' }}
+                          />
+                        }
+                        label={row.filterValue}        
+                      />
+                    )),
+               },
+               {label: "Tradeskills",
+                tabContent: splitRows.tradeskill.map((row) => (
+                  <FormControlLabel
+                    style={{ backgroundColor: row.colorHex, color: 'white' }}
+                    control={
+                      <Checkbox
+                      defaultChecked
+                      id={row.filterType}
+                      name={row.filterValue}
+                      onChange={handleChange}
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                      />
+                    }
+                      label={row.filterValue}        
+                  />
+                )),
+              }
 
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.filterValue}>
-              <TableCell component="th" scope="row">
-                {row.filterType}
-              </TableCell>
-              <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>
-                <Checkbox
-                  checked={shownFilter[row.filterType][row.filterValue]['isShown']}
-                  id={row.filterType}
-                  name={row.filterValue}
-                  onChange={handleChange}
-                  inputProps={{ 'aria-label': 'primary checkbox' }}
-                />{row.filterValue}</TableCell>
-              <TableCell align="right" style={{ backgroundColor: row.colorHex, color: 'white' }}>{row.colorHex}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
+              ]} 
+             />
+            }/>
+         
+          </Grid>
+          </Grid>
+  )
+          }
