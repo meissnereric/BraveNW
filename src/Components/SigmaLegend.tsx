@@ -108,9 +108,9 @@ export default function Legend(props) {
   const [searchText, setSearchText] = React.useState("");
   
   React.useEffect(() => {
-    setShownFilter(shownFilter)
-    setSearchText(searchText)
-  }, [shownFilter, searchText]);
+    updateItemFilters(shownFilter)
+    updateSearchText(searchText)
+  }, [updateItemFilters, updateSearchText, shownFilter, searchText]);
 
   // console.log(["Legend shown filter: ", shownFilter])
 

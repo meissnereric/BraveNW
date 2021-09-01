@@ -85,7 +85,7 @@ class UpdateNodes extends React.PureComponent {
     }
 
     componentDidMount() {
-        console.info("UpdateNodes componentDidMount")
+        console.info("UpdateNodes componentDidMount", this.props)
         this._load(this.props)
     }
 

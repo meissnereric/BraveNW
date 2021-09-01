@@ -24,7 +24,7 @@ const sigmaStyle = {
     height: 800,
     width: 800,
     maxWidth: 'inherit',
-    'background-color': 'black'
+    'backgroundColor': 'black'
 }
 
 type State = {
@@ -58,11 +58,7 @@ class ItemGraph extends React.Component <{}, State> {
         this.updateSearchText = this.updateSearchText.bind(this) 
 
     }
-    componentDidUpdate(){
-        if(this.state.adjNodes != null){
-            
-        }
-    }
+
     getAdjNodes(toKeepNodes){
         this.setState({adjNodes: toKeepNodes, hasNodes: true})
     }
