@@ -184,7 +184,7 @@ export default function Legend(props) {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <TextField id="filled-basic" label="Search"
+        {/* <TextField id="filled-basic" label="Search"
           variant="filled" color="primary"
           onChange={handleSearchBar}
           InputProps={{
@@ -193,9 +193,21 @@ export default function Legend(props) {
                 <SearchIcon />
               </InputAdornment>
             ),
-          }} />
+          }} /> */}
         <SimpleDropdown
           ddName="Filter"
+          extraContent={
+            <TextField id="filled-basic" label="Search"
+            variant="filled" color="primary"
+            onChange={handleSearchBar}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }} 
+          />}
           ddContent={
             <TabManager tabsData={[
               {

@@ -78,10 +78,10 @@ class ItemGraph extends React.Component <{}, State> {
         return (
             <div>
                 <Grid container spacing={3}>
-                    <Grid item xs={3}> 
+                    <Grid item xs={12} md={3}> 
                         <Legend updateItemFilters={this.updateItemFilters} updateSearchText={this.updateSearchText}/>
                     </Grid>
-                    <Grid item xs={7}>
+                    <Grid item xs={12} md={7}>
                         <Sigma
                             settings={sigmaSettings}
                             style={sigmaStyle}
@@ -92,7 +92,7 @@ class ItemGraph extends React.Component <{}, State> {
                             </UpdateNodes>
                         </Sigma>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={12} md={2}>
                         <SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>
                     </Grid>
                 </Grid>
