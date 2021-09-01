@@ -1,18 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import Grid from '@material-ui/core/Grid'
 
 import SimpleDropdown from './SimpleDropdown';
@@ -60,19 +52,6 @@ const rows = [
 ];
 
 const DEFAULT_SHOWN = true
-
-function rowToShownFilter(fType, fValue, colorHex, filter) {
-  if (!(fType in filter)) {
-    filter[fType] = {}
-  }
-  if (!(fValue in filter)) {
-    filter[fType][fValue] = {}
-  }
-  filter[fType][fValue] = Object.assign({}, filter[fType][fValue], { 'isShown': DEFAULT_SHOWN, 'colorHex': colorHex })
-  return filter;
-}
-
-
 
 /*
 Format for this is as follows: 
@@ -133,8 +112,6 @@ export default function Legend(props) {
     updateSearchText(searchText)
   }, [updateItemFilters, updateSearchText, shownFilter, searchText]);
 
-  // console.log(["Legend shown filter: ", shownFilter])
-
   const handleCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     var checked = event.target.checked
     for (const [fType, fTypeValue] of Object.entries(shownFilter)) {
@@ -142,9 +119,9 @@ export default function Legend(props) {
         shownFilter[fType][fValue]['isShown'] = checked
       }
     }
+
     setShownFilter(shownFilter);
     updateItemFilters(shownFilter)
-    console.log(["handleCheckAll after change", shownFilter])
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,27 +129,60 @@ export default function Legend(props) {
 
     var fType = event.target.id
     var fValue = event.target.name
-    // console.log(["HandleChange before change", event.target.checked, shownFilter[fType][fValue]['isShown']])
 
     shownFilter[fType][fValue]['isShown'] = checked
     setShownFilter(shownFilter);
     updateItemFilters(shownFilter)
-    console.log(["HandleChange after change", event.target.checked, shownFilter[fType][fValue]['isShown']])
-
   };
 
   const handleSearchBar = (event: React.ChangeEvent<HTMLInputElement>) => {
     var value = event.target.value.toLowerCase()
     setSearchText(value);
     updateSearchText(value)
-    console.log(["handleSearchBar after change", value, searchText])
-
   };
+
+  const makeFilterList = (filterType) => {
+    var makeRow = (row) => {
+      return <FormControlLabel
+        style={{ backgroundColor: row.colorHex, color: 'white' }}
+        control={
+          <Checkbox
+            checked={shownFilter[row.filterType][row.filterValue]['isShown']}
+            defaultChecked
+            id={row.filterType}
+            name={row.filterValue}
+            onChange={handleChange}
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+          />
+        }
+        label={row.filterValue}
+      />
+    }
+
+    var rows = []
+    if (filterType === 'Rarity') {
+      rows = splitRows.rarity.map((row) => makeRow(row))
+    }
+    else if (filterType === 'Tradeskill') {
+      rows = splitRows.tradeskill.map((row) => makeRow(row))
+    }
+
+    var checkAllBox = <FormControlLabel
+      style={{ backgroundColor: 'grey', color: 'white' }}
+      control={<Checkbox
+        defaultChecked
+        onChange={handleCheckAll}
+        inputProps={{ 'aria-label': 'primary checkbox' }}
+      />
+      }
+      label='Enable All'
+    />
+
+    return [checkAllBox, rows]
+  }
 
   return (
     <Grid container>
-      {/* {console.log("$$$$", rows, "$$$$")}
-          {console.log("****", splitRows, "****")} */}
       <Grid item xs={12}>
         <TextField id="filled-basic" label="Search"
           variant="filled" color="primary"
@@ -190,41 +200,12 @@ export default function Legend(props) {
             <TabManager tabsData={[
               {
                 label: "Rarity",
-                tabContent: splitRows.rarity.map((row) => (
-                  <FormControlLabel
-                    style={{ backgroundColor: row.colorHex, color: 'white' }}
-                    control={
-                      <Checkbox
-                        defaultChecked
-                        id={row.filterType}
-                        name={row.filterValue}
-                        onChange={handleChange}
-                        inputProps={{ 'aria-label': 'primary checkbox' }}
-                      />
-                    }
-                    label={row.filterValue}
-                  />
-                )),
+                tabContent: makeFilterList('Rarity'),
               },
               {
                 label: "Tradeskills",
-                tabContent: splitRows.tradeskill.map((row) => (
-                  <FormControlLabel
-                    style={{ backgroundColor: row.colorHex, color: 'white' }}
-                    control={
-                      <Checkbox
-                        defaultChecked
-                        id={row.filterType}
-                        name={row.filterValue}
-                        onChange={handleChange}
-                        inputProps={{ 'aria-label': 'primary checkbox' }}
-                      />
-                    }
-                    label={row.filterValue}
-                  />
-                )),
+                tabContent: makeFilterList('Tradeskill'),
               }
-
             ]}
             />
           } />
