@@ -2,6 +2,8 @@ import React from 'react'
 
 import sigma from 'react-sigma';
 
+import { initShownFilter } from './FilteringData';
+
 export function embedProps(elements, extraProps) {
     return React.Children.map(elements,
         (element) => React.cloneElement(element, extraProps))
@@ -72,6 +74,14 @@ function _showEdge (edge, shownFilter) {
     return t
 }
 
+function _getNodeColor (n) {
+    return initShownFilter['Rarity'][rarityMap[n.attributes.rarity]]['colorHex']
+    
+}
+function _getEdgeColor (e) {
+    return initShownFilter['Tradeskill'][e.attributes.tradeskill]['colorHex']
+}
+
 class UpdateNodes extends React.PureComponent {
     state: State;
     props: Props;
@@ -98,6 +108,8 @@ class UpdateNodes extends React.PureComponent {
             this._load(props)
         }
         console.info(this.props.sigma)
+
+        this._initColors(this.props.sigma)
 
         var searchText = this.props.searchText
         console.info(["UpdateNodes search text", searchText])
@@ -163,14 +175,14 @@ class UpdateNodes extends React.PureComponent {
 
         s.graph.nodes().forEach(function (n) {
             if (toKeepNodes[n.id])
-                n.color = n.originalColor;
+                n.color = _getNodeColor(n)
             else
                 n.color = '#eee';
         });
 
         s.graph.edges().forEach(function (e) {
             if (toKeepNodes[e.source] && toKeepNodes[e.target])
-                e.color = e.originalColor;
+                e.color = _getEdgeColor(e)
             else
                 e.color = '#eee';
         });
@@ -189,11 +201,11 @@ class UpdateNodes extends React.PureComponent {
         props.adjNodesSetter({})
         props.adjEdgesSetter({})
         s.graph.nodes().forEach(function (n) {
-            n.color = n.originalColor;
+            n.color = _getNodeColor(n)
         });
 
         s.graph.edges().forEach(function (e) {
-            e.color = e.originalColor;
+            e.color = _getEdgeColor(e)
         });
 
         // Same as in the previous event:
@@ -217,10 +229,10 @@ class UpdateNodes extends React.PureComponent {
     _saveOriginalColors = function (s) {
         console.info("original colors saving")
         s.graph.nodes().forEach(function (n) {
-            n.originalColor = n.color;
+            n.color = _getNodeColor(n)
         });
         s.graph.edges().forEach(function (e) {
-            e.originalColor = e.color;
+            e.color = _getEdgeColor(e)
         });
     }
 
@@ -228,10 +240,10 @@ class UpdateNodes extends React.PureComponent {
         if(!this.state.initColors){
             console.info("Saving original colors in initColors")
             s.graph.nodes().forEach(function (n) {
-                n.originalColor = n.color;
+                n.color = _getNodeColor(n)
             });
             s.graph.edges().forEach(function (e) {
-                e.originalColor = e.color;
+                e.color = _getEdgeColor(e)
             });
             this.setState({initColors: true})
             console.info("initColors nodes")

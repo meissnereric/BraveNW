@@ -2,14 +2,12 @@
 
 import React from "react";
 import useScript from '../hooks/useScript';
-import Button from '@material-ui/core/Button';
-import { lighten } from "@material-ui/core";
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { classicNameResolver, isClassExpression } from "typescript";
+import { rColors } from "./FilteringData";
 
 
 // Material UI Style Customization by parameters
@@ -52,15 +50,6 @@ import { classicNameResolver, isClassExpression } from "typescript";
 
 //     return <div className={`${classes.foo} ${classes.bar}`} />
 // }
-
-const rColors = [
-    "rgb(200, 200, 200)",
-    "rgb(7, 192, 47)",
-    "rgb(0, 203, 233)",
-    "rgb(255, 22, 247)",
-    "rgb(255, 135, 23)",
-    "rgb(200, 200, 200)"
-]
 
 const labelFixer = (label: string) => {
     let f = label.replace(/_/g, " ").split("")
