@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid'
+import Grid from '@material-ui/core/Grid';
 import { initShownFilter, splitRows } from './FilteringData';
 
 import SimpleDropdown from './SimpleDropdown';

@@ -97,6 +97,7 @@ class UpdateNodes extends React.PureComponent {
     componentDidMount() {
         console.info("UpdateNodes componentDidMount", this.props)
         this._load(this.props)
+        this.props.sigma.refresh()
     }
 
     componentWillReceiveProps(props: Props) {
@@ -228,6 +229,7 @@ class UpdateNodes extends React.PureComponent {
 
     _saveOriginalColors = function (s) {
         console.info("original colors saving")
+
         s.graph.nodes().forEach(function (n) {
             n.color = _getNodeColor(n)
         });
@@ -252,7 +254,6 @@ class UpdateNodes extends React.PureComponent {
 
     }
     _load(props) {
-        // console.log(props)
         var s = props.sigma
         this._saveOriginalColors(s)
 

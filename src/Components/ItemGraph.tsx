@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 
 import Legend from './SigmaLegend';
 
-
 var sigmaSettings = {
     batchEdgesDrawing: true,
     defaultNodeColor: '#ec5148',
@@ -20,6 +19,7 @@ var sigmaSettings = {
     edgesPowRatio: 0.2,
     labelThreshold: 12
 }
+
 const sigmaStyle = {
     height: 800,
     width: 800,
@@ -67,11 +67,9 @@ class ItemGraph extends React.Component <{}, State> {
     }
     updateItemFilters(sFilter){
         this.setState({shownFilter: sFilter}, () => this.forceUpdate())
-        console.log(["Item graph state shown filter", this.state.shownFilter])
     }
     updateSearchText(sText){
         this.setState({searchText: sText}, () => this.forceUpdate())
-        console.log(["ItemGraph sText SearchText", sText, this.state.searchText])
     }
 
     render() {
@@ -87,9 +85,9 @@ class ItemGraph extends React.Component <{}, State> {
                             style={sigmaStyle}
                             >
                             <LoadGEXF path={this.state.filePath}>
+                                <UpdateNodes path='red' shownFilter={this.state.shownFilter} searchText={this.state.searchText} adjNodesSetter={this.getAdjNodes} adjEdgesSetter={this.getAdjEdges}>
+                                </UpdateNodes>
                             </LoadGEXF>
-                            <UpdateNodes path='red' shownFilter={this.state.shownFilter} searchText={this.state.searchText} adjNodesSetter={this.getAdjNodes} adjEdgesSetter={this.getAdjEdges}>
-                            </UpdateNodes>
                         </Sigma>
                     </Grid>
                     <Grid item xs={2}>
