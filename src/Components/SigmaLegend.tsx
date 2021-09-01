@@ -62,13 +62,13 @@ const rows = [
 const DEFAULT_SHOWN = true
 
 function rowToShownFilter(fType, fValue, colorHex, filter) {
-  if(!(fType in filter)){
+  if (!(fType in filter)) {
     filter[fType] = {}
   }
-  if(!(fValue in filter)){
+  if (!(fValue in filter)) {
     filter[fType][fValue] = {}
   }
-  filter[fType][fValue] = Object.assign({}, filter[fType][fValue], {'isShown': DEFAULT_SHOWN, 'colorHex' : colorHex})
+  filter[fType][fValue] = Object.assign({}, filter[fType][fValue], { 'isShown': DEFAULT_SHOWN, 'colorHex': colorHex })
   return filter;
 }
 
@@ -92,15 +92,15 @@ isShownFilter = {
 */
 
 function addRowToShownFilter(fType, fValue, colorHex, filter) {
-  
-    if(!(fType in filter)){
-      filter[fType] = {}
-    }
-    if(!(fValue in filter)){
-      filter[fType][fValue] = {}
-    }
-    filter[fType][fValue] = Object.assign({}, filter[fType][fValue], {'isShown': DEFAULT_SHOWN, 'colorHex' : colorHex})
+
+  if (!(fType in filter)) {
+    filter[fType] = {}
   }
+  if (!(fValue in filter)) {
+    filter[fType][fValue] = {}
+  }
+  filter[fType][fValue] = Object.assign({}, filter[fType][fValue], { 'isShown': DEFAULT_SHOWN, 'colorHex': colorHex })
+}
 
 var initShownFilter = {}
 for (let row of Object.values(rows)) {
@@ -111,20 +111,20 @@ const rowsSplitter = (rows) => {
   let rarity = []
   let tradeskill = []
   rows.forEach(element => {
-    if (element.filterType === "Rarity"){
+    if (element.filterType === "Rarity") {
       rarity.push(element)
     }
     if (element.filterType === "Tradeskill")
-    tradeskill.push(element)
+      tradeskill.push(element)
   });
-  return {rarity, tradeskill}
+  return { rarity, tradeskill }
 }
 
 export default function Legend(props) {
   const classes = useStyles();
   const updateItemFilters = props.updateItemFilters
   const updateSearchText = props.updateSearchText
-  const [shownFilter, setShownFilter] = React.useState(initShownFilter);   
+  const [shownFilter, setShownFilter] = React.useState(initShownFilter);
   const [searchText, setSearchText] = React.useState("");
   const splitRows = rowsSplitter(rows)
 
@@ -137,11 +137,11 @@ export default function Legend(props) {
 
   const handleCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     var checked = event.target.checked
-      for (const [fType, fTypeValue] of Object.entries(shownFilter)) {
-        for (const fValue of Object.keys(fTypeValue)) {
-          shownFilter[fType][fValue]['isShown'] = checked
-        }
+    for (const [fType, fTypeValue] of Object.entries(shownFilter)) {
+      for (const fValue of Object.keys(fTypeValue)) {
+        shownFilter[fType][fValue]['isShown'] = checked
       }
+    }
     setShownFilter(shownFilter);
     updateItemFilters(shownFilter)
     console.log(["handleCheckAll after change", shownFilter])
@@ -170,55 +170,66 @@ export default function Legend(props) {
   };
 
   return (
-        <Grid container>
-          {/* {console.log("$$$$", rows, "$$$$")}
+    <Grid container>
+      {/* {console.log("$$$$", rows, "$$$$")}
           {console.log("****", splitRows, "****")} */}
-          <Grid item xs={12}>
-            <SimpleDropdown 
-              ddName="Filter" 
-              ddContent={
-              <TabManager tabsData={[
-                {
-                  label: "Rarity",
-                    tabContent: splitRows.rarity.map((row) => (
-                      <FormControlLabel
-                        style={{ backgroundColor: row.colorHex, color: 'white' }}
-                        control={
-                          <Checkbox
-                          defaultChecked
-                          id={row.filterType}
-                          name={row.filterValue}
-                          onChange={handleChange}
-                          inputProps={{ 'aria-label': 'primary checkbox' }}
-                          />
-                        }
-                        label={row.filterValue}        
+      <Grid item xs={12}>
+        <TextField id="filled-basic" label="Search"
+          variant="filled" color="primary"
+          onChange={handleSearchBar}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }} />
+        <SimpleDropdown
+          ddName="Filter"
+          ddContent={
+            <TabManager tabsData={[
+              {
+                label: "Rarity",
+                tabContent: splitRows.rarity.map((row) => (
+                  <FormControlLabel
+                    style={{ backgroundColor: row.colorHex, color: 'white' }}
+                    control={
+                      <Checkbox
+                        defaultChecked
+                        id={row.filterType}
+                        name={row.filterValue}
+                        onChange={handleChange}
+                        inputProps={{ 'aria-label': 'primary checkbox' }}
                       />
-                    )),
-               },
-               {label: "Tradeskills",
+                    }
+                    label={row.filterValue}
+                  />
+                )),
+              },
+              {
+                label: "Tradeskills",
                 tabContent: splitRows.tradeskill.map((row) => (
                   <FormControlLabel
                     style={{ backgroundColor: row.colorHex, color: 'white' }}
                     control={
                       <Checkbox
-                      defaultChecked
-                      id={row.filterType}
-                      name={row.filterValue}
-                      onChange={handleChange}
-                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                        defaultChecked
+                        id={row.filterType}
+                        name={row.filterValue}
+                        onChange={handleChange}
+                        inputProps={{ 'aria-label': 'primary checkbox' }}
                       />
                     }
-                      label={row.filterValue}        
+                    label={row.filterValue}
                   />
                 )),
               }
 
-              ]} 
-             />
-            }/>
-         
-          </Grid>
-          </Grid>
+            ]}
+            />
+          } />
+
+      </Grid>
+    </Grid>
   )
-          }
+}
