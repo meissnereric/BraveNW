@@ -7,10 +7,6 @@ export function embedProps(elements, extraProps) {
         (element) => React.cloneElement(element, extraProps))
 }
 
-function isEmpty(str) {
-    return (!str || str.length === 0 );
-}
-
 type State = {
     loaded: boolean,
     initColors: boolean
@@ -21,8 +17,8 @@ type Props = {
     onGraphLoaded?: () => void,
     children?: any,
     sigma?: sigma
-    adjNodesGetter?: any
-    adjEdgesGetter?: any
+    adjNodesSetter?: any
+    adjEdgesSetter?: any
     shownFilter?: any
     searchText?: string
 };
@@ -54,12 +50,15 @@ function _showNode (node, shownFilter, searchText) {
     if( searchLongEnough && (nameSearch || idSearch) ){
         searchTrue = true
     }
+    else if(!searchLongEnough){
+        searchTrue = true
+    }
 
     const rarityType = shownFilter['Rarity'][rmapvalue]
     if(rarityType['isShown']){
         filterTrue=true
     }
-    return searchTrue || filterTrue
+    return searchTrue && filterTrue
 }
 
 function _showEdge (edge, shownFilter) {
@@ -67,9 +66,9 @@ function _showEdge (edge, shownFilter) {
     if(shownFilter['Tradeskill'][edge.attributes.tradeskill]['isShown']){
         t=true
     }
-    // if(edge.source.hidden && edge.target.hidden){
-    //     t=false
-    // }
+    if(edge.source.hidden && edge.target.hidden){
+        t=false
+    }
     return t
 }
 
@@ -123,12 +122,12 @@ class UpdateNodes extends React.PureComponent {
             }
             n.hidden = !isShown
         });
-        console.info("Nodes true: ", t, "Nodes false: ", f)
+        console.log("Nodes true: ", t, "Nodes false: ", f)
 
-        var f = 0
-        var t = 0
+        f = 0
+        t = 0
         props.sigma.graph.edges().forEach(function (e) {
-            var isShown = !_showEdge(e, shownFilter)
+            var isShown = _showEdge(e, shownFilter)
             if(isShown){
                 t++;
             }
@@ -159,8 +158,8 @@ class UpdateNodes extends React.PureComponent {
         var toKeepEdges = res[1]
         toKeepNodes[nodeId] = e.data.node
         // pass data to GraphWrapper
-        props.adjNodesGetter(toKeepNodes)
-        props.adjEdgesGetter(toKeepEdges)
+        props.adjNodesSetter(toKeepNodes)
+        props.adjEdgesSetter(toKeepEdges)
 
         s.graph.nodes().forEach(function (n) {
             if (toKeepNodes[n.id])
@@ -187,8 +186,8 @@ class UpdateNodes extends React.PureComponent {
     _clickStage = function (props, s, e) {
         this._initColors(s)
 
-        props.adjNodesGetter({})
-        props.adjEdgesGetter({})
+        props.adjNodesSetter({})
+        props.adjEdgesSetter({})
         s.graph.nodes().forEach(function (n) {
             n.color = n.originalColor;
         });

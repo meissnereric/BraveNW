@@ -83,29 +83,41 @@ isShownFilter = {
   }
 }
 */
-var isShownFilter = {}
 
+function addRowToShownFilter(fType, fValue, colorHex, filter) {
+  
+    if(!(fType in filter)){
+      filter[fType] = {}
+    }
+    if(!(fValue in filter)){
+      filter[fType][fValue] = {}
+    }
+    filter[fType][fValue] = Object.assign({}, filter[fType][fValue], {'isShown': DEFAULT_SHOWN, 'colorHex' : colorHex})
+  }
+
+var initShownFilter = {}
+for (let row of Object.values(rows)) {
+  addRowToShownFilter(row.filterType, row.filterValue, row.colorHex, initShownFilter)
+}
 
 export default function Legend(props) {
   const classes = useStyles();
   const updateItemFilters = props.updateItemFilters
   const updateSearchText = props.updateSearchText
-  const [firstRender, setFirstRender] = React.useState(true);
-  const [shownFilter, setShownFilter] = React.useState(isShownFilter);   
-  const [searchText, setSearchText] = React.useState("");    
-
-  if(firstRender){
-    rows.map((row) => (rowToShownFilter(row.filterType, row.filterValue, row.colorHex, isShownFilter)))
-    updateItemFilters(shownFilter)
-    setFirstRender(false)
-  }
+  const [shownFilter, setShownFilter] = React.useState(initShownFilter);   
+  const [searchText, setSearchText] = React.useState("");
+  
+  React.useEffect(() => {
+    setShownFilter(shownFilter)
+    setSearchText(searchText)
+  }, [shownFilter, searchText]);
 
   // console.log(["Legend shown filter: ", shownFilter])
 
   const handleCheckAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     var checked = event.target.checked
       for (const [fType, fTypeValue] of Object.entries(shownFilter)) {
-        for (const [fValue, fValueValue] of Object.entries(fTypeValue)) {
+        for (const fValue of Object.keys(fTypeValue)) {
           shownFilter[fType][fValue]['isShown'] = checked
         }
       }

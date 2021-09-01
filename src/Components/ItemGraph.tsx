@@ -20,7 +20,6 @@ var sigmaSettings = {
     edgesPowRatio: 0.2,
     labelThreshold: 12
 }
-const sigmaContainerName = 'sigma-container'
 const sigmaStyle = {
     height: 800,
     width: 800,
@@ -71,11 +70,11 @@ class ItemGraph extends React.Component <{}, State> {
         this.setState({adjEdges: toKeepEdges, hasEdges: true})
     }
     updateItemFilters(sFilter){
-        this.setState({shownFilter: sFilter})
+        this.setState({shownFilter: sFilter}, () => this.forceUpdate())
         console.log(["Item graph state shown filter", this.state.shownFilter])
     }
     updateSearchText(sText){
-        this.setState({searchText: sText})
+        this.setState({searchText: sText}, () => this.forceUpdate())
         console.log(["ItemGraph sText SearchText", sText, this.state.searchText])
     }
 
@@ -93,7 +92,7 @@ class ItemGraph extends React.Component <{}, State> {
                             >
                             <LoadGEXF path={this.state.filePath}>
                             </LoadGEXF>
-                            <UpdateNodes path='red' shownFilter={this.state.shownFilter} searchText={this.state.searchText} adjNodesGetter={this.getAdjNodes} adjEdgesGetter={this.getAdjEdges}>
+                            <UpdateNodes path='red' shownFilter={this.state.shownFilter} searchText={this.state.searchText} adjNodesSetter={this.getAdjNodes} adjEdgesSetter={this.getAdjEdges}>
                             </UpdateNodes>
                         </Sigma>
                     </Grid>
