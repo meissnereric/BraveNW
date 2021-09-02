@@ -5,6 +5,7 @@ import SigmaSidebar from './SigmaSideBar';
 import Grid from '@material-ui/core/Grid';
 
 import Legend from './SigmaLegend';
+import PersistentDrawerLeft from './PersistantDrawer';
 
 var sigmaSettings = {
     batchEdgesDrawing: true,
@@ -95,6 +96,7 @@ class ItemGraph extends React.Component <{}, State> {
                     </Grid>
                 </Grid>
             </div>
+            
         )
     }
   

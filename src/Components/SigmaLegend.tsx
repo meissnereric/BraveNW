@@ -106,23 +106,13 @@ export default function Legend(props) {
       }
       label='Enable All'
     />
-
+      console.log("rows: ", rows)
     return [checkAllBox, rows]
   }
 
   return (
     <Grid container>
       <Grid item xs={12}>
-        {/* <TextField id="filled-basic" label="Search"
-          variant="filled" color="primary"
-          onChange={handleSearchBar}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }} /> */}
         <SimpleDropdown
           ddName="Filter"
           extraContent={

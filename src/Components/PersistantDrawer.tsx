@@ -79,9 +79,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function PersistentDrawerLeft(props: {label: string}) {
+export default function PersistentDrawerLeft(props: {label: string, display: any}) {
     const label = props.label
-
+    const display = props.display
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -93,6 +93,34 @@ export default function PersistentDrawerLeft(props: {label: string}) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  // const createListItem = (filterList) =>{
+  //   // [{
+  //   //   label: "Rarity",
+  //   //   tabContent: makeFilterList('Rarity'),
+  //   // },
+  //   // {
+  //   //   label: "Tradeskills",
+  //   //   tabContent: makeFilterList('Tradeskill'),
+  //   // },
+  //   // {
+  //   //   label: "ItemType",
+  //   //   tabContent: makeFilterList('ItemType'),
+  //   // }]
+  //   // needs to accept a label (rarity tradeskill itemtype) and makeFilterLIst(var)
+  //   // break the different filterLists into <List> and <ListItem> and separate them with <Divider/>
+  //   let listData = []
+  //   filterList.forEach(element => {
+  //     let label = element.label
+  //     let listItems = []
+  //     element.tabContent.foreach(el => {
+
+  //     })
+  //   });
+
+  //   return
+  // }
+
 
   return (
     <div className={classes.root}>
@@ -133,8 +161,16 @@ export default function PersistentDrawerLeft(props: {label: string}) {
           </IconButton>
         </div>
         <Divider />
-        <List>
-            {/* TODO: Change this to the rarity filters */}
+        <Typography>Rarity</Typography>
+        {display[0].tabContent}
+        <Divider/>
+        <Typography>Tradeskills</Typography>
+        {display[1].tabContent}
+        <Divider />
+        <Typography>Item Type</Typography>
+        {display[2].tabContent}
+        {/* {display} */}
+        {/* <List>
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
@@ -144,14 +180,13 @@ export default function PersistentDrawerLeft(props: {label: string}) {
         </List>
         <Divider />
         <List>
-            {/* TODO: change this to tradeskill filters */}
           {['All mail', 'Trash', 'Spam'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
-        </List>
+        </List> */}
       </Drawer>
       <main
         className={clsx(classes.content, {
@@ -159,10 +194,8 @@ export default function PersistentDrawerLeft(props: {label: string}) {
         })}
       >
         <div className={classes.drawerHeader} />
-        {/* TODO: figure out what this should be, I think it will be the graph */}
-        <Typography paragraph>
-          Lorem ipsum
-        </Typography>
+        
+        
         
       </main>
     </div>
