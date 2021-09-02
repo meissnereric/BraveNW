@@ -36,8 +36,9 @@ const rarityMap = {
 }
 
 function _showNode (node, shownFilter, searchText) {
-    var filterTrue = false
+    var rarityTrue = false
     var searchTrue = false
+    var itemTypeTrue = false
     var nameSearch = false
     var idSearch = false
     var name = ""
@@ -58,9 +59,15 @@ function _showNode (node, shownFilter, searchText) {
 
     const rarityType = shownFilter['Rarity'][rmapvalue]
     if(rarityType['isShown']){
-        filterTrue=true
+        rarityTrue=true
     }
-    return searchTrue && filterTrue
+
+    const itemType = shownFilter['ItemType'][node.attributes.itemtype]
+
+    if(itemType['isShown']){
+        itemTypeTrue=true
+    }
+    return searchTrue && rarityTrue && itemTypeTrue
 }
 
 function _showEdge (edge, shownFilter) {
@@ -74,8 +81,13 @@ function _showEdge (edge, shownFilter) {
     return t
 }
 
-function _getNodeColor (n) {
-    return initShownFilter['Rarity'][rarityMap[n.attributes.rarity]]['colorHex']
+function _getNodeColor (n, by='ItemType') {
+    if(by==="ItemType"){
+        return initShownFilter['ItemType'][n.attributes.itemtype]['colorHex']
+    }
+    else if(by==="ItemType"){
+        return initShownFilter['Rarity'][rarityMap[n.attributes.rarity]]['colorHex']
+    }
     
 }
 function _getEdgeColor (e) {

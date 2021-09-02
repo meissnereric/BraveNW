@@ -75,7 +75,6 @@ export default function Legend(props) {
         control={
           <Checkbox
             checked={shownFilter[row.filterType][row.filterValue]['isShown']}
-            defaultChecked
             id={row.filterType}
             name={row.filterValue}
             onChange={handleChange}
@@ -92,6 +91,9 @@ export default function Legend(props) {
     }
     else if (filterType === 'Tradeskill') {
       rows = splitRows.tradeskill.map((row) => makeRow(row))
+    }
+    else if (filterType === 'ItemType') {
+      rows = splitRows.itemType.map((row) => makeRow(row))
     }
 
     var checkAllBox = <FormControlLabel
@@ -144,6 +146,10 @@ export default function Legend(props) {
               {
                 label: "Tradeskills",
                 tabContent: makeFilterList('Tradeskill'),
+              },
+              {
+                label: "ItemType",
+                tabContent: makeFilterList('ItemType'),
               }
             ]}
             />
