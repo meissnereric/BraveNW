@@ -17,6 +17,7 @@ const styles = theme => ({
 
     legend: {
         background: Theming.theme.palette.secondary.main,
+        zIndex: 9999
     },
 
     graphouter: {
