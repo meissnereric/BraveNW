@@ -3,8 +3,33 @@ import {Sigma, LoadGEXF} from 'react-sigma';
 import UpdateNodes from './UpdateNodes';
 import SigmaSidebar from './SigmaSideBar';
 import Grid from '@material-ui/core/Grid';
+import { withStyles, useTheme } from '@material-ui/styles';
 
+import Theming from './Theming';
 import Legend from './SigmaLegend';
+
+
+const styles = theme => ({
+    root: {
+        height: '100%',
+        display: 'flex',
+    },
+
+    legend: {
+        background: Theming.theme.palette.secondary.main,
+    },
+
+    graphouter: {
+        background: Theming.theme.palette.primary.dark,
+
+    },
+
+    sidebar: {
+        background: Theming.theme.palette.secondary.main,
+    }
+  });
+
+
 
 var sigmaSettings = {
     batchEdgesDrawing: true,
@@ -20,12 +45,6 @@ var sigmaSettings = {
     labelThreshold: 12
 }
 
-const sigmaStyle = {
-    height: 800,
-    width: 800,
-    maxWidth: 'inherit',
-    'backgroundColor': 'black'
-}
 
 type State = {
     adjNodes:any, hasNodes: boolean,
@@ -35,7 +54,11 @@ type State = {
     searchText: string
 }
 
-class ItemGraph extends React.Component <{}, State> {
+type Props = {
+    classes: any
+}
+
+class ItemGraph extends React.Component <Props, State> {
 
     constructor(props) {
         super(props)
@@ -73,24 +96,36 @@ class ItemGraph extends React.Component <{}, State> {
     }
 
     render() {
+        const { classes } = this.props;
+        const theme = Theming.theme
+
+        const sigmaStyle = {
+            height: '580px',
+            // display: 'flex',
+            'backgroundColor': theme.palette.primary.main
+        }
+
         return (
-            <div>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={3}> 
+            <div className={classes.root}>
+                <Grid container spacing={3} alignItems='stretch'>
+                    <Grid item xs={12} md={3} className={classes.legend} color='primary'> 
                         <Legend updateItemFilters={this.updateItemFilters} updateSearchText={this.updateSearchText}/>
                     </Grid>
-                    <Grid item xs={12} md={7}>
+                    <Grid item xs={12} md={7} className={classes.graphouter}>
                         <Sigma
                             settings={sigmaSettings}
                             style={sigmaStyle}
                             >
                             <LoadGEXF path={this.state.filePath}>
-                                <UpdateNodes path='red' shownFilter={this.state.shownFilter} searchText={this.state.searchText} adjNodesSetter={this.getAdjNodes} adjEdgesSetter={this.getAdjEdges}>
+                                <UpdateNodes path='red' shownFilter={this.state.shownFilter}
+                                 searchText={this.state.searchText}
+                                 adjNodesSetter={this.getAdjNodes} 
+                                 adjEdgesSetter={this.getAdjEdges}>
                                 </UpdateNodes>
                             </LoadGEXF>
                         </Sigma>
                     </Grid>
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={12} md={2} className={classes.sidebar}>
                         <SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>
                     </Grid>
                 </Grid>
@@ -100,4 +135,5 @@ class ItemGraph extends React.Component <{}, State> {
   
 }
 
-export default ItemGraph
+
+export default withStyles(styles)(ItemGraph)

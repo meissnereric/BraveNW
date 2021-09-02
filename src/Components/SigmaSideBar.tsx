@@ -188,10 +188,11 @@ function RenderCards(props) {
     }
     return (
         <Grid xs={12}>
-        
-            Target: {targetCard}
-            Ingredients: {ingredients}
-            Used In: {isIngredientFor}
+            <h4>
+            <Typography variant='body2'>Target: </Typography>{targetCard} <br/>
+            <Typography variant='body2'>Ingredients: </Typography>{ingredients}<br/>
+            <Typography variant='body2'>Used In: </Typography>{isIngredientFor}<br/>
+            </h4>
         
         </Grid>
     )

@@ -165,14 +165,6 @@ class UpdateNodes extends React.PureComponent {
         this.props.sigma.refresh()
     }
 
-    render() {
-        if (!this.state.loaded){
-            console.warn("State not loaded in render in UpdateNodes.")
-            return null
-        }
-        return <div>{embedProps(this.props.children, { sigma: this.props.sigma })}</div>
-    }
-
 
     _clickNode(props, s, e) {
         this._initColors(s)
@@ -280,6 +272,14 @@ class UpdateNodes extends React.PureComponent {
         this.setState({ loaded: true })
         if (this.props.onGraphLoaded)
             return this.props.onGraphLoaded()
+    }
+
+    render() {
+        if (!this.state.loaded){
+            console.warn("State not loaded in render in UpdateNodes.")
+            return null
+        }
+        return <div>{embedProps(this.props.children, { sigma: this.props.sigma })}</div>
     }
 
 }

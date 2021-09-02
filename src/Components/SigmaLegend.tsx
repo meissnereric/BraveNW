@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { Theme, useTheme } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
@@ -9,10 +10,9 @@ import Grid from '@material-ui/core/Grid';
 import { initShownFilter, splitRows } from './FilteringData';
 
 import SimpleDropdown from './SimpleDropdown';
-import TabManager from './SimpleTabPanel';
+import TabManager from './TabManager';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
 
   table: {
     minWidth: 50,
@@ -23,12 +23,16 @@ const useStyles = makeStyles((theme) => ({
       width: '25ch',
     },
   },
+  input: {
+    color: theme.palette.secondary.main
+  }
 }));
 
 
 
 export default function Legend(props) {
   const classes = useStyles();
+  const theme = useTheme();
   const updateItemFilters = props.updateItemFilters
   const updateSearchText = props.updateSearchText
   const [shownFilter, setShownFilter] = React.useState(initShownFilter);
@@ -71,13 +75,15 @@ export default function Legend(props) {
   const makeFilterList = (filterType) => {
     var makeRow = (row) => {
       return <FormControlLabel
-        style={{ backgroundColor: row.colorHex, color: 'white' }}
+        className='formControlLabel'
+        style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5, textAlign: 'left'  }}
         control={
           <Checkbox
             checked={shownFilter[row.filterType][row.filterValue]['isShown']}
             id={row.filterType}
             name={row.filterValue}
             onChange={handleChange}
+            style={{margin: 1, padding:2}}
             inputProps={{ 'aria-label': 'primary checkbox' }}
           />
         }
@@ -97,8 +103,9 @@ export default function Legend(props) {
     }
 
     var checkAllBox = <FormControlLabel
-      style={{ backgroundColor: 'grey', color: 'white' }}
+      style={{ backgroundColor: 'grey', color: 'white', margin: 2, padding: 5 }}
       control={<Checkbox
+        style={{margin: 1, padding:2}}
         defaultChecked
         onChange={handleCheckAll}
         inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -113,23 +120,15 @@ export default function Legend(props) {
   return (
     <Grid container>
       <Grid item xs={12}>
-        {/* <TextField id="filled-basic" label="Search"
-          variant="filled" color="primary"
-          onChange={handleSearchBar}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }} /> */}
         <SimpleDropdown
           ddName="Filter"
+          ddColor='secondary'
           extraContent={
             <TextField id="filled-basic" label="Search"
-            variant="filled" color="primary"
+            variant="filled" color="secondary"
             onChange={handleSearchBar}
             InputProps={{
+              className: classes.input,
               startAdornment: (
                 <InputAdornment position="start">
                   <SearchIcon />

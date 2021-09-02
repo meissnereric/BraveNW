@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       margin: theme.spacing(1),
+      // color: 'primary',
     },
     svg: {
       width: 100,
@@ -30,9 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-export default function SimpleDropdown(props: {ddName: string, ddContent: any, extraContent?: any}) {
+export default function SimpleDropdown(props: {ddName: string, ddContent: any, ddColor: any, extraContent?: any}) {
     const ddName = props.ddName
     const ddContent = props.ddContent
+    const ddColor = props.ddColor
     const extra = props.extraContent
     const classes = useStyles();
     const [checked, setChecked] = React.useState(false);
@@ -44,7 +46,7 @@ export default function SimpleDropdown(props: {ddName: string, ddContent: any, e
   return (
     <div className={classes.root}>
       
-        <Button onClick={handleChange} variant="contained">{ddName}</Button>
+        <Button onClick={handleChange} color={ddColor} variant="contained">{ddName}</Button>
         {extra}
         {/* {checkboxFactory(checked, handleChange.bind(this), "Filter")} */}
         <div className={classes.container} id="wtfuxpro">

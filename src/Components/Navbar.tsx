@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 const useStyles = makeStyles((theme : Theme) => ({
     root: {
       flexGrow: 1,
-      // zIndex: 1000
+      backgroundColor: 'primary'
     },
     menuButton: {
       marginRight: theme.spacing(1),
@@ -33,11 +33,11 @@ const useStyles = makeStyles((theme : Theme) => ({
     return(
             <AppBar position="static">
                 <Toolbar className={classes.root}>   
-                  <Button variant="contained" className={classes.menuButton} component={Link} to="/">Home</Button>
+                  <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/">Home</Button>
                   <div className={classes.grow}></div>
-                  <Button variant="contained" className={classes.menuButton} component={Link} to="/item_list">Recipe Network</Button>
-                  <Button variant="contained" className={classes.menuButton} component={Link} to='/infographics'>Infographic</Button>
-                  <Button variant="contained" className={classes.menuButton} component={Link} to='/about'>About</Button>
+                  <Button variant="contained" className={classes.menuButton} color="secondary"  component={Link} to="/item_list">Recipe Network</Button>
+                  <Button variant="contained" className={classes.menuButton} color="secondary"  component={Link} to='/infographics'>Infographic</Button>
+                  <Button variant="contained" className={classes.menuButton} color="secondary"  component={Link} to='/about'>About</Button>
                 </Toolbar>
             </AppBar>
     )
