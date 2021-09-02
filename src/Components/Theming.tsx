@@ -54,6 +54,10 @@ let theme = createTheme({
     //   fontFamily: 'CaslonAntT',
     //   color: fontColor
     // },
+    // h5: {
+    //   fontFamily: 'CaslonAntT',
+    //   color: fontColor
+    // },
     // h4: {
     //   fontFamily: 'CaslonAntT',
     //   color: fontColor

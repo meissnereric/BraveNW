@@ -13,7 +13,6 @@ import SimpleDropdown from './SimpleDropdown';
 import TabManager from './TabManager';
 
 const useStyles = makeStyles((theme: Theme) => ({
-
   table: {
     minWidth: 50,
   },
@@ -24,7 +23,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   input: {
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
+  },
+  legend: {
+    zIndex: 9999
   }
 }));
 
@@ -118,7 +120,7 @@ export default function Legend(props) {
   }
 
   return (
-    <Grid container>
+    <Grid container className='legend'>
       <Grid item xs={12}>
         <SimpleDropdown
           ddName="Filter"
