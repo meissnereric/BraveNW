@@ -41,7 +41,7 @@ export default function About(props) {
                 <Typography variant='h3'><a href="https://www.twitch.tv/enbielievable">Enbielievable's Twitch</a></Typography>
             </Grid>
 
-            <Grid item xs={4} style={{ margin: 5, backgroundColor: theme.palette.secondary.light }}>
+            <Grid item xs={3} style={{ margin: 5, backgroundColor: theme.palette.secondary.light }}>
                 <Grid item style={{ margin: 5, backgroundColor: theme.palette.secondary.light }}>
                     <Typography variant='h2'>Github</Typography>
                     <Typography variant='body2'>You can find all the code used to run the website <a href="https://github.com/meissnereric/BraveNW">here</a> and
