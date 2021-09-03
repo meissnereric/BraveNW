@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import NavBar from './Components/Navbar'
-import Home from './Components/Home'
 import About from './Components/About'
 import Infographics from './Components/Infographics'
 import ItemGraph from './Components/ItemGraph';
@@ -10,14 +9,14 @@ import Grid from '@material-ui/core/Grid';
 import '@fontsource/roboto';
 import Theming from './Components/Theming';
 import { CssBaseline } from '@material-ui/core';
-import { ThemeProvider, makeStyles, createStyles  } from '@material-ui/styles';
+import { ThemeProvider, makeStyles  } from '@material-ui/styles';
+// import Footer from './Components/Footer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-
-  },
-}));
-
+    minWidth: '100vw',
+    minHeight: '100vh'
+  }}));
 
 
 function App(props) { 
@@ -28,15 +27,16 @@ function App(props) {
         <ThemeProvider theme={Theming.theme}>
           <CssBaseline />
           <Grid
+            className={classes.root}
             container
-            // direction="row"
+            direction="row"
             justifyContent="flex-start"
             alignItems="flex-start"
           >
             <Grid item xs={12}>
               <NavBar />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{minHeight:'100vh'}}>
               <Switch>
                 {/* Route the home page to recipe graph for now during testing. */}
                 <Route exact path="/" component={ItemGraph}></Route>
@@ -45,6 +45,9 @@ function App(props) {
                 <Route exact path="/item_list" component={ItemGraph}></Route>
               </Switch>
             </Grid>
+            {/* <Grid item xs={12}>
+              <Footer/>
+            </Grid> */}
           </Grid>
         </ThemeProvider>
 

@@ -22,6 +22,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-sigma": "^1.2.35",
+    "react-twitch-embed": "^2.1.0",
     "typescript": "^4.3.5",
     "web-vitals": "^1.1.2"
   },

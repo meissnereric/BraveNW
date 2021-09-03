@@ -47,25 +47,29 @@ let theme = createTheme({
     },
     body2: {
       fontFamily: 'IMFelleaDWPica',
-      fontStyle: 'bold',
+      color: fontColor,
+      fontSize: '1rem'
+    },
+    h2: {
+      fontFamily: 'CaslonAntT',
       color: fontColor
     },
-    // h5: {
-    //   fontFamily: 'CaslonAntT',
-    //   color: fontColor
-    // },
-    // h5: {
-    //   fontFamily: 'CaslonAntT',
-    //   color: fontColor
-    // },
-    // h4: {
-    //   fontFamily: 'CaslonAntT',
-    //   color: fontColor
-    // },
-    // h6: {
-    //   fontFamily: 'CaslonAntT',
-    //   color: fontColor
-    // }
+    h3: {
+      fontFamily: 'CaslonAntT',
+      color: fontColor
+    },
+    h4: {
+      fontFamily: 'CaslonAntT',
+      color: fontColor
+    },
+    h5: {
+      fontFamily: 'CaslonAntT',
+      color: fontColor
+    },
+    h6: {
+      fontFamily: 'CaslonAntT',
+      color: fontColor
+    }
   },
   overrides: {
     MuiCssBaseline: {

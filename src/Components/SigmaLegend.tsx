@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   input: {
-    color: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
   },
   legend: {
     zIndex: 9999

@@ -11,7 +11,7 @@ import Legend from './SigmaLegend';
 
 const styles = theme => ({
     root: {
-        height: '100%',
+        minHeight:'100vh',
         display: 'flex',
     },
 
@@ -68,7 +68,7 @@ class ItemGraph extends React.Component <Props, State> {
             hasNodes: false,
             adjEdges: null,
             hasEdges: false,
-            filePath: "../data/pretty_graph_smaller_8_28_2021.gexf",
+            filePath: "../data/pretty_graph_9_3_2021.gexf",
             shownFilter: false,
             searchText: ""
         }
@@ -101,7 +101,7 @@ class ItemGraph extends React.Component <Props, State> {
         const theme = Theming.theme
 
         const sigmaStyle = {
-            height: '580px',
+            height: '800px',
             // display: 'flex',
             'backgroundColor': theme.palette.primary.main
         }

@@ -115,6 +115,7 @@ function Card(props) {
     const nodeId = props.nodeId
     const rarity = props.rarity
     const rColor = rColors[rarity]
+    const quantity = props.quantity ? 'quantity' in props : 1
     var url = "https://nwdb.info/db/item/" + nodeId
     return (
         //TODO: Fix text wrapping on labels
@@ -130,6 +131,7 @@ function Card(props) {
                         </Grid>
                         <Grid item xs={12} sm container>
                             <Grid item xs className={classes.textGrid}>
+                                <Typography variant='body2'>Quantity: {quantity}</Typography>
                                 <Typography style={{ color: rColor }}>{label}</Typography>
                             </Grid>
                         </Grid>
@@ -144,9 +146,7 @@ function Card(props) {
 
 
 function RenderCards(props) {
-    const nodes = props.nodes
-    const edges = props.edges
-
+    
     let ingredients = []
     let isIngredientFor = []
     let targetCard = null
@@ -161,7 +161,7 @@ function RenderCards(props) {
         for (let node of Object.values(props.nodes)) {
             var nodeWritten = false
             // The target card of the recipe
-            if (targetNode.id == node.id && !nodeWritten) {
+            if (targetNode.id === node.id && !nodeWritten) {
                 targetCard = <Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />
                 nodeWritten=true 
             }
@@ -169,14 +169,14 @@ function RenderCards(props) {
                 if (props.edges && !nodeWritten) {
                     for (let edge of Object.values(props.edges)) {
                         // Ingredients that make TargetNode
-                        if (targetNode.id == edge.target && !nodeWritten) {
-                            ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                        if (targetNode.id === edge.target && !nodeWritten) {
+                            ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} quantity={edge.attributes.quantity}/>)
                             nodeWritten=true 
                         }
                         else {
 
                             // Items that TargetNode is an ingredient for
-                            if (targetNode.id == edge.source && !nodeWritten) {
+                            if (targetNode.id === edge.source && !nodeWritten) {
                                 isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
                                 nodeWritten=true 
                             }
@@ -188,12 +188,10 @@ function RenderCards(props) {
     }
     return (
         <Grid xs={12}>
-            <h4>
+            <Typography variant='h3'> Recipe </Typography>
             <Typography variant='body2'>Target: </Typography>{targetCard} <br/>
             <Typography variant='body2'>Ingredients: </Typography>{ingredients}<br/>
             <Typography variant='body2'>Used In: </Typography>{isIngredientFor}<br/>
-            </h4>
-        
         </Grid>
     )
 }
@@ -205,7 +203,9 @@ function SigmaSidebar(props) {
     useScript('https://nwdb.info/embed.js');
     return (
 
-        <Grid container className={classes.sideBar} spacing={1}>
+        <Grid container className={classes.sideBar} spacing={1} 
+            justifyContent="flex-start"
+            alignItems="flex-start">
             <RenderCards nodes={nodes} edges={edges} />
         </Grid>
 
