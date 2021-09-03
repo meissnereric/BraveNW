@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'none',
     },
     drawer: {
-      width: drawerWidth,
+      // width: drawerWidth,
       flexShrink: 0,
     },
     drawerPaper: {
@@ -106,7 +106,7 @@ export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: 
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
-        position="fixed"
+        position="static"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
