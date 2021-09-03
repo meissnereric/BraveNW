@@ -146,7 +146,7 @@ function Card(props) {
                     <Grid container spacing={1} className={classes.sidebarBackground}>
                         <Grid item>
                             <ButtonBase className={classes.image}>
-                                <img className={classes.img} alt="Img" src="" />
+                                <img className={classes.img} alt="no image :("  src={processIcon(icon)} />
                             </ButtonBase>
                         </Grid>
                         <Grid item xs={12} sm container>

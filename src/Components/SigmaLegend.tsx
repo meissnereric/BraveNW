@@ -146,6 +146,17 @@ export default function Legend(props) {
     
     // />
     <div className={classes.drawer}>
+      <TextField id="filled-basic" label="Search"
+            variant="filled" color="primary"
+            onChange={handleSearchBar}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }} 
+          />
       <Typography>Rarity</Typography>
         {makeFilterList('Rarity')}
         <Divider />
