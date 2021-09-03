@@ -86,9 +86,9 @@ let theme = createTheme({
       contrastText: fontColor
     },
     secondary: {
-      light: '#0d222a',
+      light: '#2d424a',
       main: '#1d323a',
-      dark:  '#2d424a',
+      dark:  '#0d222a',
       contrastText: fontColor
     }
   }
