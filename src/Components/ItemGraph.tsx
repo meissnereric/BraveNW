@@ -27,6 +27,9 @@ const sigmaStyle = {
     maxWidth: 'inherit',
     'backgroundColor': 'black'
 }
+const centerStyle ={
+    textAlign: "center"
+}
 
 type State = {
     adjNodes:any, hasNodes: boolean,
@@ -76,11 +79,19 @@ class ItemGraph extends React.Component <{}, State> {
     render() {
         return (
             <div>
+                <PersistentDrawerLeft 
+                    lLabel="Filters" 
+                    lDisplay = {<Legend updateItemFilters={this.updateItemFilters} updateSearchText={this.updateSearchText} />}
+                    rLabel="Selected Item"
+                    rDisplay = {<SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>}
+                   />
+
                 <Grid container spacing={3}>
-                    <Grid item xs={12} md={3}> 
+                    {/* <Grid item xs={12} md={3}> 
                         <Legend updateItemFilters={this.updateItemFilters} updateSearchText={this.updateSearchText}/>
-                    </Grid>
-                    <Grid item xs={12} md={7}>
+                    </Grid> */}
+                    
+                    <Grid item xs={12}>
                         <Sigma
                             settings={sigmaSettings}
                             style={sigmaStyle}
@@ -91,10 +102,11 @@ class ItemGraph extends React.Component <{}, State> {
                             </LoadGEXF>
                         </Sigma>
                     </Grid>
-                    <Grid item xs={12} md={2}>
+                    {/* <Grid item xs={12} md={2}>
                         <SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
+                
             </div>
             
         )

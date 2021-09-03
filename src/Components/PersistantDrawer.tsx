@@ -5,18 +5,13 @@ import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+
 
 const drawerWidth = 240;
 
@@ -78,49 +73,34 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-export default function PersistentDrawerLeft(props: {label: string, display: any}) {
-    const label = props.label
-    const display = props.display
+type Anchor = 'left' | 'right';
+export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: any, rDisplay: any, rLabel: string }) {
+  const lLabel = props.lLabel
+  const lDisplay = props.lDisplay
+  const rLabel = props.rLabel
+  const rDisplay = props.rDisplay
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [state, setState] = React.useState({
+    left: false,
+    right: false,
+  });
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
+  const toggleDrawer = (anchor: Anchor, open: boolean) => (
+    event: React.KeyboardEvent | React.MouseEvent,
+  ) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' ||
+        (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
   };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  // const createListItem = (filterList) =>{
-  //   // [{
-  //   //   label: "Rarity",
-  //   //   tabContent: makeFilterList('Rarity'),
-  //   // },
-  //   // {
-  //   //   label: "Tradeskills",
-  //   //   tabContent: makeFilterList('Tradeskill'),
-  //   // },
-  //   // {
-  //   //   label: "ItemType",
-  //   //   tabContent: makeFilterList('ItemType'),
-  //   // }]
-  //   // needs to accept a label (rarity tradeskill itemtype) and makeFilterLIst(var)
-  //   // break the different filterLists into <List> and <ListItem> and separate them with <Divider/>
-  //   let listData = []
-  //   filterList.forEach(element => {
-  //     let label = element.label
-  //     let listItems = []
-  //     element.tabContent.foreach(el => {
-
-  //     })
-  //   });
-
-  //   return
-  // }
-
 
   return (
     <div className={classes.root}>
@@ -131,73 +111,80 @@ export default function PersistentDrawerLeft(props: {label: string, display: any
           [classes.appBarShift]: open,
         })}
       >
+
         <Toolbar>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
+            aria-label="open left drawer"
+            onClick={toggleDrawer("left", true)}
             edge="start"
             className={clsx(classes.menuButton, open && classes.hide)}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            {label}
+            {lLabel}
           </Typography>
+          <div style={{ flexGrow: 1 }} />
+          <Typography variant="h6" noWrap>{rLabel}</Typography>
+          <IconButton
+            color="inherit"
+            aria-label="open right drawer"
+            onClick={toggleDrawer("right", true)}
+            edge="end"
+            className={clsx(classes.menuButton, open && classes.hide)}>
+            <MenuIcon />
+          </IconButton>
+
         </Toolbar>
       </AppBar>
+      {/* Left drawer */}
       <Drawer
         className={classes.drawer}
         variant="persistent"
         anchor="left"
-        open={open}
+        open={state["left"]}
+
         classes={{
           paper: classes.drawerPaper,
         }}
+
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={toggleDrawer("left", false)}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </div>
         <Divider />
-        <Typography>Rarity</Typography>
-        {display[0].tabContent}
-        <Divider/>
+        {lDisplay}
+        {/* <Typography>Rarity</Typography>
+        {lDisplay[0].tabContent}
+        <Divider />
         <Typography>Tradeskills</Typography>
-        {display[1].tabContent}
+        {lDisplay[1].tabContent}
         <Divider />
         <Typography>Item Type</Typography>
-        {display[2].tabContent}
-        {/* {display} */}
-        {/* <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
+        {lDisplay[2].tabContent} */}
       </Drawer>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
+
+      {/* Right drawer */}
+      <Drawer anchor={"right"}
+        open={state["right"]}
+        variant="persistent"
+        className={classes.drawer}
+
       >
-        <div className={classes.drawerHeader} />
-        
-        
-        
-      </main>
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={
+            toggleDrawer("right", false)
+          }>
+            {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+
+        </div>
+        <Divider />
+        {rDisplay}
+      </Drawer>
     </div>
   );
 }
