@@ -111,7 +111,7 @@ export default function Legend(props) {
 
     var checkAllBox = <FormControlLabel
       className={classes.maxWidth}
-      style={{ backgroundColor: 'grey', color: 'white' }}
+      style={{ backgroundColor: 'gray', color: 'white' }}
       control={<Checkbox
         defaultChecked
         onChange={handleCheckAll}

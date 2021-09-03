@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme : Theme) => ({
     grow: {
       flexGrow: 1,
     },
-    menuItems: {
-      backgroundColor: "gray"
+    paperMenu: {
+      backgroundColor:"gray"
     }
 
   }));
@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme : Theme) => ({
           keepMounted
           open={Boolean(anchorEl)}
           onClose={handleClose}
+          classes={{ paper: classes.paperMenu }}
         >
           
           <MenuItem onClick={handleClose}>

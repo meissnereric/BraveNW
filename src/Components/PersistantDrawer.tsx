@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      backgroundColor: "#becee5"
+      backgroundColor: "#b2b2b2"
     },
     appBarShift: {
       width: `calc(100% - ${drawerWidth}px)`,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+      marginRight: theme.spacing(1),
     },
     hide: {
       display: 'none',
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     drawerPaper: {
       width: drawerWidth,
-      backgroundColor: "#becee5"
+      backgroundColor: "#b2b2b2"
     },
     drawerHeader: {
       display: 'flex',
@@ -129,7 +129,10 @@ export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: 
             {lLabel}
           </Typography>
           <div style={{ flexGrow: 1 }} />
+          <Divider orientation="vertical"/>
+          <div style={{ flexGrow: 1 }} />
           <Typography variant="h6" noWrap>{rLabel}</Typography>
+          
           <IconButton
             color="inherit"
             aria-label="open right drawer"
@@ -138,7 +141,6 @@ export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: 
             className={clsx(classes.menuButton, open && classes.hide)}>
             <KeyboardArrowDownIcon />
           </IconButton>
-
         </Toolbar>
       </AppBar>
       {/* Left drawer */}
