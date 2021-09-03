@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
+      backgroundColor: "#becee5"
     },
     appBarShift: {
       width: `calc(100% - ${drawerWidth}px)`,
@@ -43,9 +44,11 @@ const useStyles = makeStyles((theme: Theme) =>
     drawer: {
       // width: drawerWidth,
       flexShrink: 0,
+      
     },
     drawerPaper: {
       width: drawerWidth,
+      backgroundColor: "#becee5"
     },
     drawerHeader: {
       display: 'flex',
@@ -157,14 +160,7 @@ export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: 
         </div>
         <Divider />
         {lDisplay}
-        {/* <Typography>Rarity</Typography>
-        {lDisplay[0].tabContent}
-        <Divider />
-        <Typography>Tradeskills</Typography>
-        {lDisplay[1].tabContent}
-        <Divider />
-        <Typography>Item Type</Typography>
-        {lDisplay[2].tabContent} */}
+        
       </Drawer>
 
       {/* Right drawer */}
@@ -174,7 +170,7 @@ export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: 
         className={classes.drawer}
 
       >
-        <div className={classes.drawerHeader}>
+        <div className={classes.drawerHeader} style={{justifyContent: "flex-start"}}>
           <IconButton onClick={
             toggleDrawer("right", false)
           }>
