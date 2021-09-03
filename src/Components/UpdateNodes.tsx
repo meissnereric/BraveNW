@@ -147,7 +147,7 @@ class UpdateNodes extends React.PureComponent {
             }
             n.hidden = !isShown
         });
-        console.log("Nodes true: ", t, "Nodes false: ", f)
+        // console.log("Nodes true: ", t, "Nodes false: ", f)
 
         f = 0
         t = 0

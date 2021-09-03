@@ -6,11 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
 import { initShownFilter, splitRows } from './FilteringData';
-
-import SimpleDropdown from './SimpleDropdown';
-import TabManager from './TabManager';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
   table: {
@@ -21,12 +19,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: theme.spacing(1),
       width: '25ch',
     },
+
   },
   input: {
     color: theme.palette.secondary.contrastText,
   },
-  legend: {
-    zIndex: 9999
+  drawer: {
+    // width: 240,
+    // flexShrink: 0,
+    flexGrow: 1
+  },
+  maxWidth: {
+    width: "100%"
   }
 }));
 
@@ -77,15 +81,15 @@ export default function Legend(props) {
   const makeFilterList = (filterType) => {
     var makeRow = (row) => {
       return <FormControlLabel
-        className='formControlLabel'
-        style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5, textAlign: 'left'  }}
+        className={classes.maxWidth}
+        style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5, textAlign: 'left' }}
         control={
           <Checkbox
             checked={shownFilter[row.filterType][row.filterValue]['isShown']}
             id={row.filterType}
             name={row.filterValue}
             onChange={handleChange}
-            style={{margin: 1, padding:2}}
+            style={{ margin: 1, padding: 2 }}
             inputProps={{ 'aria-label': 'primary checkbox' }}
           />
         }
@@ -104,59 +108,44 @@ export default function Legend(props) {
       rows = splitRows.itemType.map((row) => makeRow(row))
     }
 
-    var checkAllBox = <FormControlLabel
-      style={{ backgroundColor: 'grey', color: 'white', margin: 2, padding: 5 }}
-      control={<Checkbox
-        style={{margin: 1, padding:2}}
-        defaultChecked
-        onChange={handleCheckAll}
-        inputProps={{ 'aria-label': 'primary checkbox' }}
-      />
-      }
-      label='Enable All'
-    />
-
-    return [checkAllBox, rows]
+    return [rows]
   }
 
   return (
-    <Grid container className='legend'>
-      <Grid item xs={12}>
-        <SimpleDropdown
-          ddName="Filter"
-          ddColor='secondary'
-          extraContent={
-            <TextField id="filled-basic" label="Search"
-            variant="filled" color="secondary"
-            onChange={handleSearchBar}
-            InputProps={{
-              className: classes.input,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }} 
-          />}
-          ddContent={
-            <TabManager tabsData={[
-              {
-                label: "Rarity",
-                tabContent: makeFilterList('Rarity'),
-              },
-              {
-                label: "Tradeskills",
-                tabContent: makeFilterList('Tradeskill'),
-              },
-              {
-                label: "ItemType",
-                tabContent: makeFilterList('ItemType'),
-              }
-            ]}
-            />
-          } />
-
-      </Grid>
-    </Grid>
+    <div className={classes.drawer}>
+      <TextField id="filled-basic" label="Search"
+        variant="filled" color="secondary"
+        onChange={handleSearchBar}
+        InputProps={{
+          className: classes.input,
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
+      <FormControlLabel
+        className={classes.maxWidth}
+        style={{ backgroundColor: 'gray', color: 'white', margin: 2, padding: 5 }}
+        control={<Checkbox
+          style={{ margin: 1, padding: 2 }}
+          defaultChecked
+          onChange={handleCheckAll}
+          inputProps={{ 'aria-label': 'primary checkbox' }}
+        />
+        }
+        label='Enable All'
+      />
+      <Typography>Rarity (Node Color)
+      </Typography>
+      {makeFilterList('Rarity')}
+      <Divider />
+      <Typography>Tradeskill (Edge Color)</Typography>
+      {makeFilterList('Tradeskill')}
+      <Divider />
+      <Typography>Item Type</Typography>
+      {makeFilterList('ItemType')}
+    </div>
   )
 }

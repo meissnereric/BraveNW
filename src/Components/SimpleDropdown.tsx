@@ -49,7 +49,7 @@ export default function SimpleDropdown(props: {ddName: string, ddContent: any, d
         <Button onClick={handleChange} color={ddColor} variant="contained">{ddName}</Button>
         {extra}
         {/* {checkboxFactory(checked, handleChange.bind(this), "Filter")} */}
-        <div className={classes.container} id="wtfuxpro">
+        <div className={classes.container}>
             <Grow in={checked}>
                 <Paper elevation={4} className={classes.paper}>
                     {ddContent}

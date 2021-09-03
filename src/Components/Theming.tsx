@@ -48,7 +48,7 @@ let theme = createTheme({
     body2: {
       fontFamily: 'IMFelleaDWPica',
       color: fontColor,
-      fontSize: '1rem'
+      fontSize: '1.2rem'
     },
     h2: {
       fontFamily: 'CaslonAntT',
@@ -86,10 +86,9 @@ let theme = createTheme({
       contrastText: fontColor
     },
     secondary: {
-      // light: '#1d222a',
-      // main:  '#00ffbb',
+      light: '#0d222a',
       main: '#1d323a',
-      // dark:  '#1d222a',
+      dark:  '#2d424a',
       contrastText: fontColor
     }
   }

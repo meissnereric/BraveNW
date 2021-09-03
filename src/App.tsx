@@ -29,7 +29,6 @@ function App(props) {
           <Grid
             className={classes.root}
             container
-            direction="row"
             justifyContent="flex-start"
             alignItems="flex-start"
           >
@@ -45,9 +44,6 @@ function App(props) {
                 <Route exact path="/item_list" component={ItemGraph}></Route>
               </Switch>
             </Grid>
-            {/* <Grid item xs={12}>
-              <Footer/>
-            </Grid> */}
           </Grid>
         </ThemeProvider>
 

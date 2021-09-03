@@ -8,20 +8,6 @@ import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { rColors } from "./FilteringData";
-
-
-// Material UI Style Customization by parameters
-// const useStyles = makeStyles({
-//     // style rule
-//     foo: props => ({
-//       backgroundColor: props.backgroundColor,
-//     }),
-//     bar: {
-//       // CSS property
-//       color: props => props.color,
-//     },
-//   });
-
 // Material UI gradient coloring
 // const useStyles = makeStyles({
 //     root: {
@@ -41,16 +27,6 @@ import { rColors } from "./FilteringData";
 //         margin: 8,
 //     },
 // });
-
-// function MyComponent() {
-// // Simulated props for the purpose of the example
-//     const props = { backgroundColor: 'black', color: 'white' };
-//     // Pass the props as the first argument of useStyles()
-//     const classes = useStyles(props);
-
-//     return <div className={`${classes.foo} ${classes.bar}`} />
-// }
-
 const labelFixer = (label: string) => {
     let f = label.replace(/_/g, " ").split("")
     for (let i = 0; i < f.length; i++) {
@@ -62,14 +38,12 @@ const labelFixer = (label: string) => {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            //   flexGrow: 1,
         },
         paper: {
             padding: theme.spacing(1),
             margin: 'auto',
             marginTop: 5,
             marginBottom: 5
-            //maxWidth: 500,
         },
         image: {
             width: 60,
@@ -85,18 +59,11 @@ const useStyles = makeStyles((theme: Theme) =>
             overflowX: "auto"
         },
         sideBar: {
-            // padding: theme.spacing(5,5),
             height: "94%",
-            //width: "16%",
-            // position: "fixed",
-            zIndex: 1,
             bottom: 0,
             right: 0,
             overflow: "auto",
 
-
-
-            //backgroundColor: "#5e6e9b"
         },
         textGrid: {
             display: "flex",
@@ -114,19 +81,33 @@ function Card(props) {
     const label = labelFixer(props.label)
     const nodeId = props.nodeId
     const rarity = props.rarity
+    const icon = props.icon.toLowerCase()
+    const type = props.itemType.toLowerCase()
+    
     const rColor = rColors[rarity]
     const quantity = props.quantity ? 'quantity' in props : 1
     var url = "https://nwdb.info/db/item/" + nodeId
+    const processIcon = (itemIcon: string) => {
+        let baseUrl = "https://cdn.nwdb.info/db/v2/icons/"
+        
+        let imgUrl = ""
+        if (!itemIcon.includes("/")) {
+            imgUrl = baseUrl + "items/" + type + "/" + itemIcon + ".png"
+        } else {
+            if(itemIcon.includes("icons")){console.warn("Issue parsing item image :O")}
+            imgUrl = baseUrl + itemIcon +".png"
+        }
+        return imgUrl
+    }
+
     return (
-        //TODO: Fix text wrapping on labels
-        //TODO: Add 
         <div className={classes.root}>
             <a href={url} style={{ textDecoration: "none" }}>
                 <Paper className={classes.paper} style={{ backgroundColor: rColor }}>
                     <Grid container spacing={1} className={classes.sidebarBackground}>
                         <Grid item>
                             <ButtonBase className={classes.image}>
-                                <img className={classes.img} alt="Img" src="" />
+                                <img className={classes.img} alt="" src={processIcon(icon)} />
                             </ButtonBase>
                         </Grid>
                         <Grid item xs={12} sm container>
@@ -162,7 +143,7 @@ function RenderCards(props) {
             var nodeWritten = false
             // The target card of the recipe
             if (targetNode.id === node.id && !nodeWritten) {
-                targetCard = <Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />
+                targetCard = <Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} icon={node.attributes.icon} itemType={node.attributes.itemtype}/>
                 nodeWritten=true 
             }
             else {
@@ -170,14 +151,14 @@ function RenderCards(props) {
                     for (let edge of Object.values(props.edges)) {
                         // Ingredients that make TargetNode
                         if (targetNode.id === edge.target && !nodeWritten) {
-                            ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} quantity={edge.attributes.quantity}/>)
+                            ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} icon={node.attributes.icon} itemType={node.attributes.itemtype}/>)
                             nodeWritten=true 
                         }
                         else {
 
                             // Items that TargetNode is an ingredient for
                             if (targetNode.id === edge.source && !nodeWritten) {
-                                isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                                isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} icon={node.attributes.icon} itemType={node.attributes.itemtype}/>)
                                 nodeWritten=true 
                             }
                         }
@@ -188,7 +169,7 @@ function RenderCards(props) {
     }
     return (
         <Grid xs={12}>
-            <Typography variant='h3'> Recipe </Typography>
+            <Typography variant='h4'> Recipe </Typography>
             <Typography variant='body2'>Target: </Typography>{targetCard} <br/>
             <Typography variant='body2'>Ingredients: </Typography>{ingredients}<br/>
             <Typography variant='body2'>Used In: </Typography>{isIngredientFor}<br/>
@@ -201,6 +182,7 @@ function SigmaSidebar(props) {
     const nodes = props.nodes
     const edges = props.edges
     useScript('https://nwdb.info/embed.js');
+    console.log("Render cards nodes: ", props.nodes, "edges: ", props.edges)
     return (
 
         <Grid container className={classes.sideBar} spacing={1} 
