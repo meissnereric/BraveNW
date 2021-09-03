@@ -168,7 +168,9 @@ export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: 
         open={state["right"]}
         variant="persistent"
         className={classes.drawer}
-
+        classes={{
+          paper: classes.drawerPaper,
+        }}
       >
         <div className={classes.drawerHeader} style={{justifyContent: "flex-start"}}>
           <IconButton onClick={
