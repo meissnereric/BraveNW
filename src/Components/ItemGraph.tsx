@@ -3,9 +3,10 @@ import {Sigma, LoadGEXF} from 'react-sigma';
 import UpdateNodes from './UpdateNodes';
 import SigmaSidebar from './SigmaSideBar';
 import Grid from '@material-ui/core/Grid';
-
+import Box from '@material-ui/core/Box';
 import Legend from './SigmaLegend';
 import PersistentDrawerLeft from './PersistantDrawer';
+import { classicNameResolver } from 'typescript';
 
 var sigmaSettings = {
     batchEdgesDrawing: true,
@@ -23,9 +24,12 @@ var sigmaSettings = {
 
 const sigmaStyle = {
     height: 800,
-    width: 800,
+    // width: 800,
     maxWidth: 'inherit',
-    'backgroundColor': 'black'
+    'backgroundColor': 'black',
+    // flexGrow: 1
+    // 'justify-content': "center"
+    // textAlign: "center"
 }
 const centerStyle ={
     textAlign: "center"
@@ -86,12 +90,12 @@ class ItemGraph extends React.Component <{}, State> {
                     rDisplay = {<SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>}
                    />
 
-                <Grid container spacing={3}>
+                <Grid container spacing={3} >
                     {/* <Grid item xs={12} md={3}> 
                         <Legend updateItemFilters={this.updateItemFilters} updateSearchText={this.updateSearchText}/>
                     </Grid> */}
-                    
-                    <Grid item xs={12}>
+                    <Grid item xs={12} justifyContent="space-evenly">
+                    <Box width="100%" height="100%">
                         <Sigma
                             settings={sigmaSettings}
                             style={sigmaStyle}
@@ -101,7 +105,9 @@ class ItemGraph extends React.Component <{}, State> {
                                 </UpdateNodes>
                             </LoadGEXF>
                         </Sigma>
+                        </Box>
                     </Grid>
+                   
                     {/* <Grid item xs={12} md={2}>
                         <SigmaSidebar nodes={this.state.adjNodes} edges={this.state.adjEdges}/>
                     </Grid> */}
