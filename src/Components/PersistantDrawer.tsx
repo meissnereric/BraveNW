@@ -8,9 +8,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 
 const drawerWidth = 240;
@@ -123,7 +123,7 @@ export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: 
             edge="start"
             className={clsx(classes.menuButton, open && classes.hide)}
           >
-            <MenuIcon />
+            <KeyboardArrowDownIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
             {lLabel}
@@ -136,7 +136,7 @@ export default function PersistentDrawerLeft(props: { lLabel: string, lDisplay: 
             onClick={toggleDrawer("right", true)}
             edge="end"
             className={clsx(classes.menuButton, open && classes.hide)}>
-            <MenuIcon />
+            <KeyboardArrowDownIcon />
           </IconButton>
 
         </Toolbar>
