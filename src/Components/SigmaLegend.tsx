@@ -120,7 +120,7 @@ export default function Legend(props) {
       }
       label='Enable All'
     />
-      console.log("rows: ", rows)
+      // console.log("rows: ", rows)
     return [checkAllBox, rows]
   }
 

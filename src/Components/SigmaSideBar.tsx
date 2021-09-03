@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { rColors } from "./FilteringData";
-
+// TODO: add images, they seem to all be at https://cdn.nwdb.info/db/v2/icons/items/{itemType}/{icon}
 
 // Material UI Style Customization by parameters
 // const useStyles = makeStyles({
@@ -114,11 +114,32 @@ function Card(props) {
     const label = labelFixer(props.label)
     const nodeId = props.nodeId
     const rarity = props.rarity
+    const icon = props.icon.toLowerCase()
+    const type = props.itemType.toLowerCase()
+    
     const rColor = rColors[rarity]
     var url = "https://nwdb.info/db/item/" + nodeId
+    // var imgUrl = "https://cdn.nwdb.info/db/v2/icons/items/" + itemIcon + ".png"
+    const processIcon = (itemIcon: string) => {
+        let baseUrl = "https://cdn.nwdb.info/db/v2/icons/"
+        
+        let imgUrl = ""
+        if (!itemIcon.includes("/")) {
+            imgUrl = baseUrl + "items/" + type + "/" + itemIcon + ".png"
+        } else {
+            if(itemIcon.includes("icons")){console.log("OH FUCK!")}
+            imgUrl = baseUrl + itemIcon +".png"
+        }
+        return imgUrl
+    }
+    // console.log("*****")
+    // console.log("imgUrl: ", processIcon(icon))
+    // console.log("url: ", url)
+    // console.log("*****")
+
     return (
         //TODO: Fix text wrapping on labels
-        //TODO: Add 
+        // TODO: add images, they seem to all be at https://cdn.nwdb.info/db/v2/icons/items/{itemType}/{icon}
         <div className={classes.root}>
             <a href={url} style={{ textDecoration: "none" }}>
                 <Paper className={classes.paper} style={{ backgroundColor: rColor }}>
@@ -150,6 +171,7 @@ function RenderCards(props) {
     let ingredients = []
     let isIngredientFor = []
     let targetCard = null
+    console.log("nodes: ", props.nodes)
     if (props.nodes) {
         let targetNode = Object.values(props.nodes)[props.length - 1]
 
@@ -162,7 +184,7 @@ function RenderCards(props) {
             var nodeWritten = false
             // The target card of the recipe
             if (targetNode.id == node.id && !nodeWritten) {
-                targetCard = <Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />
+                targetCard = <Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} icon={node.attributes.icon} itemType={node.attributes.itemtype}/>
                 nodeWritten=true 
             }
             else {
@@ -170,14 +192,14 @@ function RenderCards(props) {
                     for (let edge of Object.values(props.edges)) {
                         // Ingredients that make TargetNode
                         if (targetNode.id == edge.target && !nodeWritten) {
-                            ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                            ingredients.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} icon={node.attributes.icon} itemType={node.attributes.itemtype}/>)
                             nodeWritten=true 
                         }
                         else {
 
                             // Items that TargetNode is an ingredient for
                             if (targetNode.id == edge.source && !nodeWritten) {
-                                isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} />)
+                                isIngredientFor.push(<Card label={node.label} targetNode={targetNode} nodeId={node.id} rarity={node.attributes.rarity} icon={node.attributes.icon} itemType={node.attributes.itemtype}/>)
                                 nodeWritten=true 
                             }
                         }
