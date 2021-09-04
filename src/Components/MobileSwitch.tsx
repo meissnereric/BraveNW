@@ -50,6 +50,32 @@ export default function MobileSwitch(props) {
 
                 <Grid xs={9} item >
                     <Box width="100%" margin={4}>
+                        <Box>
+                            <Typography variant='h4'>How to use: </Typography>
+                            <Typography variant='body2'>
+                                <ul>
+                                    <li>Each <b>dot</b> is each an item in the game.</li>
+                                    <ul>
+                                        <li>The color of each dot represents its rarity in game.</li>
+                                        </ul>
+                                    <li>The <b>lines</b> between them indicate that that item is used to make another item.</li>
+                                    <ul>
+                                        <li>The color of each line represents the tradeskill used in creating that item.</li>
+                                    </ul>
+                                    <li>For example, an Iron Axe will have 3 Armoring lines coming into it from Iron Ingot, Timber, and Coarse Leather, respectively.</li>
+                                </ul>
+                            </Typography>
+                            <Typography variant='h5'> Selecting, Searching, and Filtering</Typography>
+
+                            <Typography variant='body2'>
+                                <ul>
+                                    <li>Selecting: If you click on a node, it will show up in the right side under “Recipe” and you can see the recipes.</li>
+                                    <li>If you hover over those items a tooltip to nwdb.info will pop up with more info.</li>
+                                    <li>Filtering: You can use the filters on the left to choose what types of items you want to see, such as only items that are made via armoring or only legendary items.</li>
+                                    <li>Searching: ou can also use the search bar, found in the left under the filters tab, to search directly for an item. It will filter all items that don't contain that search.</li>
+                                </ul>
+                            </Typography>
+                        </Box>
                         <GraphGridItem filePath={props.filePath} getAdjNodes={props.getAdjNodes} getAdjEdges={props.getAdjEdges}
                             shownFilter={props.shownFilter} searchText={props.searchText} />
                     </Box>
