@@ -36,17 +36,17 @@ const fontColor = '#fff'
 
 let theme = createTheme({
   typography: {
-    fontFamily: 'CaslonAntT, IMFellDWPica, Arial',
+    fontFamily: 'CaslonAntT, IMFellDWPica, Arial, Roboto',
     button: {
-      fontFamily: 'CaslonAntT',
+      fontFamily: 'Roboto',
     },
     body1: {
-      fontFamily: 'IMFelleaDWPica',
+      fontFamily: 'Roboto',
       fontStyle: 'italic',
       color: fontColor
     },
     body2: {
-      fontFamily: 'IMFelleaDWPica',
+      fontFamily: 'Roboto',
       color: fontColor,
       fontSize: '1.2rem'
     },
