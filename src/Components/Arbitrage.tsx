@@ -161,7 +161,9 @@ export default function Arbitrage(props) {
     };
 
     return (
-        <Grid container className='root' spacing={0} style={{ backgroundColor: theme.palette.secondary.main, minHeight: '100vh' }}
+        <Grid container  style={{ backgroundColor: theme.palette.secondary.main, minHeight: '100vh', padding: 40 }}>
+            
+        <Grid container className='root' spacing={3}
             justifyContent="flex-start"
             alignItems="center"
         >
@@ -309,7 +311,7 @@ export default function Arbitrage(props) {
                     Table
                     </Typography> */}
                 <Grid item xs={2}> </Grid>
-                <Grid item xs={10} alignItems='center' justifyContent='center'>
+                <Grid item xs={10} alignItems='center' justifyContent='flex-end'>
                     <Typography variant='h4'>Input Materials</Typography>
                 </Grid>
                 <Grid item xs={2} alignItems='center' justifyContent='center'>
@@ -365,6 +367,7 @@ export default function Arbitrage(props) {
                     </TableContainer>
                 </Grid>
             </Grid>
+        </Grid>
 
 
         </Grid>
