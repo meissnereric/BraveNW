@@ -41,14 +41,14 @@ export default function MobileSwitch(props) {
     if (isDesktop) {
         return (
             <Grid container >
-                <Grid xs={1} item className={classes.legend} color='primary'>
+                <Grid xs={2} item className={classes.legend} color='primary'>
                     <Box width="100%" margin={1}>
                         <Typography variant='h4'>Filters</Typography>
                         <Legend updateItemFilters={props.updateItemFilters} updateSearchText={props.updateSearchText} />
                     </Box>
                 </Grid>
 
-                <Grid xs={9} item >
+                <Grid xs={8} item >
                     <Box width="100%" margin={4}>
                         <Box>
                             <Typography variant='h4'>How to use: </Typography>
