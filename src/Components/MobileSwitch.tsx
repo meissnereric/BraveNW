@@ -72,7 +72,7 @@ export default function MobileSwitch(props) {
                                     <li>Selecting: If you click on a node, it will show up in the right side under “Recipe” and you can see the recipes.</li>
                                     <li>If you hover over those items a tooltip to nwdb.info will pop up with more info.</li>
                                     <li>Filtering: You can use the filters on the left to choose what types of items you want to see, such as only items that are made via armoring or only legendary items.</li>
-                                    <li>Searching: ou can also use the search bar, found in the left under the filters tab, to search directly for an item. It will filter all items that don't contain that search.</li>
+                                    <li>Searching: You can also use the search bar, found in the left under the filters tab, to search directly for an item. It will filter all items that don't contain that search.</li>
                                 </ul>
                             </Typography>
                         </Box>
