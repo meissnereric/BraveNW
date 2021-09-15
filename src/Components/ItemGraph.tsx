@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles, useTheme } from '@material-ui/styles';
+import { Grid } from '@material-ui/core';
 
 import Theming from './Theming';
 import MobileSwitch from './MobileSwitch';
@@ -78,12 +79,14 @@ class ItemGraph extends React.Component <Props, State> {
         const { classes } = this.props;
 
         return (
-            <div  className={classes.root}>
+            <Grid  container className={classes.root}  spacing={3}
+            justifyContent="flex-start"
+            alignItems="center">
                 <MobileSwitch updateItemFilters={this.updateItemFilters} updateSearchText={this.updateSearchText} 
                               filePath={this.state.filePath} getAdjNodes={this.getAdjNodes} getAdjEdges={this.getAdjEdges}
                               adjNodes={this.state.adjNodes} adjEdges={this.state.adjEdges}
                               shownFilter={this.state.shownFilter} searchText={this.state.searchText}></MobileSwitch>
-            </div>
+            </Grid>
 
         )
     }

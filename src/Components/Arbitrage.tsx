@@ -161,8 +161,6 @@ export default function Arbitrage(props) {
     };
 
     return (
-        <Grid container  style={{ backgroundColor: theme.palette.secondary.main, minHeight: '100vh', padding: 40 }}>
-            
         <Grid container className='root' spacing={3}
             justifyContent="flex-start"
             alignItems="center"
@@ -196,26 +194,6 @@ export default function Arbitrage(props) {
 
 
             <Grid container item xs={12} style={{ backgroundColor: theme.palette.secondary.dark }}>
-                {/* 
-                <Grid container item justifyContent="space-evenly" alignItems='center' spacing={3} style={{ backgroundColor: theme.palette.secondary.light, }}>
-                    
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="tier-selector-label">Refining Reagent Tier</InputLabel>
-                        <Select
-                        labelId="tier-selector-label"
-                        id="tier-selector"
-                        value={currentTier}
-                        onChange={handleTierChange}
-                        inputProps={{
-                            className: classes.input
-                        }}
-                        >
-                        <MenuItem value={'tier1'}>Tier 1</MenuItem>
-                        <MenuItem value={'tier2'}>Tier 2</MenuItem>
-                        <MenuItem value={'tier3'}>Tier 3</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid> */}
 
                 <Grid container item justifyContent="space-evenly" alignItems='flex-end' style={{ padding: '10px' }}>
 
@@ -367,8 +345,6 @@ export default function Arbitrage(props) {
                     </TableContainer>
                 </Grid>
             </Grid>
-        </Grid>
-
 
         </Grid>
     )

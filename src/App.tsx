@@ -11,17 +11,21 @@ import '@fontsource/roboto';
 import Theming from './Components/Theming';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, makeStyles  } from '@material-ui/styles';
+import { Theme, useTheme } from '@material-ui/core';
 // import Footer from './Components/Footer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: '100vw',
-    minHeight: '100vh'
+    minWidth: '95vw',
+    maxWidth: '100vw',
+    minHeight: '95vh',
+    maxHeight: '100vh'
   }}));
 
 
 function App(props) { 
   const classes = useStyles();
+  const theme = Theming.theme
   return (
     <div className="#">
       <BrowserRouter>
@@ -31,12 +35,16 @@ function App(props) {
             className={classes.root}
             container
             justifyContent="flex-start"
-            alignItems="flex-start"
+            alignItems="stretch"
+            style={{minHeight:'100vh', minWidth:'95vw', maxWidth:'100vw', backgroundColor: theme.palette.secondary.main}}
+            direction='row'
           >
-            <Grid item xs={12}>
+          {/* <Grid item xs={12} style={{minHeight:'5vh'}}> */}
+            <Grid item style={{minHeight:'100%', minWidth: '100%'}}>
               <NavBar />
             </Grid>
-            <Grid item xs={12} style={{minHeight:'100vh'}}>
+            {/* <Grid item xs={12} style={{minHeight:'95vh',  backgroundColor: theme.palette.secondary.main, padding: 30 }}> */}
+            <Grid item style={{minHeight:'100%', backgroundColor: theme.palette.secondary.main, paddingLeft: 30, paddingRight: 30, paddingBottom: 30}}>
               <Switch>
                 {/* Route the home page to recipe graph for now during testing. */}
                 <Route exact path="/" component={ItemGraph}></Route>
