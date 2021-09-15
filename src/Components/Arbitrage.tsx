@@ -73,33 +73,33 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 var initValues = {
     'tier1': {
-        'sandpaper': ["Coarse Sandpaper", NaN],
-        'weave': ["Crossweave", NaN],
-        'flux': ["Sand Flux", NaN],
-        'tannin': ["Tannin", NaN],
-        'solvent': ["Weak Solvent", NaN],
+        'sandpaper': ["Coarse Sandpaper", 0.],
+        'weave': ["Crossweave", 0.],
+        'flux': ["Sand Flux", 0.],
+        'tannin': ["Tannin", 0.],
+        'solvent': ["Weak Solvent", 0.],
         'converter': ["Common Material Converter", {
             'gold': 0,
             'factionPoints': 100
         }]
     },
     'tier2': {
-        'sandpaper': ["Coarse Sandpaper", NaN],
-        'weave': ["Crossweave", NaN],
-        'flux': ["Sand Flux", NaN],
-        'tannin': ["Tannin", NaN],
-        'solvent': ["Weak Solvent", NaN],
+        'sandpaper': ["Coarse Sandpaper", 0.],
+        'weave': ["Crossweave", 0.],
+        'flux': ["Sand Flux", 0.],
+        'tannin': ["Tannin", 0.],
+        'solvent': ["Weak Solvent", 0.],
         'converter': ["Uncommon Material Converter", {
             'gold': 0,
             'factionPoints': 100
         }]
     },
     'tier3': {
-        'sandpaper': ["Coarse Sandpaper", NaN],
-        'weave': ["Crossweave", NaN],
-        'flux': ["Sand Flux", NaN],
-        'tannin': ["Tannin", NaN],
-        'solvent': ["Weak Solvent", NaN],
+        'sandpaper': ["Coarse Sandpaper", 0.],
+        'weave': ["Crossweave", 0.],
+        'flux': ["Sand Flux", 0.],
+        'tannin': ["Tannin", 0.],
+        'solvent': ["Weak Solvent", 0.],
         'converter': ["Rare Material Converter", {
             'gold': 0,
             'factionPoints': 100
@@ -117,7 +117,13 @@ export default function Arbitrage(props) {
     const [quantity, setQuantity] = React.useState(1);
     // rows = [{}]
 
-    const handleQuantityChange =  (event: React.ChangeEvent<HTMLInputElement>) => {setQuantity(parseInt(event.target.value))}
+    const handleQuantityChange =  (event: React.ChangeEvent<HTMLInputElement>) => {
+        var quantity = parseInt(event.target.value)
+        if (isNaN(quantity)) {
+            quantity = 1
+        }
+        setQuantity(quantity)
+    }
 
     const handleReagentCostChanges = (event: React.ChangeEvent<HTMLInputElement>) => {
         var value = event.target.value.toLowerCase()
