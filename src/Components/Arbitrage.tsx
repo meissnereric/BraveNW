@@ -161,7 +161,7 @@ export default function Arbitrage(props) {
         >
             <Grid container item xs={12}>
                 <Grid xs={12}>
-                    <Typography variant='h2'>Refining Reagent Costs</Typography>
+                    <Typography variant='h2'>Refining Reagent Conversions</Typography>
 
                 </Grid>
                 <Grid xs={12}>
