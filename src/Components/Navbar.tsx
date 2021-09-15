@@ -90,6 +90,7 @@ function SimpleMenu() {
     return (
       <div>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/item_list">Recipe Network</Button>
+        <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/arbitrage">Reagent Conversions</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/infographics'>Infographic</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/about'>About</Button>
       </div>
