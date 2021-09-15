@@ -284,19 +284,16 @@ export default function Arbitrage(props) {
 
                 </Grid>
             </Grid>
-            <Grid container item xs={12} className={classes.table} style={{ backgroundColor: theme.palette.secondary.dark }}>
-                {/* <Typography className={classes.head} id="tableTitle" variant='h3' component="div">
-                    Table
-                    </Typography> */}
-                <Grid item xs={2}> </Grid>
-                <Grid item xs={10} alignItems='center' justifyContent='flex-end'>
-                    <Typography variant='h4'>Input Materials</Typography>
+            <Grid container direction='row' item xs={12} className={classes.table} style={{ backgroundColor: theme.palette.secondary.dark }}>
+                <Grid item xs={1}> </Grid>
+                <Grid container item xs={11} alignItems='center' justifyContent='center'>
+                    <Typography variant='h4'>Purchase </Typography>
                 </Grid>
-                <Grid item xs={2} alignItems='center' justifyContent='center'>
-                    <Typography variant='h4'>Output Materials</Typography>
+                <Grid container item xs={1} alignItems='center' justifyContent='center'>
+                    <Typography variant='h4'>Sell </Typography>
                 </Grid>
 
-                <Grid item xs={10}>
+                <Grid item xs={11}>
                     <TableContainer component={Paper} style={{ backgroundColor: theme.palette.primary.main }}>
                         <Table className={classes.table} size="small" aria-label="arbitrage table" style={{ color: theme.palette.secondary.contrastText }}>
                             <TableHead className={classes.head}>

@@ -11,8 +11,6 @@ import '@fontsource/roboto';
 import Theming from './Components/Theming';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, makeStyles  } from '@material-ui/styles';
-import { Theme, useTheme } from '@material-ui/core';
-// import Footer from './Components/Footer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
