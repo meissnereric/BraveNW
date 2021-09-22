@@ -105,11 +105,6 @@ function Card(props) {
             <a href={url} style={{ textDecoration: "none" }}>
                 <Paper className={classes.paper} style={{ backgroundColor: rColor }}>
                     <Grid container spacing={1} className={classes.sidebarBackground}>
-                        {/* <Grid item>
-                            <ButtonBase className={classes.image}>
-                                <img className={classes.img} alt="" src={processIcon(icon)} />
-                            </ButtonBase>
-                        </Grid> */}
                         <Grid item xs={12} sm container>
                             <Grid item xs className={classes.textGrid}>
                                 <Typography variant='body2'>Quantity: {quantity}</Typography>
