@@ -14,7 +14,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { isDesktopQuery } from './MobileSwitch';
+import { useAuth0 } from "@auth0/auth0-react";
 
+import UserAuth from './user/UserAuth';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 
 }));
+
 
 function SimpleMenu() {
   const classes = useStyles();
@@ -71,10 +74,7 @@ function SimpleMenu() {
           classes={{ paper: classes.paperMenu }}
         >
           <MenuItem onClick={handleClose}>
-            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/login'>login</Button>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/logout'>logout</Button>
+            {UserAuth(classes.menuButton)}
           </MenuItem>
           <MenuItem onClick={handleClose}>
             <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/profile'>profile</Button>
@@ -100,16 +100,12 @@ function SimpleMenu() {
   else {
     return (
       <div>
-                    <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/login'>login</Button>
-                    <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/logout'>logout</Button>
-                    <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/profile'>profile</Button>
-
-
-
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/item_list">Recipe Network</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/arbitrage">Reagent Conversions</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/infographics'>Infographic</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/about'>About</Button>
+        <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/profile'>profile</Button>
+        {UserAuth(classes.menuButton)}
       </div>
     )
   }
