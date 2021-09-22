@@ -25,6 +25,14 @@ export const rows = [
     createData('Tradeskill', 'Weaving', "#FFA202"),
     createData('Tradeskill', 'Woodworking', "#999999"),
     createData('Tradeskill', 'Item Category', "#dddddd"),
+    createData('Tradeskill', 'Logging', "#93A8FF"),
+    createData('Tradeskill', 'Mining', "#FFA202"),
+    createData('Tradeskill', 'Harvesting', "#89CFCF"),
+    createData('Tradeskill', 'Skinning', "#FFA202"),
+    createData('Tradeskill', 'Fishing', "#11D904"),
+    createData('Tradeskill', 'Item Category', "#dddddd"),
+    createData('Tradeskill', 'N/A', "#dddddd"),
+    createData('Tradeskill', 'ElementalAnimal', "#FFA202"),
 
 
     createData('ItemType', 'Armor', "#00B680"),
@@ -36,6 +44,9 @@ export const rows = [
     createData('ItemType', 'Dye', "#55CF00"),
     createData('ItemType', 'Ammo', "#5EAAFD"),
     createData('ItemType', 'currency', "#FF6383"),
+    createData('ItemType', 'LootBucket', "#222222"),
+    createData('ItemType', 'LootTable', "#666666"),
+    createData('ItemType', 'Item', "#999999"),
 ];
 
 export const rColors = [

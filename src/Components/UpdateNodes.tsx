@@ -57,14 +57,24 @@ function _showNode (node, shownFilter, searchText) {
         searchTrue = true
     }
 
-    const rarityType = shownFilter['Rarity'][rmapvalue]
-    if(rarityType['isShown']){
+// TODO this is a hack, will mess up rarity filtering for sure with the new gathering additions.
+    if(rmapvalue in shownFilter['Rarity']){
+        const rarityType = shownFilter['Rarity'][rmapvalue]
+        if(rarityType['isShown']){
+            rarityTrue=true
+        }
+    }
+    else{
         rarityTrue=true
     }
-
-    const itemType = shownFilter['ItemType'][node.attributes.itemtype]
-
-    if(itemType['isShown']){
+    
+    if(node.attributes.itemtype in shownFilter['ItemType']){
+        const itemType = shownFilter['ItemType'][node.attributes.itemtype]
+        if(itemType['isShown']){
+            itemTypeTrue=true
+        }
+    }
+    else{
         itemTypeTrue=true
     }
     return searchTrue && rarityTrue && itemTypeTrue
@@ -83,15 +93,31 @@ function _showEdge (edge, shownFilter) {
 
 function _getNodeColor (n, by='ItemType') {
     if(by==="ItemType"){
-        return initShownFilter['ItemType'][n.attributes.itemtype]['colorHex']
+        if(n.attributes.itemtype in initShownFilter['ItemType']){
+            return initShownFilter['ItemType'][n.attributes.itemtype]['colorHex']
+        }
+        else{
+            return '#ffffff'
+        }
+        
     }
-    else if(by==="ItemType"){
-        return initShownFilter['Rarity'][rarityMap[n.attributes.rarity]]['colorHex']
+    else if(by==="Rarity"){
+        if(n.attributes.rarity in rarityMap){
+            return initShownFilter['Rarity'][rarityMap[n.attributes.rarity]]['colorHex']
+        }
+        else{
+            return '#ffffff'
+        }
     }
     
 }
 function _getEdgeColor (e) {
-    return initShownFilter['Tradeskill'][e.attributes.tradeskill]['colorHex']
+    if(e.attributes.tradeskill in initShownFilter['Tradeskill']){
+        return initShownFilter['Tradeskill'][e.attributes.tradeskill]['colorHex']
+    }
+    else{
+        return '#ffffff'
+    }
 }
 
 class UpdateNodes extends React.PureComponent {

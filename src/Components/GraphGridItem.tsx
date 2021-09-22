@@ -63,7 +63,7 @@ export default function GraphGridItem(props) {
     }
 
     return (
-        <Sigma
+        <Sigma renderer="canvas"
             settings={sigmaSettings}
             style={sigmaStyle}
         >
