@@ -11,6 +11,9 @@ import '@fontsource/roboto';
 import Theming from './Components/Theming';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, makeStyles  } from '@material-ui/styles';
+import LoginButton from './Components/user/Login';
+import LogoutButton from './Components/user/Logout';
+import Profile from './Components/user/Profile';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +53,10 @@ function App(props) {
                 <Route exact path="/infographics" component={Infographics}></Route>
                 <Route exact path="/arbitrage" component={Arbitrage}></Route>
                 <Route exact path="/item_list" component={ItemGraph}></Route>
+                <Route exact path="/login" component={LoginButton} />
+                <Route exact path="/logout" component={LogoutButton} />
+                <Route exact path="/profile" component={Profile} />
+
               </Switch>
             </Grid>
           </Grid>

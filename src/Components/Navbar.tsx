@@ -70,6 +70,15 @@ function SimpleMenu() {
           onClose={handleClose}
           classes={{ paper: classes.paperMenu }}
         >
+          <MenuItem onClick={handleClose}>
+            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/login'>login</Button>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/logout'>logout</Button>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/profile'>profile</Button>
+          </MenuItem>
 
           <MenuItem onClick={handleClose}>
             <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/item_list">Recipe Network</Button>
@@ -81,6 +90,8 @@ function SimpleMenu() {
             <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/about'>About</Button>
           </MenuItem>
 
+          
+
         </Menu>
 
       </div>
@@ -89,6 +100,12 @@ function SimpleMenu() {
   else {
     return (
       <div>
+                    <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/login'>login</Button>
+                    <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/logout'>logout</Button>
+                    <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/profile'>profile</Button>
+
+
+
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/item_list">Recipe Network</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/arbitrage">Reagent Conversions</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/infographics'>Infographic</Button>

@@ -126,3 +126,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# AuthO config info
+autho_config.json
