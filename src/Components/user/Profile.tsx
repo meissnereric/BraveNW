@@ -3,9 +3,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const Profile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
-  // console.log("User: ", user)
-  // console.log("isAuth: " , isAuthenticated)
-  // console.log("isLoading: ", isLoading)
   if (isLoading) {
     return <div>Loading ...</div>;
   }
@@ -19,7 +16,7 @@ const Profile = () => {
         {console.log(user)}
       </div>
     ) || (
-      <h1>PLEASE LOGIN </h1>
+      <h1>PLEASE LOGIN</h1>
     )
   );
 };
