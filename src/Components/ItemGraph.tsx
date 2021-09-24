@@ -47,7 +47,7 @@ class ItemGraph extends React.Component <Props, State> {
             hasNodes: false,
             adjEdges: null,
             hasEdges: false,
-            filePath: "../data/pretty_graph_9_3_2021.gexf",
+            filePath: "../data/graph_loot_tables_included_9_22_2021.gexf",
             shownFilter: false,
             searchText: ""
         }

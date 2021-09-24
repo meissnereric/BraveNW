@@ -6,6 +6,7 @@ import About from './Components/About'
 import Infographics from './Components/Infographics'
 import ItemGraph from './Components/ItemGraph';
 import Arbitrage from './Components/Arbitrage';
+import GatheringLuck from './Components/GatheringLuck';
 import Grid from '@material-ui/core/Grid';
 import '@fontsource/roboto';
 import Theming from './Components/Theming';
@@ -50,6 +51,7 @@ function App(props) {
                 <Route exact path="/about" component={About}></Route>
                 <Route exact path="/infographics" component={Infographics}></Route>
                 <Route exact path="/arbitrage" component={Arbitrage}></Route>
+                <Route exact path="/gathering_luck" component={GatheringLuck}></Route>
                 <Route exact path="/item_list" component={ItemGraph}></Route>
                 <Route exact path="/profile" component={Profile} />
 
