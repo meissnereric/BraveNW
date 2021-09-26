@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Typography } from "@material-ui/core";
+import { Button, FormControlLabel, Grid, Typography } from "@material-ui/core";
 import { Theme, useTheme } from '@material-ui/core';
 import { makeStyles } from "@material-ui/styles";
 import Table from '@material-ui/core/Table';
@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { TextField } from "@material-ui/core";
 import GatheringNetwork from "./GatheringNetwork"
+import { gatheringSplitRows } from './FilteringData';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -21,8 +22,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.secondary.light
     },
     table: {
-        minWidth: 300,
+        minWidth: 650,
         borderRadius: '3px',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light
 
     },
     paper: {
@@ -69,16 +72,62 @@ export default function GatheringLuck(props) {
         setLuckBonus(luckBonus)
     }
 
-    const makeHeaderList = (adjEdges) => {
-        
+
+
+    const makeFilterList = (filterType) => {
+        var makeRow = (row) => {
+            return <FormControlLabel
+                style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5, textAlign: 'left' }}
+                control={
+                    <Button
+
+                    />
+                }
+                label={row.filterValue}
+            />
+        }
+
+        var rows = []
+        if (filterType === 'Mining') {
+            rows = gatheringSplitRows.mining.map((row) => makeRow(row))
+        }
+        else if (filterType === 'Logging') {
+            rows = gatheringSplitRows.logging.map((row) => makeRow(row))
+        }
+        else if (filterType === 'Harvesting') {
+            rows = gatheringSplitRows.harvesting.map((row) => makeRow(row))
+        }
+
+        return [rows]
     }
 
+    const makeHeaderList = (adjEdges) => {
+        var rows = []
+        var range = Array.from(Array(adjEdges).keys())
+        console.log(["range", range])
+        adjEdges.forEach(edge=> {
+            rows.push(<TableCell className={classes.input}>Item{adjEdges.indexOf(edge)}</TableCell>)
+        });
+        return rows
+    }
     const makeItemNameList = (adjEdges) => {
         var rows = []
-        console.log(adjEdges)
         adjEdges.forEach(edge => {
-            console.log([edge, adjEdges])
-            rows.push(<TableCell>id {edge.target} prob {edge.attributes.computedProbability} quant{edge.attributes.quantity}</TableCell>)
+            rows.push(<TableCell className={classes.input}>{edge.target}</TableCell>)
+        });
+        return rows
+    }
+    const makeQuantityList = (adjEdges) => {
+        var rows = []
+        adjEdges.forEach(edge => {
+            rows.push(<TableCell className={classes.input}>{edge.attributes.quantity}</TableCell>)
+        });
+        return rows
+    }
+    const makeProbabilityList = (adjEdges) => {
+        var rows = []
+        adjEdges.forEach(edge => {
+            rows.push(<TableCell className={classes.input}>{edge.attributes.computedProbability}</TableCell>)
         });
         return rows
     }
@@ -86,19 +135,18 @@ export default function GatheringLuck(props) {
     return (
         <Grid container className='root' spacing={0} style={{ backgroundColor: theme.palette.secondary.main, minHeight: '100vh' }}
             justifyContent="flex-start"
-            alignItems="center"
-        >
-            <Grid container item xs={4}>
-                <Grid xs={12}>
-                    <Typography variant='h2'>Gathering Reagent Stuff</Typography>
-                </Grid>
+            alignItems="center">
+                
+
+            <Grid container item xs={4} style={{ backgroundColor: theme.palette.secondary.dark }}>
                 <Grid container item>
                     <GatheringNetwork setAdjNodes={setAdjNodes} setAdjEdges={setAdjEdges}
                         selectedGatheringNode={'oreveinfinishsmall'} luckBonus={luckBonus}></GatheringNetwork>
                 </Grid>
+                <Grid item>
+                    <Typography variant='h2'>Hello</Typography>
+                </Grid>
             </Grid>
-
-
 
             <Grid container item xs={4} className={classes.table} style={{ backgroundColor: theme.palette.secondary.dark }}>
                 <Grid item xs={2}> </Grid>
@@ -114,13 +162,22 @@ export default function GatheringLuck(props) {
                         <Table className={classes.table} size="small" aria-label="arbitrage table" style={{ color: theme.palette.secondary.contrastText }}>
                             <TableHead className={classes.head}>
                                 <TableRow>
-                                    <TableCell> </TableCell>
-                                    <TableCell align="center"><Typography variant='body2'>Header</Typography></TableCell>
+                                    <TableCell align="center"></TableCell>
+                                    {makeHeaderList(adjEdges)}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 <TableRow>
+                                    <TableCell align="center" className={classes.input}>Item Name</TableCell>
                                     {makeItemNameList(adjEdges)}
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="center" className={classes.input}>Quantity</TableCell>
+                                    {makeQuantityList(adjEdges)}
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align="center" className={classes.input}>Probability</TableCell>
+                                    {makeProbabilityList(adjEdges)}
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -128,7 +185,7 @@ export default function GatheringLuck(props) {
                 </Grid>
             </Grid>
 
-            <Grid container item xs={4} style={{ backgroundColor: theme.palette.secondary.dark }}>
+            <Grid container item xs={2} style={{ backgroundColor: theme.palette.secondary.dark }}>
                 <Grid container item justifyContent="space-evenly" alignItems='flex-end' style={{ padding: '10px' }}>
                     <Grid item>
                         <Typography>Luck Bonus</Typography>
