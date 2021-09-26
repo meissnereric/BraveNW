@@ -220,13 +220,13 @@ const gatheringRowsSplitter = (rows) => {
     let logging = []
     let harvesting = []
     rows.forEach(element => {
-        if (element.filterType === "Mining")
+        if (element.gatheringType === "Mining")
             mining.push(element)
         
-        if (element.filterType === "Logging")
+        if (element.gatheringType === "Logging")
             logging.push(element)
 
-        if (element.filterType === "Harvesting")
+        if (element.gatheringType === "Harvesting")
             harvesting.push(element)
     });
     return { mining, logging, harvesting }

@@ -13,7 +13,7 @@ type State = {
     loaded: boolean,
     initColors: boolean,
     selectedGatheringNode?: string
-    
+
 };
 
 type Props = {
@@ -55,86 +55,194 @@ class GatheringNodeSelector extends React.PureComponent {
             console.info("UpdateNodes componentWillReceiveProps inner path thing")
             return
         }
-        console.info(this.props.sigma)
-        this.setState({selectedGatheringNode: props.selectedGatheringNode})
+        this.props = props
 
+        this.updateNeighbors()
+        this.props.sigma.refresh()
+        console.log("Finish componentWillReceiveProps")
+    }
+
+    updateNeighbors = function () {
+        console.log(["Update neighbors", this.props])
         var nodeId = this.props.selectedGatheringNode
 
         var res = this._neighbors(this.props.sigma.graph, nodeId, {})
         var toKeepNodes = res[0]
         var toKeepEdges = res[1]
 
-        props.adjNodesSetter(toKeepNodes)
-        props.adjEdgesSetter(toKeepEdges)
+        this.props.adjNodesSetter(toKeepNodes)
+        this.props.adjEdgesSetter(toKeepEdges)
 
-        this.props.sigma.refresh()
+        this.setState({ selectedGatheringNode: this.props.selectedGatheringNode })
+
     }
 
-    _computeProbability = function (luckBonus = 0, maxRoll = 100000, nodeProb = 0, existingProb = 1.) {
+    _computeProbability = function (luckBonus, maxRoll, nodeProb, existingProb, luckSafe, andOrTuple, uniformProbs) {
+
         var luck = luckBonus
+        var andOr = andOrTuple[0]
+        var nextProb = andOrTuple[1]
+
         // If maxRoll < 100000, just treat the table as luckSafe bc not sure.
-        if(maxRoll < 100000){
-            luck = 0 
+        if (maxRoll < 100000 || luckSafe) {
+            luck = 0
         }
-        return existingProb
+        console.log(["luckBonus", luckBonus, "maxRoll", maxRoll, "nodeProb", nodeProb, "existingProb", existingProb, "nextProb", nextProb])
+
+        if(andOr == "AND"){
+            var newProb = 1. - (nodeProb - luck) / maxRoll
+            if(newProb < 0)
+                newProb = 0.
+            var finalProb = newProb * existingProb
+            console.log(["newProb", newProb, "finalProb", finalProb])
+    
+            return finalProb
+        }
+        else {
+            if(nextProb == nodeProb){ // count for uniform
+                if(nextProb in uniformProbs)
+                    uniformProbs[nextProb] = uniformProbs[nextProb] + 1
+                else
+                    uniformProbs[nextProb] = 1
+            }
+            console.log(["nextProb", nextProb, "nodeProb", nodeProb])
+            return (nextProb - nodeProb) / maxRoll
+        }
     }
+
+    _edge_stop_recurse = function(edge, nodeId){
+        return edge.target != nodeId
+    }
+    _stop_recurse = function(adjNodes, adjEdges, nodeId) {
+        // var isForward = false
+        // for (let key in adjEdges) {
+        //     let element = adjEdges[key];
+        //     if(this._edge_stop_recurse(element,nodeId)){
+        //         console.log(["Does go forward", element, nodeId])
+        //         isForward = true
+        //     }
+        // }
+        return Object.keys(adjNodes).length === 0 || Object.keys(adjEdges).length === 0
+    }
+
+    _computeAdjNodes = function(graph, ogAdjEdges, nodeId){
+        var adjNodes = {}
+        ogAdjEdges.forEach(element => {
+            if (this._edge_stop_recurse(element, nodeId))
+                adjNodes[element.target] = graph.nodes(nodeId)
+        })
+        console.log(["AdjNodes", adjNodes])
+        return adjNodes
+
+    }
+
+
+    _computeAdjEdges = function(graph, ogAdjEdges, nodeId){
+        var adjEdges = {}
+        ogAdjEdges.forEach(element => {
+            if (this._edge_stop_recurse(element, nodeId))
+                adjEdges[element.id] = graph.edges(element.id)
+        })
+        console.log(["AdjEdges", adjEdges])
+        return adjEdges
+
+    }
+
     _neighbors = function (graph, nodeId, existingNodes) {
-        // nodeId='oreveinfinishsmall'
         existingNodes[nodeId] = graph.nodes(nodeId)
-        var adjNodes = graph.adjacentNodes(nodeId)
-        var adjEdges = graph.adjacentEdges(nodeId)
-        if (Object.keys(adjNodes).length === 0 || Object.keys(adjEdges).length === 0) {
+        var ogAdjEdges = graph.adjacentEdges(nodeId)
+        var adjNodes = this._computeAdjNodes(graph, ogAdjEdges, nodeId)
+        var adjEdges = this._computeAdjEdges(graph, ogAdjEdges, nodeId)
+        var nextKeys = []
+        var nextProbs = {}
+        for (let key in adjEdges) {
+            nextKeys.push(key)
+        }
+        nextKeys.push(-1)
+        var i = 0
+        for (let key in adjEdges) {
+            var nk = nextKeys[i+1]
+            var nextProb = adjEdges[nk]
+            if(nk === -1)
+                nextProbs[key] = 100000 + this.props.luckBonus // TODO hack
+            else
+                nextProbs[key] = nextProb.attributes.probability
+            i = i+1
+        }
+
+        // var adjNodes = graph.adjacentNodes(nodeId)
+        if (this._stop_recurse(adjNodes, adjEdges, nodeId)) {
             // short circuit
+            console.log("No adjacent edges or nodes! Cutting out!")
         }
         else {
             var tmpNeighbors = Object.assign({}, adjNodes);
+            var uniformProbs = {}
+            console.log(["props"], this.props)
             console.log(["Adjacency stuff", existingNodes, adjNodes, adjEdges, nodeId, graph, tmpNeighbors, existingNodes])
-            adjEdges.forEach(element => {
-                console.log(["0"])
+            for (let key in adjEdges) {
+                let element = adjEdges[key];
+                 var sourceNode = graph.nodes(element.source)
+                var targetNode = graph.nodes(element.target)
+                
                 if (element.attributes.computedProbability) {
-
-                    console.log(element.attributes.computedProbability)
+                    console.log(["Already has computed prob", element.attributes.computedProbability])
                 }
                 else {
-                    var sourceNode = graph.nodes(element.source)
-                    console.log(["1"])
-
                     var existingProbability = 1.
-                    console.log(["2"])
-                    existingProbability = sourceNode.attributes.probability
-                    console.log(["3"])
-                    element.attributes.computedProbability = this._computeProbability(this.props.luckBonus, sourceNode.attributes.maxRoll, element.attributes.probability, existingProbability)
-                    console.log(["Edge processing / probabilities", element, sourceNode])
+                    var luckSafe = sourceNode.attributes.lucksafe
+                    var andOr = sourceNode.attributes.andor
+                    var andOrTuple = [andOr, nextProbs[key]]
+
+                    if (!(sourceNode.attributes.computedProbability == undefined))
+                        existingProbability = sourceNode.attributes.computedProbability
+                    targetNode.attributes.computedProbability = this._computeProbability(this.props.luckBonus, sourceNode.attributes.maxroll, element.attributes.probability, existingProbability, luckSafe, andOrTuple)
+                    element.attributes.computedProbability = targetNode.attributes.computedProbability
+                    element.attributes.targetName = targetNode.label
+                    if(element.itemType === 'LootTable'){
+                        element.attributes.targetName= "[LTID]" + element.attributes.targetName
+                    }
+                    console.log(["Edge processing / probabilities", element, sourceNode, targetNode])
                 }
 
-            });
-            for (let key in tmpNeighbors) {
-                console.log(["4"])
-                let element = tmpNeighbors[key];
-                console.log(["5"])
-                if (element.itemType === 'LootTable' && !(element.id in existingNodes)) {
+            };
+
+            for (let key in adjEdges) {
+                let edgeElement = adjEdges[key];
+                console.log(["51", edgeElement, key])
+                let element = graph.nodes(edgeElement.target)
+                console.log(["5", element, key, tmpNeighbors, existingNodes, nodeId])
+                console.log(["6", edgeElement.source == nodeId , element.attributes.itemtype === 'LootTable' , !(element.id in existingNodes)])
+                if (edgeElement.source == nodeId && element.attributes.itemtype === 'LootTable' && !(element.id in existingNodes)) {
                     console.log(["Element", element, existingNodes])
                     var subNeighbors = this._neighbors(graph, element.id, existingNodes)
                     var subNodes = subNeighbors[0]
                     var subEdges = subNeighbors[1]
+                    
+
+                    console.log(["Node", subNodes, adjNodes])
+                    console.log(["Edges", subEdges, adjEdges])
 
                     adjNodes = Object.assign({}, subNodes, adjNodes);
                     adjEdges = Object.assign({}, subEdges, adjEdges);
                 }
             }
         }
-        console.log(["6"])
+        console.log(["6", adjNodes, adjEdges])
+        // for (let key in adjNodes) {
+        //     let element = adjNodes[key];
+        //     neighbors[element.id] = element
+        // }
         var neighbors = []
-        adjNodes.forEach(element => {
-            neighbors[element.id] = element
-        });
-
         var edges = []
-        adjEdges.forEach(element => {
-            edges[element.id] = element
-        });
-        console.log(["7"])
-
+        for (let key in adjEdges) {
+            let element = adjEdges[key];
+            let targetNode = graph.nodes(element.target)
+            if(!(targetNode.attributes.itemtype == 'LootTable')){
+                neighbors[targetNode.id] = targetNode
+                edges[element.id] = element
+            }
+        }
         return [neighbors, edges];
     };
 

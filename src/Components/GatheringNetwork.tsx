@@ -50,6 +50,7 @@ export default function GatheringNetwork(props) {
     const setAdjNodes = props.setAdjNodes
     const setAdjEdges = props.setAdjEdges
     const selectedGatheringNode = props.selectedGatheringNode
+    const luckBonus = props.luckBonus
 
     const matches = useMediaQuery(isDesktopQuery);
     const sigmaStyle = {
@@ -68,6 +69,7 @@ export default function GatheringNetwork(props) {
                     adjNodesSetter={setAdjNodes}
                     adjEdgesSetter={setAdjEdges}
                     selectedGatheringNode={selectedGatheringNode}
+                    luckBonus={luckBonus}
                     >
                 </GatheringNodeSelector>
             </LoadGEXF>
