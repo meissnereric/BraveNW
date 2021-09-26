@@ -105,23 +105,18 @@ class GatheringNodeSelector extends React.PureComponent {
                 else
                     uniformProbs[nextProb] = 1
             }
-            console.log(["nextProb", nextProb, "nodeProb", nodeProb])
-            return (nextProb - nodeProb) / maxRoll
+            var p = (nextProb - nodeProb) / maxRoll
+            if (p < 0)
+                p = 0.
+            console.log(["nextProb", nextProb, "nodeProb", nodeProb, "p", p, "existingProb", existingProb])
+            return p * existingProb
         }
     }
 
     _edge_stop_recurse = function(edge, nodeId){
         return edge.target != nodeId
     }
-    _stop_recurse = function(adjNodes, adjEdges, nodeId) {
-        // var isForward = false
-        // for (let key in adjEdges) {
-        //     let element = adjEdges[key];
-        //     if(this._edge_stop_recurse(element,nodeId)){
-        //         console.log(["Does go forward", element, nodeId])
-        //         isForward = true
-        //     }
-        // }
+    _stop_recurse = function(adjNodes, adjEdges) {
         return Object.keys(adjNodes).length === 0 || Object.keys(adjEdges).length === 0
     }
 
@@ -171,7 +166,7 @@ class GatheringNodeSelector extends React.PureComponent {
         }
 
         // var adjNodes = graph.adjacentNodes(nodeId)
-        if (this._stop_recurse(adjNodes, adjEdges, nodeId)) {
+        if (this._stop_recurse(adjNodes, adjEdges)) {
             // short circuit
             console.log("No adjacent edges or nodes! Cutting out!")
         }
@@ -196,7 +191,7 @@ class GatheringNodeSelector extends React.PureComponent {
 
                     if (!(sourceNode.attributes.computedProbability == undefined))
                         existingProbability = sourceNode.attributes.computedProbability
-                    targetNode.attributes.computedProbability = this._computeProbability(this.props.luckBonus, sourceNode.attributes.maxroll, element.attributes.probability, existingProbability, luckSafe, andOrTuple)
+                    targetNode.attributes.computedProbability = this._computeProbability(this.props.luckBonus, sourceNode.attributes.maxroll, element.attributes.probability, existingProbability, luckSafe, andOrTuple, uniformProbs)
                     element.attributes.computedProbability = targetNode.attributes.computedProbability
                     element.attributes.targetName = targetNode.label
                     if(element.itemType === 'LootTable'){
@@ -229,21 +224,18 @@ class GatheringNodeSelector extends React.PureComponent {
             }
         }
         console.log(["6", adjNodes, adjEdges])
-        // for (let key in adjNodes) {
-        //     let element = adjNodes[key];
-        //     neighbors[element.id] = element
+        // var neighbors = []
+        // var edges = []
+        // for (let key in adjEdges) {
+        //     let element = adjEdges[key];
+        //     let targetNode = graph.nodes(element.target)
+        //     if(!(targetNode.attributes.itemtype == 'LootTable')){
+        //         neighbors[targetNode.id] = targetNode
+        //         edges[element.id] = element
+        //     }
         // }
-        var neighbors = []
-        var edges = []
-        for (let key in adjEdges) {
-            let element = adjEdges[key];
-            let targetNode = graph.nodes(element.target)
-            if(!(targetNode.attributes.itemtype == 'LootTable')){
-                neighbors[targetNode.id] = targetNode
-                edges[element.id] = element
-            }
-        }
-        return [neighbors, edges];
+        // return [neighbors, edges];
+        return [adjNodes, adjEdges]
     };
 
     _onLoad() {

@@ -188,6 +188,7 @@ export default function GatheringLuck(props) {
                         <Typography>Luck Bonus</Typography>
                         <TextField id="luckBonus"
                             variant="filled" color="secondary"
+                            defaultValue="5000"
                             onChange={handleLuckBonusChange}
                             InputProps={{
                                 className: classes.input,
