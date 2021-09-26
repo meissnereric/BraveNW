@@ -1,0 +1,1 @@
+export var GRAPH_PATH = "../data/graph_loot_tables_included_9_22_2021.gexf"

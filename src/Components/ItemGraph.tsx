@@ -4,6 +4,7 @@ import { Grid } from '@material-ui/core';
 
 import Theming from './Theming';
 import MobileSwitch from './MobileSwitch';
+import { GRAPH_PATH } from './GraphConfig';
 
 
 const styles = theme => ({
@@ -47,7 +48,7 @@ class ItemGraph extends React.Component <Props, State> {
             hasNodes: false,
             adjEdges: null,
             hasEdges: false,
-            filePath: "../data/graph_loot_tables_included_9_22_2021.gexf",
+            filePath: GRAPH_PATH,
             shownFilter: false,
             searchText: ""
         }
