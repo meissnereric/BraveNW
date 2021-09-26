@@ -71,6 +71,11 @@ class GatheringNodeSelector extends React.PureComponent {
     }
 
     _computeProbability = function (luckBonus = 0, maxRoll = 100000, nodeProb = 0, existingProb = 1.) {
+        var luck = luckBonus
+        // If maxRoll < 100000, just treat the table as luckSafe bc not sure.
+        if(maxRoll < 100000){
+            luck = 0 
+        }
         return existingProb
     }
     _neighbors = function (graph, nodeId, existingNodes) {

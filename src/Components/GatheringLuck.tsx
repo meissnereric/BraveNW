@@ -11,7 +11,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { TextField } from "@material-ui/core";
 import GatheringNetwork from "./GatheringNetwork"
-import { rows } from './FilteringData';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -68,6 +67,10 @@ export default function GatheringLuck(props) {
             luckBonus = 1
         }
         setLuckBonus(luckBonus)
+    }
+
+    const makeHeaderList = (adjEdges) => {
+        
     }
 
     const makeItemNameList = (adjEdges) => {
