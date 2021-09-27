@@ -351,7 +351,7 @@ class GatheringLuck extends React.Component<Props, State> {
                     />
                 </Grid>
                 <Grid item xs={4}>
-                    <Typography>Housing</Typography>
+                    <Typography>Trophies</Typography>
                     <Typography>0-4500</Typography>
                     <TextField id="housingLuck"
                         variant="filled" color="secondary"
@@ -369,7 +369,7 @@ class GatheringLuck extends React.Component<Props, State> {
                     />
                 </Grid>
                 <Grid item xs={4}>
-                    <Typography>Skill Level</Typography>
+                    <Typography>Tradeskill Level (*10)</Typography>
                     <Typography>0-2000</Typography>
                     <TextField id="skillLuck"
                         variant="filled" color="secondary"
@@ -449,7 +449,6 @@ class GatheringLuck extends React.Component<Props, State> {
 
     render() {
         const { classes, IsDesktop = true } = this.props;
-        console.log("Render IsDesktop", IsDesktop)
 
         var graphReactObject = (
             <GatheringNetwork setAdjNodes={this.getAdjNodes} setAdjEdges={this.getAdjEdges}
@@ -506,9 +505,7 @@ class GatheringLuck extends React.Component<Props, State> {
 export const withMediaQuery = (queries = []) => Component => props => {
     const mediaProps = {}
     queries.forEach(q => {
-        console.log("media shit", q)
         mediaProps[q[0]] = useMediaQuery(q[1])
-        console.log("media shit2", mediaProps)
     })
     return <Component {...mediaProps} {...props} />
 }
