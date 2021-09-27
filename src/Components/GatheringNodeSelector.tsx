@@ -114,7 +114,7 @@ class GatheringNodeSelector extends React.PureComponent {
     }
 
     _edge_stop_recurse = function(edge, nodeId){
-        return edge.target != nodeId
+        return edge.target !== nodeId
     }
     _stop_recurse = function(adjNodes, adjEdges) {
         return Object.keys(adjNodes).length === 0 || Object.keys(adjEdges).length === 0

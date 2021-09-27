@@ -136,6 +136,24 @@ export default function GatheringLuck(props) {
         };
         return rows
     }
+    const makeRows = (adjEdges) => {
+        var rows = []
+        for (let key in adjEdges) {
+            let edge = adjEdges[key];
+            rows.push(<TableRow className={classes.input}>{makeRow(edge)}</TableRow>)
+        };
+        return rows
+
+    }
+
+    const makeRow = (edge) => {
+        var cells = []
+        cells.push(<TableCell className={classes.input}>{edge.attributes.targetName}</TableCell>)
+        cells.push(<TableCell className={classes.input}>{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
+        cells.push(<TableCell className={classes.input}>{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
+        return cells
+
+    }
     var graphReactObject = (
         <GatheringNetwork setAdjNodes={setAdjNodes} setAdjEdges={setAdjEdges}
             selectedGatheringNode={selectedGatheringNode} luckBonus={0}></GatheringNetwork>
@@ -146,7 +164,9 @@ export default function GatheringLuck(props) {
             justifyContent="flex-start"
             alignItems="center">
 
-            <Grid container item style={{ backgroundColor: theme.palette.secondary.dark }}>
+            <Grid container item xs={3} justifyContent="flex-start"
+            alignItems="flex-start"
+style={{ backgroundColor: theme.palette.secondary.dark }}>
                 <Grid item xs={12}>
                     <Typography variant='h2'>{makeFilterList('Mining')}</Typography>
                 </Grid>
@@ -157,15 +177,17 @@ export default function GatheringLuck(props) {
 
             <Grid container item xs={6} className={classes.table} style={{ backgroundColor: theme.palette.secondary.dark }}>
                 <TableContainer component={Paper} style={{ backgroundColor: theme.palette.primary.main }}>
-                    <Table className={classes.table} size="small" aria-label="arbitrage table" style={{ color: theme.palette.secondary.contrastText }}>
-                        {/* <TableHead className={classes.head}>
+                    <Table className={classes.table} size="small" aria-label="gathering table" style={{ color: theme.palette.secondary.contrastText }}>
+                        <TableHead className={classes.head}>
                             <TableRow>
-                                <TableCell align="center"></TableCell>
-                                {makeHeaderList(adjEdges)}
+                                <TableCell align="center">Item</TableCell>
+                                <TableCell align="center">Quantity</TableCell>
+                                <TableCell align="center">Chance</TableCell>
                             </TableRow>
-                        </TableHead> */}
+                        </TableHead>
                         <TableBody>
-                            <TableRow>
+                            {makeRows(adjEdges)}
+                            {/* <TableRow>
                                 <TableCell align="center" className={classes.input}>Item Name</TableCell>
                                 {makeItemNameList(adjEdges)}
                             </TableRow>
@@ -176,13 +198,13 @@ export default function GatheringLuck(props) {
                             <TableRow>
                                 <TableCell align="center" className={classes.input}>Probability</TableCell>
                                 {makeProbabilityList(adjEdges)}
-                            </TableRow>
+                            </TableRow> */}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Grid>
 
-            <Grid container item xs={2} style={{ backgroundColor: theme.palette.secondary.dark }}>
+            <Grid container item xs={3} style={{ backgroundColor: theme.palette.secondary.dark }}>
                 <Grid container item justifyContent="space-evenly" alignItems='flex-end' style={{ padding: '10px' }}>
                     <Grid item>
                         <Typography>Luck Bonus</Typography>
