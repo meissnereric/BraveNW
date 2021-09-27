@@ -78,6 +78,7 @@ class GatheringNodeSelector extends React.PureComponent {
     }
 
     _computeProbability = function (key, nextKeys, luckBonus, maxRoll, nodeProb, existingProb, luckSafe, andOr, nextProbs, uniformProbs) {
+        console.log("Computing new prob.")
 
         var luck = luckBonus
         var nextProb = nextProbs[key]
@@ -86,18 +87,22 @@ class GatheringNodeSelector extends React.PureComponent {
         if (maxRoll < 100000 || luckSafe) {
             luck = 0
         }
-        console.log(["luckBonus", luckBonus, "maxRoll", maxRoll, "nodeProb", nodeProb, "existingProb", existingProb, "nextProb", nextProb])
+        console.log(["key", key, "luckBonus", luckBonus, "luck", luck,  "maxRoll", maxRoll, "nodeProb", nodeProb, "existingProb", existingProb, "nextProb", nextProb])
 
         if(andOr === "AND"){
+            console.log("AND")
             var newProb = 1. - (nodeProb - luck) / maxRoll
             if(newProb < 0)
                 newProb = 0.
+            if(newProb > 1.)
+                newProb = 1.
             var finalProb = newProb * existingProb
             console.log(["newProb", newProb, "finalProb", finalProb])
     
             return finalProb
         }
         else {
+            console.log("OR")
             while(nodeProb === nextProb[0]){
                 nextProb = nextProbs[nextKeys[nextProb[1]]]
             }
@@ -107,7 +112,7 @@ class GatheringNodeSelector extends React.PureComponent {
             var nextp = nextProb[0]
             if(np < luckBonus)
                 np = luckBonus
-            var p = (nextp - np) / maxRoll / uniformProbs[np]
+            var p = (nextp - np) / maxRoll / uniformProbs[nodeProb]
             if (p < 0)
                 p = 0
             console.log(["nextProb", nextp, "np", np, "p", p, "existingProb", existingProb])
@@ -128,7 +133,6 @@ class GatheringNodeSelector extends React.PureComponent {
             if (this._edge_stop_recurse(element, nodeId))
                 adjNodes[element.target] = graph.nodes(nodeId)
         })
-        console.log(["AdjNodes", adjNodes])
         return adjNodes
 
     }
@@ -140,7 +144,6 @@ class GatheringNodeSelector extends React.PureComponent {
             if (this._edge_stop_recurse(element, nodeId))
                 adjEdges[element.id] = graph.edges(element.id)
         })
-        console.log(["AdjEdges", adjEdges])
         return adjEdges
 
     }
@@ -180,68 +183,58 @@ class GatheringNodeSelector extends React.PureComponent {
             console.log("No adjacent edges or nodes! Cutting out!")
         }
         else {
-            var tmpNeighbors = Object.assign({}, adjNodes);
-            console.log(["props"], this.props)
-            console.log(["Adjacency stuff", existingNodes, adjNodes, adjEdges, nodeId, graph, tmpNeighbors, existingNodes])
             for (let key in adjEdges) {
                 let element = adjEdges[key];
                  var sourceNode = graph.nodes(element.source)
                 var targetNode = graph.nodes(element.target)
                 
                 if (element.attributes.computedProbability) {
-                    console.log(["Already has computed prob", element.attributes.computedProbability])
+                    // console.log(["Already has computed prob", element.attributes.computedProbability])
                 }
                 else {
                     var existingProbability = 1.
                     var luckSafe = sourceNode.attributes.lucksafe
                     var andOr = sourceNode.attributes.andor
-                    if (!(sourceNode.attributes.computedProbability == undefined))
+                    if (!(sourceNode.attributes.computedProbability === undefined))
                         existingProbability = sourceNode.attributes.computedProbability
                     targetNode.attributes.computedProbability = this._computeProbability(key, nextKeys, this.props.luckBonus, sourceNode.attributes.maxroll, element.attributes.probability, existingProbability, luckSafe, andOr, nextProbs, uniformProbs)
                     element.attributes.computedProbability = targetNode.attributes.computedProbability
                     element.attributes.targetName = targetNode.label
+                    console.log("NAMES", element, targetNode)
                     if(element.itemType === 'LootTable'){
                         element.attributes.targetName= "[LTID]" + element.attributes.targetName
                     }
-                    console.log(["Edge processing / probabilities", element, sourceNode, targetNode])
                 }
 
             };
 
             for (let key in adjEdges) {
                 let edgeElement = adjEdges[key];
-                console.log(["51", edgeElement, key])
                 let element = graph.nodes(edgeElement.target)
-                console.log(["5", element, key, tmpNeighbors, existingNodes, nodeId])
-                console.log(["6", edgeElement.source == nodeId , element.attributes.itemtype === 'LootTable' , !(element.id in existingNodes)])
-                if (edgeElement.source == nodeId && element.attributes.itemtype === 'LootTable' && !(element.id in existingNodes)) {
-                    console.log(["Element", element, existingNodes])
+                if (edgeElement.source === nodeId && element.attributes.itemtype === 'LootTable' && !(element.id in existingNodes)) {
                     var subNeighbors = this._neighbors(graph, element.id, existingNodes)
                     var subNodes = subNeighbors[0]
                     var subEdges = subNeighbors[1]
-                    
-
-                    console.log(["Node", subNodes, adjNodes])
-                    console.log(["Edges", subEdges, adjEdges])
-
                     adjNodes = Object.assign({}, subNodes, adjNodes);
                     adjEdges = Object.assign({}, subEdges, adjEdges);
                 }
             }
         }
-        console.log(["6", adjNodes, adjEdges])
-        // var neighbors = []
-        // var edges = []
-        // for (let key in adjEdges) {
-        //     let element = adjEdges[key];
-        //     let targetNode = graph.nodes(element.target)
-        //     if(!(targetNode.attributes.itemtype == 'LootTable')){
-        //         neighbors[targetNode.id] = targetNode
-        //         edges[element.id] = element
-        //     }
-        // }
-        // return [neighbors, edges];
-        return [adjNodes, adjEdges]
+
+        // Remove Loot Tables from the output for cleanliness / display 
+        var neighbors = []
+        var edges = []
+        for (let key in adjEdges) {
+            let element = adjEdges[key];
+            let targetNode = graph.nodes(element.target)
+            if(!(targetNode.attributes.itemtype === 'LootTable')){
+                neighbors[targetNode.id] = targetNode
+                edges[element.id] = element
+            }
+        }
+        return [neighbors, edges];
+
+        // return [adjNodes, adjEdges]
     };
 
     _onLoad() {

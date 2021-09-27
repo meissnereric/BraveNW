@@ -231,5 +231,18 @@ const gatheringRowsSplitter = (rows) => {
     });
     return { mining, logging, harvesting }
 }
-
 export const gatheringSplitRows = gatheringRowsSplitter(gatheringRows)
+
+
+const makeGatheringLabelsMap = (rows) => {
+    let map = {}
+    rows.forEach(element => {
+        map[element.nodeId] = element.nodeName
+    })
+    return map
+
+}
+
+export const gatheringLabelsMap = makeGatheringLabelsMap(gatheringRows)
+
+

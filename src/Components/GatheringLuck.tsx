@@ -11,7 +11,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { TextField } from "@material-ui/core";
 import GatheringNetwork from "./GatheringNetwork"
-import { gatheringSplitRows } from './FilteringData';
+import { gatheringSplitRows, gatheringLabelsMap } from './FilteringData';
+import { titleCase } from './GraphConfig';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -27,8 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.light,
         margin: theme.spacing(1),
-
-
     },
     paper: {
         padding: theme.spacing(1),
@@ -43,15 +42,31 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.secondary.light,
         color: theme.palette.primary.contrastText,
     },
-    formControl: {
-        margin: theme.spacing(1),
+    tableHeading: {
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.primary.contrastText,
+        textAlign: 'center',
         padding: theme.spacing(1),
-        // minWidth: 80,
+
+    },
+    formControl: {
+        borderRadius: '1',
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
     },
-    maxWidth: {
-        //   width: "100%"
+    legend: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+
+    },
+    luckBox: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        margin: theme.spacing(1),
     }
 }));
 
@@ -80,8 +95,8 @@ export default function GatheringLuck(props) {
 
 
     const makeFilterList = (filterType) => {
-        var makeRow = (row) => {
-            return <FormControlLabel className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
+        var makeGRow = (row) => {
+            return <FormControlLabel labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
         }
         console.log(["Rows", filterType, gatheringSplitRows])
         return <FormControl component="fieldset" className={classes.formControl}>
@@ -93,49 +108,14 @@ export default function GatheringLuck(props) {
                 value={selectedGatheringNode}
             >
 
-                <FormLabel className={classes.head} component="legend" >Gathering Node</FormLabel>
-                {gatheringSplitRows.mining.map((row) => makeRow(row))}
-                {gatheringSplitRows.logging.map((row) => makeRow(row))}
-                {gatheringSplitRows.harvesting.map((row) => makeRow(row))}
+                <FormLabel className={classes.head} component="legend"><Typography align='left' variant='h3' className={classes.head}>Gathering Nodes</Typography></FormLabel>
+                {gatheringSplitRows.mining.map((row) => makeGRow(row))}
+                {gatheringSplitRows.logging.map((row) => makeGRow(row))}
+                {gatheringSplitRows.harvesting.map((row) => makeGRow(row))}
             </RadioGroup>
         </FormControl>
     }
 
-    const makeHeaderList = (adjEdges) => {
-        var rows = []
-        var range = Array.from(Array(adjEdges).keys())
-        console.log(["range", range])
-        var i = 0
-        range.forEach(edge => {
-            i = i + 1
-            rows.push(<TableCell className={classes.input}>Item{i}</TableCell>)
-        });
-        return rows
-    }
-    const makeItemNameList = (adjEdges) => {
-        var rows = []
-        for (let key in adjEdges) {
-            let edge = adjEdges[key];
-            rows.push(<TableCell className={classes.input}>{edge.attributes.targetName}</TableCell>)
-        };
-        return rows
-    }
-    const makeQuantityList = (adjEdges) => {
-        var rows = []
-        for (let key in adjEdges) {
-            let edge = adjEdges[key];
-            rows.push(<TableCell className={classes.input}>{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
-        };
-        return rows
-    }
-    const makeProbabilityList = (adjEdges) => {
-        var rows = []
-        for (let key in adjEdges) {
-            let edge = adjEdges[key];
-            rows.push(<TableCell className={classes.input}>{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
-        };
-        return rows
-    }
     const makeRows = (adjEdges) => {
         var rows = []
         for (let key in adjEdges) {
@@ -148,69 +128,67 @@ export default function GatheringLuck(props) {
 
     const makeRow = (edge) => {
         var cells = []
-        cells.push(<TableCell className={classes.input}>{edge.attributes.targetName}</TableCell>)
-        cells.push(<TableCell className={classes.input}align="center">{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
-        cells.push(<TableCell className={classes.input}align="center">{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
+        cells.push(<TableCell className={classes.input}>{titleCase(edge.attributes.targetName)}</TableCell>)
+        cells.push(<TableCell className={classes.input} align="center">{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
+        cells.push(<TableCell className={classes.input} align="center">{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
         return cells
 
     }
     var graphReactObject = (
         <GatheringNetwork setAdjNodes={setAdjNodes} setAdjEdges={setAdjEdges}
-            selectedGatheringNode={selectedGatheringNode} luckBonus={0}></GatheringNetwork>
+            selectedGatheringNode={selectedGatheringNode} luckBonus={luckBonus}></GatheringNetwork>
     )
 
     var thing = (
-        <Grid container className='root' spacing={0} style={{ backgroundColor: theme.palette.secondary.main, minHeight: '100vh' }}
+        <Grid container className='root' spacing={0} style={{ backgroundColor: theme.palette.secondary.main, minHeight: '100vh', minWidth: '100vw' }}
             justifyContent="flex-start"
-            alignItems="center">
+            alignItems="flex-start">
 
-            <Grid container item xs={3} justifyContent="flex-start"
-            alignItems="flex-start"
-style={{ backgroundColor: theme.palette.secondary.dark }}>
+            <Grid container item xs={2} 
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                style={{ backgroundColor: theme.palette.secondary.dark }}
+                className={classes.legend}>
                 <Grid item xs={12}>
-                    <Typography variant='h2'>{makeFilterList('Mining')}</Typography>
+                    {makeFilterList('Mining')}
                 </Grid>
                 <Grid item>
                     {graphReactObject}
-                </Grid>)
+                </Grid>
             </Grid>
 
-            <Grid container item xs={6} className={classes.table} style={{ backgroundColor: theme.palette.secondary.dark }}>
-                <TableContainer component={Paper} style={{ backgroundColor: theme.palette.primary.main }}>
-                    <Table className={classes.table} size="small" aria-label="gathering table" style={{ color: theme.palette.secondary.contrastText }}>
-                        <TableHead className={classes.head}>
-                            <TableRow>
-                                <TableCell align="center"className={classes.input}>Item</TableCell>
-                                <TableCell align="center"className={classes.input}>Quantity</TableCell>
-                                <TableCell align="center"className={classes.input}>Chance</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {makeRows(adjEdges)}
-                            {/* <TableRow>
-                                <TableCell align="center" className={classes.input}>Item Name</TableCell>
-                                {makeItemNameList(adjEdges)}
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="center" className={classes.input}>Quantity</TableCell>
-                                {makeQuantityList(adjEdges)}
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="center" className={classes.input}>Probability</TableCell>
-                                {makeProbabilityList(adjEdges)}
-                            </TableRow> */}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+            <Grid container item alignItems='center' justifyContent="center" xs={6} className={classes.table} style={{ backgroundColor: theme.palette.secondary.dark }}>
+                <Grid item xs={12}>
+                    <Typography variant='h3' className={classes.tableHeading} >Probability of Items</Typography>
+                    <Typography variant='h3' className={classes.tableHeading} >{gatheringLabelsMap[selectedGatheringNode]}</Typography>
+
+                </Grid>
+                <Grid item>
+                    <TableContainer component={Paper} style={{ backgroundColor: theme.palette.primary.main }}>
+                        <Table className={classes.table} size="small" aria-label="gathering table" style={{ color: theme.palette.secondary.contrastText }}>
+                            <TableHead className={classes.head}>
+                                <TableRow>
+                                    <TableCell align="center" className={classes.input}>Item</TableCell>
+                                    <TableCell align="center" className={classes.input}>Quantity</TableCell>
+                                    <TableCell align="center" className={classes.input}>Chance</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {makeRows(adjEdges)}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Grid>
             </Grid>
 
-            <Grid container item xs={3} style={{ backgroundColor: theme.palette.secondary.dark }}>
+            <Grid container item xs={2} className={classes.luckBox} style={{ backgroundColor: theme.palette.secondary.dark }}>
                 <Grid container item justifyContent="space-evenly" alignItems='flex-end' style={{ padding: '10px' }}>
-                    <Grid item>
-                        <Typography>Luck Bonus</Typography>
+                    <Grid item>                    
+                        <Typography variant='h3' className={classes.tableHeading} >Luck Bonuses</Typography>
+                        <Typography>Total Luck Bonus</Typography>
                         <TextField id="luckBonus"
                             variant="filled" color="secondary"
-                            defaultValue="5000"
+                            defaultValue={luckBonus}
                             onChange={handleLuckBonusChange}
                             InputProps={{
                                 className: classes.input,
