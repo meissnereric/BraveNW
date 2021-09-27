@@ -149,8 +149,8 @@ export default function GatheringLuck(props) {
     const makeRow = (edge) => {
         var cells = []
         cells.push(<TableCell className={classes.input}>{edge.attributes.targetName}</TableCell>)
-        cells.push(<TableCell className={classes.input}>{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
-        cells.push(<TableCell className={classes.input}>{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
+        cells.push(<TableCell className={classes.input}align="center">{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
+        cells.push(<TableCell className={classes.input}align="center">{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
         return cells
 
     }
@@ -180,9 +180,9 @@ style={{ backgroundColor: theme.palette.secondary.dark }}>
                     <Table className={classes.table} size="small" aria-label="gathering table" style={{ color: theme.palette.secondary.contrastText }}>
                         <TableHead className={classes.head}>
                             <TableRow>
-                                <TableCell align="center">Item</TableCell>
-                                <TableCell align="center">Quantity</TableCell>
-                                <TableCell align="center">Chance</TableCell>
+                                <TableCell align="center"className={classes.input}>Item</TableCell>
+                                <TableCell align="center"className={classes.input}>Quantity</TableCell>
+                                <TableCell align="center"className={classes.input}>Chance</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

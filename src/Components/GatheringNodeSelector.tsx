@@ -77,11 +77,10 @@ class GatheringNodeSelector extends React.PureComponent {
 
     }
 
-    _computeProbability = function (luckBonus, maxRoll, nodeProb, existingProb, luckSafe, andOrTuple, uniformProbs) {
+    _computeProbability = function (key, nextKeys, luckBonus, maxRoll, nodeProb, existingProb, luckSafe, andOr, nextProbs, uniformProbs) {
 
         var luck = luckBonus
-        var andOr = andOrTuple[0]
-        var nextProb = andOrTuple[1]
+        var nextProb = nextProbs[key]
 
         // If maxRoll < 100000, just treat the table as luckSafe bc not sure.
         if (maxRoll < 100000 || luckSafe) {
@@ -89,7 +88,7 @@ class GatheringNodeSelector extends React.PureComponent {
         }
         console.log(["luckBonus", luckBonus, "maxRoll", maxRoll, "nodeProb", nodeProb, "existingProb", existingProb, "nextProb", nextProb])
 
-        if(andOr == "AND"){
+        if(andOr === "AND"){
             var newProb = 1. - (nodeProb - luck) / maxRoll
             if(newProb < 0)
                 newProb = 0.
@@ -99,16 +98,19 @@ class GatheringNodeSelector extends React.PureComponent {
             return finalProb
         }
         else {
-            if(nextProb == nodeProb){ // count for uniform
-                if(nextProb in uniformProbs)
-                    uniformProbs[nextProb] = uniformProbs[nextProb] + 1
-                else
-                    uniformProbs[nextProb] = 1
+            while(nodeProb === nextProb[0]){
+                nextProb = nextProbs[nextKeys[nextProb[1]]]
             }
-            var p = (nextProb - nodeProb) / maxRoll
+            console.log(["nodeProb", nodeProb, "nextProb", nextProb, "uniformProbs", uniformProbs])
+
+            var np = nodeProb
+            var nextp = nextProb[0]
+            if(np < luckBonus)
+                np = luckBonus
+            var p = (nextp - np) / maxRoll / uniformProbs[np]
             if (p < 0)
-                p = 0.
-            console.log(["nextProb", nextProb, "nodeProb", nodeProb, "p", p, "existingProb", existingProb])
+                p = 0
+            console.log(["nextProb", nextp, "np", np, "p", p, "existingProb", existingProb])
             return p * existingProb
         }
     }
@@ -155,13 +157,20 @@ class GatheringNodeSelector extends React.PureComponent {
         }
         nextKeys.push(-1)
         var i = 0
+        var uniformProbs = {}
         for (let key in adjEdges) {
             var nk = nextKeys[i+1]
             var nextProb = adjEdges[nk]
+            var nodeProb = adjEdges[nextKeys[i]].attributes.probability
             if(nk === -1)
-                nextProbs[key] = 100000 + this.props.luckBonus // TODO hack
+                nextProbs[key] = [100000 + this.props.luckBonus, i+1] // TODO hack, breaks if not 100000???
             else
-                nextProbs[key] = nextProb.attributes.probability
+                nextProbs[key] = [nextProb.attributes.probability, i+1]
+
+            if(nodeProb in uniformProbs)
+                uniformProbs[nodeProb] = uniformProbs[nodeProb] + 1
+            else
+                uniformProbs[nodeProb] = 1
             i = i+1
         }
 
@@ -172,7 +181,6 @@ class GatheringNodeSelector extends React.PureComponent {
         }
         else {
             var tmpNeighbors = Object.assign({}, adjNodes);
-            var uniformProbs = {}
             console.log(["props"], this.props)
             console.log(["Adjacency stuff", existingNodes, adjNodes, adjEdges, nodeId, graph, tmpNeighbors, existingNodes])
             for (let key in adjEdges) {
@@ -187,11 +195,9 @@ class GatheringNodeSelector extends React.PureComponent {
                     var existingProbability = 1.
                     var luckSafe = sourceNode.attributes.lucksafe
                     var andOr = sourceNode.attributes.andor
-                    var andOrTuple = [andOr, nextProbs[key]]
-
                     if (!(sourceNode.attributes.computedProbability == undefined))
                         existingProbability = sourceNode.attributes.computedProbability
-                    targetNode.attributes.computedProbability = this._computeProbability(this.props.luckBonus, sourceNode.attributes.maxroll, element.attributes.probability, existingProbability, luckSafe, andOrTuple, uniformProbs)
+                    targetNode.attributes.computedProbability = this._computeProbability(key, nextKeys, this.props.luckBonus, sourceNode.attributes.maxroll, element.attributes.probability, existingProbability, luckSafe, andOr, nextProbs, uniformProbs)
                     element.attributes.computedProbability = targetNode.attributes.computedProbability
                     element.attributes.targetName = targetNode.label
                     if(element.itemType === 'LootTable'){
