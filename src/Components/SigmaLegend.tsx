@@ -34,6 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+let globalLuckBonus=0
+
 
 
 export default function Legend(props) {
