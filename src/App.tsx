@@ -47,7 +47,7 @@ function App(props) {
             <Grid item style={{minHeight:'100%', backgroundColor: theme.palette.secondary.main, paddingLeft: 30, paddingRight: 30, paddingBottom: 30}}>
               <Switch>
                 {/* Route the home page to recipe graph for now during testing. */}
-                <Route exact path="/" component={ItemGraph}></Route>
+                <Route exact path="/" component={GatheringLuck}></Route>
                 <Route exact path="/about" component={About}></Route>
                 <Route exact path="/infographics" component={Infographics}></Route>
                 <Route exact path="/arbitrage" component={Arbitrage}></Route>

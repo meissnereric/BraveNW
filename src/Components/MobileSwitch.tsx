@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-export const isDesktopQuery = '(min-width:600px)'
+export const isDesktopQuery = theme => theme.breakpoints.up('sm')
 
 export default function MobileSwitch(props) {
     const classes = useStyles();

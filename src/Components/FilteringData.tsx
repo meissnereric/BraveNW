@@ -119,3 +119,130 @@ export function hexToRgb(hex) {
         b: parseInt(result[3], 16)
     } : null;
 }
+
+function createGatheringData(gatheringType: string, nodeId: string, nodeName: string, colorHex: string) {
+    return { gatheringType, nodeId, nodeName, colorHex };
+}
+
+export const gatheringRows = [
+    createGatheringData('Mining', 'oreveinfinishsmall', "Iron Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'oreveinfinishmedium', "Iron Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'oreveinfinishlarge', "Iron Vein (L)", "#7F5800"),
+
+    createGatheringData('Mining', 'starmetaloreveinfinishsmall', "Starmetal Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'starmetaloreveinfinishmedium', "Starmetal Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'starmetaloreveinfinishlarge', "Starmetal Vein (L)", "#7F5800"),
+
+    createGatheringData('Mining', 'orichalcumoreveinfinishsmall', "Orichalcum Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'orichalcumoreveinfinishmedium', "Orichalcum Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'orichalcumoreveinfinishlarge', "Orichalcum Vein (L)", "#7F5800"),
+
+    createGatheringData('Mining', 'silver_small', "Silver Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'silver_medium', "Silver Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'silver_large', "Silver Vein (L)", "#7F5800"),
+
+    createGatheringData('Mining', 'gold_small', "Gold Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'gold_medium', "Gold Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'gold_large', "Gold Vein (L)", "#7F5800"),
+
+    createGatheringData('Mining', 'platinum_small', "Platinum Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'platinum_medium', "Platinum Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'platinum_large', "Platinum Vein (L)", "#7F5800"),
+
+    createGatheringData('Mining', 'boulderfinishsmall', "Boulder (S)", "#A8A8A8"),
+    createGatheringData('Mining', 'boulderfinishmedium', "Boulder (M)", "#949494"),
+    createGatheringData('Mining', 'boulderfinishlarge', "Boulder (L)", "#474747"),
+
+    createGatheringData('Mining', 'lodestonefinishsmall', "Lodestone (S)", "#A8A8A8"),
+    createGatheringData('Mining', 'lodestonefinishmedium', "Lodestone (M)", "#949494"),
+    createGatheringData('Mining', 'lodestonefinishlarge', "Lodestone (L)", "#474747"),
+
+    createGatheringData('Mining', 'seepingstonesmall', "Seeping Stone (S)", "#A8A8A8"),
+    createGatheringData('Mining', 'seepingstonemedium', "Seeping Stone (M)", "#949494"),
+    createGatheringData('Mining', 'seepingstonelarge', "Seeping Stone (L)", "#474747"),
+
+    createGatheringData('Mining', 'singlestone', "Flint", "#949494"),
+
+    createGatheringData('Logging', 'treetiny', "Young Tree (T)", "#429030"),
+    createGatheringData('Logging', 'treesmall', "Young Tree (S)", "#3A802A"),
+    createGatheringData('Logging', 'treemedium', "Young Tree (M)", "#316A24"),
+    createGatheringData('Logging', 'treelarge', "Young Tree (L)", "#25501B"),
+    createGatheringData('Logging', 'treehuge', "Young Tree (H)", "#122F0A"),
+
+    createGatheringData('Logging', 'treesoftwoodtiny', "Mature Tree (T)", "#429030"),
+    createGatheringData('Logging', 'treesoftwoodsmall', "Mature Tree (S)", "#3A802A"),
+    createGatheringData('Logging', 'treesoftwoodmedium', "Mature Tree (M)", "#316A24"),
+    createGatheringData('Logging', 'treesoftwoodlarge', "Mature Tree (L)", "#25501B"),
+    createGatheringData('Logging', 'treesoftwoodhuge', "Mature Tree (H)", "#122F0A"),
+
+    createGatheringData('Logging', 'wyrdwoodtreetiny', "Wyrdwood Tree (T)", "#429030"),
+    createGatheringData('Logging', 'wyrdwoodtreesmall', "Wyrdwood Tree (S)", "#3A802A"),
+    createGatheringData('Logging', 'wyrdwoodtreemedium', "Wyrdwood Tree (M)", "#316A24"),
+    createGatheringData('Logging', 'wyrdwoodtreelarge', "Wyrdwood Tree (L)", "#25501B"),
+    createGatheringData('Logging', 'wyrdwoodtreehuge', "Wyrdwood Tree (H)", "#122F0A"),
+
+    createGatheringData('Logging', 'ironwoodtreetiny', "Ironwood Tree (T)", "#429030"),
+    createGatheringData('Logging', 'ironwoodtreesmall', "Ironwood Tree (S)", "#3A802A"),
+    createGatheringData('Logging', 'ironwoodtreemedium', "Ironwood Tree (M)", "#316A24"),
+    createGatheringData('Logging', 'ironwoodtreelarge', "Ironwood Tree (L)", "#25501B"),
+    createGatheringData('Logging', 'ironwoodtreehuge', "Ironwood Tree (H)", "#122F0A"),
+
+    createGatheringData('Harvesting', 'bushxsmall', "Bush (XS)", "#ADBDFF"),
+    createGatheringData('Harvesting', 'bushsmall', "Bush (S)", "#ADB2FF"),
+    createGatheringData('Harvesting', 'bushmedium', "Bush (M)", "#93A8FF"),
+    createGatheringData('Harvesting', 'bushlarge', "Bush (L)", "#6675B2"),
+    createGatheringData('Harvesting', 'bushhuge', "Bush (H)", "#48537E"),
+
+    createGatheringData('Harvesting', 'hempsmallt1', "Hemp (S)", "#93A8FF"),
+    createGatheringData('Harvesting', 'hempmediumt1', "Hemp (M)", "#6675B2"),
+    createGatheringData('Harvesting', 'hemplarget1', "Hemp (L)", "#48537E"),
+
+    createGatheringData('Harvesting', 'hempsmallt4', "Silkweed (S)", "#93A8FF"),
+    createGatheringData('Harvesting', 'hempmediumt4', "Silkweed (M)", "#6675B2"),
+    createGatheringData('Harvesting', 'hemplarget4', "Silkweed (L)", "#48537E"),
+
+    createGatheringData('Harvesting', 'hempsmallt5', "Wirefiber (S)", "#93A8FF"),
+    createGatheringData('Harvesting', 'hempmediumt5', "Wirefiber (M)", "#6675B2"),
+    createGatheringData('Harvesting', 'hemplarget5', "Wirefiber (L)", "#48537E"),
+
+    createGatheringData('Harvesting', 'earth_plant', "Earth Plant", "#603735"),
+    createGatheringData('Harvesting', 'fire_plant', "Fire Plant", "#FF6333"),
+    createGatheringData('Harvesting', 'air_plant', "Air Plant", "#89CFCF"),
+    createGatheringData('Harvesting', 'water_plant', "Water Plant", "#5EAAFD"),
+    createGatheringData('Harvesting', 'soul_plant', "Soul Plant", "#93B8FF"),
+    createGatheringData('Harvesting', 'life_plant', "Life Plant", "#00D38C"),
+    createGatheringData('Harvesting', 'death_plant', "Death Plant", "#555555"),
+
+]
+
+const gatheringRowsSplitter = (rows) => {
+    let mining = []
+    let logging = []
+    let harvesting = []
+    rows.forEach(element => {
+        if (element.gatheringType === "Mining")
+            mining.push(element)
+        
+        if (element.gatheringType === "Logging")
+            logging.push(element)
+
+        if (element.gatheringType === "Harvesting")
+            harvesting.push(element)
+    });
+    return { mining, logging, harvesting }
+}
+export const gatheringSplitRows = gatheringRowsSplitter(gatheringRows)
+
+
+const makeGatheringLabelsMap = (rows) => {
+    let map = {}
+    rows.forEach(element => {
+        map[element.nodeId] = element.nodeName
+    })
+    return map
+
+}
+
+export const gatheringLabelsMap = makeGatheringLabelsMap(gatheringRows)
+
+

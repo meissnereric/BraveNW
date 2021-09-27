@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Grid, Typography } from "@material-ui/core";
-import { Theme, useTheme } from '@material-ui/core';
-import { makeStyles } from "@material-ui/styles";
+import React, { useState, useEffect, useReducer } from 'react';
+import { FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Grid, Typography, Box, Accordion, AccordionSummary, AccordionDetails, useMediaQuery, GridSize } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,35 +9,39 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { TextField } from "@material-ui/core";
+import GatheringNetwork from "./GatheringNetwork"
+import { gatheringSplitRows, gatheringLabelsMap } from './FilteringData';
+import { titleCase } from './GraphConfig';
+import PersistentDrawer from './PersistentDrawer';
 
-function createData(name, sandpaper, weave, flux, tannin, solvent) {
-    return { name, sandpaper, weave, flux, tannin, solvent };
-}
-
-const rows = [
-    createData('sandpaper', 159, 6.0, 24, 4.0, 5.0),
-    createData('weave', 237, 9.0, 37, 4.3, 5.0),
-    createData('flux', 262, 16.0, 24, 6.0, 5.0),
-    createData('tannin', 305, 3.7, 67, 4.3, 5.0),
-    createData('solvent', 356, 16.0, 49, 3.9, 5.0),
-];
-
-const useStyles = makeStyles((theme: Theme) => ({
+const styles = theme => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
+        backgroundColor: theme.palette.secondary.main,
+        minHeight: '100vh',
+        minWidth: '100vw'
     },
     input: {
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.light
     },
     table: {
-        minWidth: 300,
+        minWidth: '600px',
         borderRadius: '3px',
-
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.dark,
+        margin: theme.spacing(1),
+    },
+    mobileTable: {
+        minWidth: '100%',
+        borderRadius: '3px',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.dark,
+        margin: theme.spacing(1),
     },
     paper: {
         padding: theme.spacing(1),
-        textAlign: 'center',
+        // textAlign: 'center',
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.dark
     },
@@ -49,296 +52,466 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.secondary.light,
         color: theme.palette.primary.contrastText,
     },
-    formControl: {
-        margin: theme.spacing(1),
-        // minWidth: 80,
+    tableHeading: {
+        backgroundColor: theme.palette.secondary.dark,
         color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.secondary.light
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-        color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.secondary.light
-    },
-}));
+        // textAlign: 'center',
+        padding: theme.spacing(1),
 
-var initValues = {
-    'tier1': {
-        'sandpaper': ["Coarse Sandpaper", 0.],
-        'weave': ["Crossweave", 0.],
-        'flux': ["Sand Flux", 0.],
-        'tannin': ["Tannin", 0.],
-        'solvent': ["Weak Solvent", 0.],
-        'converter': ["Common Material Converter", {
-            'gold': 0,
-            'factionPoints': 100
-        }]
     },
-    'tier2': {
-        'sandpaper': ["Coarse Sandpaper", 0.],
-        'weave': ["Crossweave", 0.],
-        'flux': ["Sand Flux", 0.],
-        'tannin': ["Tannin", 0.],
-        'solvent': ["Weak Solvent", 0.],
-        'converter': ["Uncommon Material Converter", {
-            'gold': 0,
-            'factionPoints': 100
-        }]
+    formControl: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
     },
-    'tier3': {
-        'sandpaper': ["Coarse Sandpaper", 0.],
-        'weave': ["Crossweave", 0.],
-        'flux': ["Sand Flux", 0.],
-        'tannin': ["Tannin", 0.],
-        'solvent': ["Weak Solvent", 0.],
-        'converter': ["Rare Material Converter", {
-            'gold': 0,
-            'factionPoints': 100
-        }]
+    legend: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.dark
     },
+    mobileLegend: {
+        minWidth: '100%',
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.dark
+    },
+    luckBox: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.dark
+    },
+    mobileLuckBox: {
+        minWidth: '100%',
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.dark
+    },
+    tableContainer: {
+        backgroundColor: theme.palette.primary.main
+    },
+    highlightBox: {
+        backgroundColor: theme.palette.secondary.main,
+        padding: theme.spacing(1),
+
+    }
+
+});
+
+const initLucks = {
+    armorLuck: 0,
+    toolLuck: 0,
+    amuletLuck: 0,
+    housingLuck: 0,
+    foodLuck: 0,
+    settlementLuck: 0,
+    skillLevel: 0
 }
 
 
-export default function GatheringLuck(props) {
-    const classes = useStyles();
-    const theme = useTheme();
-    const [reagentCosts, setReagentCosts] = React.useState(initValues);
-    const [currentTier, setCurrentTier] = React.useState("tier1");
-    const [converterType, setConverterType] = React.useState("gold");
-    const [quantity, setQuantity] = React.useState(1);
-    // rows = [{}]
+type State = {
+    adjNodes: any,
+    adjEdges: any,
+    selectedGatheringNode: string,
+    luckBonus: number,
+    luckBonuses: Object,
+}
 
-    const handleQuantityChange =  (event: React.ChangeEvent<HTMLInputElement>) => {
-        var quantity = parseInt(event.target.value)
-        if (isNaN(quantity)) {
-            quantity = 1
+type Props = {
+    classes: any,
+    IsDesktop: boolean
+}
+
+class GatheringLuck extends React.Component<Props, State> {
+    constructor(props) {
+        super(props)
+        this.state = {
+            adjNodes: [],
+            adjEdges: [],
+            selectedGatheringNode: "oreveinfinishsmall",
+            luckBonus: 0,
+            luckBonuses: initLucks,
         }
-        setQuantity(quantity)
+        this.getAdjNodes = this.getAdjNodes.bind(this)
+        this.getAdjEdges = this.getAdjEdges.bind(this)
+        this.updateSelectedGatheringNode = this.updateSelectedGatheringNode.bind(this)
+        this.updateLuckBonus = this.updateLuckBonus.bind(this)
+        this.updateLuckBonuses = this.updateLuckBonuses.bind(this)
+        this.updateSelectedGatheringNode = this.updateSelectedGatheringNode.bind(this)
+        this.handleRadioChange = this.handleRadioChange.bind(this)
+
     }
 
-    const handleReagentCostChanges = (event: React.ChangeEvent<HTMLInputElement>) => {
-        var value = event.target.value.toLowerCase()
-        var fValue = event.target.id
+    getAdjNodes(toKeepNodes) {
+        this.setState({ adjNodes: toKeepNodes })
+    }
+    getAdjEdges(toKeepEdges) {
+        this.setState({ adjEdges: toKeepEdges })
+    }
+    updateSelectedGatheringNode(gnode) {
+        this.setState({ selectedGatheringNode: gnode }, () => { console.log("Done gathering node updating"); this.forceUpdate(); console.log("Extra done gathering node updating"); })
+    }
+    updateLuckBonus(lb) {
+        this.setState({ luckBonus: lb },
+            () => { console.log("Done luck bonus updating", lb, this.state.luckBonus); this.forceUpdate(); console.log("Extra done luck bonus updating", lb, this.state.luckBonus); })
+    }
+    updateLuckBonuses(lbs) {
+        this.setState({ luckBonuses: lbs }, () => { console.log("Done luck bonuses updating"); })
+    }
 
-        var prevValue = reagentCosts[currentTier][fValue]
-        var newValue = [prevValue[0], value]
-        if (fValue == 'converter') {
-            newValue = [prevValue[0], { ...prevValue[1], 'gold': value }]
+    handleLuckBonusChange = (event: any) => {
+        var lb = parseInt(event.target.value)
+        if (isNaN(lb)) {
+            lb = 0
         }
-        setReagentCosts(reagentCosts => ({
-            ...reagentCosts, [currentTier]: {
-                ...reagentCosts[currentTier], [fValue]: newValue
-            }
-        }))
-        console.log(reagentCosts)
-    };
 
-    const computeArbitrageRate = (startItemCost, endItemCost, converterCost, quantity) => {
-        if (isNaN(startItemCost) || isNaN(endItemCost)) {
-            return "NaN"
-        }
-        var rate = (endItemCost * 15) - (startItemCost * 20)
-        console.log("Arbitrage Rate", startItemCost, endItemCost, converterCost, rate)
-        if (converterType == 'gold') {
-            return (rate - converterCost) * quantity
-        }
-        else {
-            return (rate) * quantity
-        }
-    };
+        var luckType = event.target.id
+        var cp = { ...this.state.luckBonuses }
+        cp[luckType] = lb
+        this.updateLuckBonuses(cp)
 
-    const handleTierChange = () => {
-        console.log("Tier change")
-    };
+        let sum = 0
+        for (let key in this.state.luckBonuses) {
+            sum = sum + this.state.luckBonuses[key];
+        }
+        this.updateLuckBonus(sum)
+        console.log(["Luck bonus", event.target.value, this.state.luckBonus])
+        console.log(["Luck bonuses", cp, this.state.luckBonuses])
+    }
 
-    return (
-        <Grid container className='root' spacing={0} style={{ backgroundColor: theme.palette.secondary.main, minHeight: '100vh' }}
-            justifyContent="flex-start"
-            alignItems="center"
-        >
-            <Grid container item xs={4}>
-                <Grid xs={12}>
-                    <Typography variant='h2'>Refining Reagent Conversions</Typography>
+    handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.updateSelectedGatheringNode(event.target.value)
+        console.log(["Selected gathering node", event.target.value, this.state.selectedGatheringNode])
+    }
+
+
+
+    makeFilterList = (classes, filterType) => {
+        var makeGRow = (row) => {
+            return <FormControlLabel
+                style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
+                labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
+        }
+        console.log(["Rows", filterType, gatheringSplitRows])
+
+        return <FormControl component="fieldset" className={classes.formControl}>
+            <RadioGroup
+                aria-label="gatheringNode"
+                defaultValue="oreveinfinishsmall"
+                name="gathering-nodes-radio-group"
+                onChange={this.handleRadioChange}
+                value={this.state.selectedGatheringNode}
+            >
+
+                <FormLabel className={classes.head} component="legend"><Typography align='left' variant='h3' className={classes.head}>Gathering Nodes</Typography></FormLabel>
+
+                {/* <Accordion className={classes.formControl}>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography>Mining</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                    </AccordionDetails>
+                </Accordion> */}
+                {gatheringSplitRows.mining.map((row) => makeGRow(row))}
+                {gatheringSplitRows.logging.map((row) => makeGRow(row))}
+                {gatheringSplitRows.harvesting.map((row) => makeGRow(row))}
+            </RadioGroup>
+        </FormControl>
+    }
+
+    makeRows = (classes, adjEdges) => {
+        var rows = []
+        for (let key in adjEdges) {
+            let edge = adjEdges[key];
+            rows.push(<TableRow className={classes.input}>{this.makeRow(classes, edge)}</TableRow>)
+        };
+        return rows
+
+    }
+
+    makeRow = (classes, edge) => {
+        var cells = []
+        cells.push(<TableCell className={classes.input}>{titleCase(edge.attributes.targetName)}</TableCell>)
+        cells.push(<TableCell className={classes.input} align="center">{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
+        cells.push(<TableCell className={classes.input} align="center">{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
+        return cells
+
+    }
+
+    myUpdate = () => {
+        this.forceUpdate()
+    }
+
+    makeLegend = (isDesktop: boolean, classes: any, graphReactObject: Object) => {
+        var legend = (
+            <Box>
+                <Grid item xs={12}>
+                    <Paper className={classes.formControl} style={{ maxHeight: '80vh', overflow: 'auto' }}>
+                        {this.makeFilterList(classes, 'Mining')}
+                    </Paper>
                 </Grid>
-            </Grid>
-
-
-
-            <Grid container item xs={4} className={classes.table} style={{ backgroundColor: theme.palette.secondary.dark }}>
-                {/* <Typography className={classes.head} id="tableTitle" variant='h3' component="div">
-                    Table
-                    </Typography> */}
-                <Grid item xs={2}> </Grid>
-                <Grid item xs={10} alignItems='center' justifyContent='center'>
-                    <Typography variant='h4'>Input Materials</Typography>
+                <Grid item>
+                    {graphReactObject}
                 </Grid>
-                <Grid item xs={2} alignItems='center' justifyContent='center'>
-                    <Typography variant='h4'>Output Materials</Typography>
-                </Grid>
+            </Box>
+        )
+        return legend
 
-                <Grid item xs={10}>
-                    <TableContainer component={Paper} style={{ backgroundColor: theme.palette.primary.main }}>
-                        <Table className={classes.table} size="small" aria-label="arbitrage table" style={{ color: theme.palette.secondary.contrastText }}>
+    }
+    makeTable = (isDesktop: boolean, classes: any) => {
+        var tableClass = classes.table
+        if(!isDesktop)
+            tableClass = classes.mobileTable
+        var table = (
+            <Box>
+                <Grid item xs={12} alignItems='center' justifyContent="center">
+                    <Typography variant='h3' className={classes.tableHeading} >Probability of Items</Typography>
+                    <Typography variant='h3' className={classes.tableHeading} >{gatheringLabelsMap[this.state.selectedGatheringNode]}</Typography>
+
+                </Grid>
+                <Grid item alignItems='center' justifyContent="center">
+                    <TableContainer component={Paper} className={classes.tableContainer}>
+                        <Table className={tableClass} size="small" aria-label="gathering table" style={{}}>
                             <TableHead className={classes.head}>
                                 <TableRow>
-                                    <TableCell> </TableCell>
-                                    <TableCell align="center"><Typography variant='body2'>{reagentCosts[currentTier]['sandpaper'][0]}</Typography></TableCell>
-                                    <TableCell align="center"><Typography variant='body2'>{reagentCosts[currentTier]['weave'][0]}</Typography></TableCell>
-                                    <TableCell align="center"><Typography variant='body2'>{reagentCosts[currentTier]['flux'][0]}</Typography></TableCell>
-                                    <TableCell align="center"><Typography variant='body2'>{reagentCosts[currentTier]['tannin'][0]}</Typography></TableCell>
-                                    <TableCell align="center"><Typography variant='body2'>{reagentCosts[currentTier]['solvent'][0]}</Typography></TableCell>
+                                    <TableCell align="center" className={classes.input}>Item</TableCell>
+                                    <TableCell align="center" className={classes.input}>Quantity</TableCell>
+                                    <TableCell align="center" className={classes.input}>Chance</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.name}>
-                                        <TableCell align="center" className={classes.head}><Typography variant='body2'>{reagentCosts[currentTier][row.name][0]}</Typography></TableCell>
-
-                                        <TableCell align="center"><Typography variant='body2'>{computeArbitrageRate(reagentCosts[currentTier]['sandpaper'][1],
-                                            reagentCosts[currentTier][row.name][1],
-                                            reagentCosts[currentTier]['converter'][1]['gold'],
-                                            quantity)}g</Typography></TableCell>
-
-                                        <TableCell align="center"><Typography variant='body2'>{computeArbitrageRate(reagentCosts[currentTier]['weave'][1],
-                                            reagentCosts[currentTier][row.name][1],
-                                            reagentCosts[currentTier]['converter'][1]['gold'],
-                                            quantity)}g</Typography></TableCell>
-
-                                        <TableCell align="center"><Typography variant='body2'>{computeArbitrageRate(reagentCosts[currentTier]['flux'][1],
-                                            reagentCosts[currentTier][row.name][1],
-                                            reagentCosts[currentTier]['converter'][1]['gold'],
-                                            quantity)}g</Typography></TableCell>
-
-                                        <TableCell align="center"><Typography variant='body2'>{computeArbitrageRate(reagentCosts[currentTier]['tannin'][1],
-                                            reagentCosts[currentTier][row.name][1],
-                                            reagentCosts[currentTier]['converter'][1]['gold'],
-                                            quantity)}g</Typography></TableCell>
-
-                                        <TableCell align="center"><Typography variant='body2'>{computeArbitrageRate(reagentCosts[currentTier]['solvent'][1],
-                                            reagentCosts[currentTier][row.name][1],
-                                            reagentCosts[currentTier]['converter'][1]['gold'],
-                                            quantity)}g</Typography></TableCell>
-                                    </TableRow>
-                                ))}
+                                {this.makeRows(classes, this.state.adjEdges)}
                             </TableBody>
                         </Table>
                     </TableContainer>
                 </Grid>
-            </Grid>
+            </Box >
+        )
+        return table
 
-            <Grid container item xs={4} style={{ backgroundColor: theme.palette.secondary.dark }}>
-                {/* 
-                <Grid container item justifyContent="space-evenly" alignItems='center' spacing={3} style={{ backgroundColor: theme.palette.secondary.light, }}>
-                    
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="tier-selector-label">Refining Reagent Tier</InputLabel>
-                        <Select
-                        labelId="tier-selector-label"
-                        id="tier-selector"
-                        value={currentTier}
-                        onChange={handleTierChange}
-                        inputProps={{
-                            className: classes.input
+    }
+    makeLuckBox = (isDesktop: boolean, classes: any) => {
+        var luckBox = (
+            <Grid container item justifyContent="space-evenly" alignItems='flex-start' style={{ padding: '10px' }} spacing={1}>
+                <Grid item xs={12}>
+                    <Typography variant='h3' className={classes.tableHeading} >Luck Bonuses</Typography>
+                    <Typography variant='body1' className={classes.highlightBox}>1% Luck on item = 100 Luck</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant='h4'>Total Luck Bonus: <i>{this.state.luckBonus}</i></Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Armor</Typography>
+                    <Typography>0-2500</Typography>
+                    <TextField id="armorLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
                         }}
-                        >
-                        <MenuItem value={'tier1'}>Tier 1</MenuItem>
-                        <MenuItem value={'tier2'}>Tier 2</MenuItem>
-                        <MenuItem value={'tier3'}>Tier 3</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid> */}
-
-                <Grid container item justifyContent="space-evenly" alignItems='flex-end' style={{ padding: '10px' }}>
-
-
-                    <Grid item>
-                        <Typography>{reagentCosts[currentTier]['sandpaper'][0]}</Typography>
-                        <TextField id="sandpaper"
-                            variant="filled" color="primary"
-                            onChange={handleReagentCostChanges}
-                            InputProps={{
-                                className: classes.input,
-                            }}
-                        />
-                    </Grid>
-
-                    <Grid item>
-                        <Typography>{reagentCosts[currentTier]['weave'][0]}</Typography>
-                        <TextField id="weave"
-                            variant="filled" color="primary"
-                            onChange={handleReagentCostChanges}
-                            InputProps={{
-                                className: classes.input,
-                            }}
-                        />
-                    </Grid>
-
-                    <Grid item>
-                        <Typography>{reagentCosts[currentTier]['flux'][0]}</Typography>
-                        <TextField id="flux"
-                            variant="filled" color="primary"
-                            onChange={handleReagentCostChanges}
-                            InputProps={{
-                                className: classes.input,
-                            }}
-                        />
-                    </Grid>
-
-                    <Grid item>
-                        <Typography>{reagentCosts[currentTier]['tannin'][0]}</Typography>
-                        <TextField id="tannin"
-                            variant="filled" color="secondary"
-                            onChange={handleReagentCostChanges}
-                            InputProps={{
-                                className: classes.input,
-                            }}
-                        />
-                    </Grid>
-
-                    <Grid item>
-                        <Typography>{reagentCosts[currentTier]['solvent'][0]}</Typography>
-                        <TextField id="solvent"
-                            variant="filled" color="secondary"
-                            onChange={handleReagentCostChanges}
-                            InputProps={{
-                                className: classes.input,
-                            }}
-                        />
-                    </Grid>
-
-                    <Grid item>
-                        <Grid item xs={12}>
-                            <Typography variant='body2'>100 Faction Points</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography>{reagentCosts[currentTier]['converter'][0]}</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField id="converter"
-                                variant="filled" color="secondary"
-                                onChange={handleReagentCostChanges}
-                                InputProps={{
-                                    className: classes.input,
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
-
-                    <Grid item>
-                        <Typography>Quantity</Typography>
-                        <TextField id="quantity"
-                            variant="filled" color="secondary"
-                            onChange={handleQuantityChange}
-                            InputProps={{
-                                className: classes.input,
-                            }}
-                        />
-                    </Grid>
-
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Amulet</Typography>
+                    <Typography>0-955</Typography>
+                    <TextField id="amuletLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Housing</Typography>
+                    <Typography>0-4500</Typography>
+                    <TextField id="housingLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Skill Level</Typography>
+                    <Typography>0-2000</Typography>
+                    <TextField id="skillLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Tool</Typography>
+                    <Typography>0-927</Typography>
+                    <TextField id="toolLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Food</Typography>
+                    <Typography>0-2000</Typography>
+                    <TextField id="foodLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Settlement Project</Typography>
+                    <Typography>0-500</Typography>
+                    <TextField id="settlementLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
                 </Grid>
             </Grid>
-            
+        )
+        return luckBox
 
-        </Grid>
-    )
+    }
+
+
+    render() {
+        const { classes, IsDesktop = true } = this.props;
+        console.log("Render IsDesktop", IsDesktop)
+
+        var graphReactObject = (
+            <GatheringNetwork setAdjNodes={this.getAdjNodes} setAdjEdges={this.getAdjEdges}
+                selectedGatheringNode={this.state.selectedGatheringNode} luckBonus={this.state.luckBonus}></GatheringNetwork>
+        )
+        var legend = this.makeLegend(IsDesktop, classes, graphReactObject)
+        var table = this.makeTable(IsDesktop, classes)
+        var luckBox = this.makeLuckBox(IsDesktop, classes)
+
+        if (IsDesktop) {
+            return (
+                <Grid container spacing={0}
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    className={classes.root}>
+
+                    <Grid container item xs={3}
+                        justifyContent="flex-start"
+                        alignItems="flex-start"
+                        className={classes.legend}>
+                        {legend}
+                    </Grid>
+                    <Grid container item alignItems='center' justifyContent="center" xs={6} className={classes.table}>
+                        <Paper className={classes.formControl} style={{ maxHeight: '80vh', overflow: 'auto' }}>
+                            {table}
+                        </Paper>
+                    </Grid>
+                    <Grid container item xs={2} className={classes.luckBox}>
+                        {luckBox}
+                    </Grid>
+                </Grid>
+            )
+        }
+        else {
+            return (
+                <Grid container alignItems='flex-start' justifyContent="center"  >
+                    <Grid item xs={12}>
+                        <PersistentDrawer
+                            lLabel="Gathering Nodes"
+                            lDisplay={legend}
+                            rLabel="Luck Bonuses"
+                            rDisplay={luckBox}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        {table}
+                    </Grid>
+                </Grid>
+            )
+        }
+    }
 }
+
+export const withMediaQuery = (queries = []) => Component => props => {
+    const mediaProps = {}
+    queries.forEach(q => {
+        console.log("media shit", q)
+        mediaProps[q[0]] = useMediaQuery(q[1])
+        console.log("media shit2", mediaProps)
+    })
+    return <Component {...mediaProps} {...props} />
+}
+
+export default withStyles(styles)(withMediaQuery([
+    ['IsDesktop', theme => theme.breakpoints.up('sm'), {
+        defaultMatches: true
+    }]
+])(GatheringLuck));
