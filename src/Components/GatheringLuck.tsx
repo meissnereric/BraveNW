@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Grid, Typography, Box } from "@material-ui/core";
+import { Button, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Grid, Typography, Box, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
 import { Theme, useTheme } from '@material-ui/core';
 import { makeStyles } from "@material-ui/styles";
 import Table from '@material-ui/core/Table';
@@ -13,6 +13,7 @@ import { TextField } from "@material-ui/core";
 import GatheringNetwork from "./GatheringNetwork"
 import { gatheringSplitRows, gatheringLabelsMap } from './FilteringData';
 import { titleCase } from './GraphConfig';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -96,7 +97,9 @@ export default function GatheringLuck(props) {
 
     const makeFilterList = (filterType) => {
         var makeGRow = (row) => {
-            return <FormControlLabel labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
+            return <FormControlLabel
+                style={{ backgroundColor: row.colorHex, color: theme.palette.secondary.contrastText, margin: 2, padding: 5, textAlign: 'left' }}
+                labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
         }
         console.log(["Rows", filterType, gatheringSplitRows])
         return <FormControl component="fieldset" className={classes.formControl}>
@@ -109,6 +112,18 @@ export default function GatheringLuck(props) {
             >
 
                 <FormLabel className={classes.head} component="legend"><Typography align='left' variant='h3' className={classes.head}>Gathering Nodes</Typography></FormLabel>
+
+                {/* <Accordion className={classes.formControl}>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography>Mining</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                    </AccordionDetails>
+                </Accordion> */}
                 {gatheringSplitRows.mining.map((row) => makeGRow(row))}
                 {gatheringSplitRows.logging.map((row) => makeGRow(row))}
                 {gatheringSplitRows.harvesting.map((row) => makeGRow(row))}
@@ -144,7 +159,7 @@ export default function GatheringLuck(props) {
             justifyContent="flex-start"
             alignItems="flex-start">
 
-            <Grid container item xs={2} 
+            <Grid container item xs={2}
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 style={{ backgroundColor: theme.palette.secondary.dark }}
@@ -183,7 +198,7 @@ export default function GatheringLuck(props) {
 
             <Grid container item xs={2} className={classes.luckBox} style={{ backgroundColor: theme.palette.secondary.dark }}>
                 <Grid container item justifyContent="space-evenly" alignItems='flex-end' style={{ padding: '10px' }}>
-                    <Grid item>                    
+                    <Grid item>
                         <Typography variant='h3' className={classes.tableHeading} >Luck Bonuses</Typography>
                         <Typography>Total Luck Bonus</Typography>
                         <TextField id="luckBonus"

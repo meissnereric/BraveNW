@@ -12,6 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
+export const DISCORD_LINK="https://discord.gg/FVVFvGNj"
+
 export default function About(props) {
     const classes = useStyles();
     const theme = useTheme();
@@ -21,7 +23,7 @@ export default function About(props) {
                 alignItems="flex-start"
         >
             <Grid item style={{ margin: 5, backgroundColor: theme.palette.secondary.light }}>
-                <Typography variant='h3'><Link href="https://discord.gg/FVVFvGNj">BraveNW  Discord</Link></Typography>
+                <Typography variant='h3'><Link href={DISCORD_LINK}>BraveNW  Discord</Link></Typography>
                 <Typography><iframe src="https://discord.com/widget?id=879794338756956191&theme=dark" width="350" height="500" allowTransparency={true} frameBorder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe></Typography>
             </Grid>
             <Grid item style={{ margin: 5, backgroundColor: theme.palette.secondary.light }}>

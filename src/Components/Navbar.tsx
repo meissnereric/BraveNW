@@ -1,4 +1,5 @@
-import React from 'react';
+import * as React from 'react';
+import PropTypes from 'prop-types';
 
 // import Nav from 'react-bootstrap/Nav';
 
@@ -14,6 +15,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { isDesktopQuery } from './MobileSwitch';
+import { DISCORD_LINK } from './About';
+import { FaDiscord } from 'react-icons/fa';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -81,10 +84,13 @@ function SimpleMenu() {
             <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/gathering_luck'>Gathering Luck</Button>
           </MenuItem>
           <MenuItem onClick={handleClose}>
-            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/infographics'>Infographic</Button>
+            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/infographics'>Infographics</Button>
           </MenuItem>
           <MenuItem onClick={handleClose}>
             <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/about'>About</Button>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to={DISCORD_LINK}><FaDiscord />Discord</Button>
           </MenuItem>
 
         </Menu>
@@ -98,8 +104,9 @@ function SimpleMenu() {
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/item_list">Recipe Network</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/arbitrage">Reagent Conversions</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/gathering_luck">Gathering Luck</Button>
-        <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/infographics'>Infographic</Button>
+        <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/infographics'>Infographics</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/about'>About</Button>
+        <Button variant="contained" className={classes.menuButton} color="secondary" href={DISCORD_LINK}><FaDiscord /> Discord</Button>
       </div>
     )
   }
