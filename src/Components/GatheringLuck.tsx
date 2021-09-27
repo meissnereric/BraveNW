@@ -122,6 +122,7 @@ type State = {
     selectedGatheringNode: string,
     luckBonus: number,
     luckBonuses: Object,
+    firstLoad: boolean
 }
 
 type Props = {
@@ -138,6 +139,7 @@ class GatheringLuck extends React.Component<Props, State> {
             selectedGatheringNode: "oreveinfinishsmall",
             luckBonus: 0,
             luckBonuses: initLucks,
+            firstLoad: true
         }
         this.getAdjNodes = this.getAdjNodes.bind(this)
         this.getAdjEdges = this.getAdjEdges.bind(this)
@@ -249,10 +251,6 @@ class GatheringLuck extends React.Component<Props, State> {
 
     }
 
-    myUpdate = () => {
-        this.forceUpdate()
-    }
-
     makeLegend = (isDesktop: boolean, classes: any, graphReactObject: Object) => {
         var legend = (
             <Box>
@@ -306,7 +304,12 @@ class GatheringLuck extends React.Component<Props, State> {
             <Grid container item justifyContent="space-evenly" alignItems='flex-start' style={{ padding: '10px' }} spacing={1}>
                 <Grid item xs={12}>
                     <Typography variant='h3' className={classes.tableHeading} >Luck Bonuses</Typography>
+                    
+                    <Typography variant='h4'>Maths References</Typography>
                     <Typography variant='body1' className={classes.highlightBox}>1% Luck on item = 100 Luck</Typography>
+                    <Typography variant='body1' className={classes.highlightBox}><a href='https://github.com/meissnereric/BraveNW/blob/master/src/Components/GatheringNodeSelector.tsx#L103'>This</a> is the math in the code if you're interested.</Typography>
+                    <Typography variant='body1' className={classes.highlightBox}><a href='https://colab.research.google.com/drive/1HHu04Z-DTrw0FPl3BDhGLLAY1Ys9Q0mK#scrollTo=fVoQM8xGWoXx'>This</a> is a notebook I wrote a while ago with reasoning for the maths.</Typography>
+                    
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant='h4'>Total Luck Bonus: <i>{this.state.luckBonus}</i></Typography>

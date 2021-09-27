@@ -40,8 +40,10 @@ class GatheringNodeSelector extends React.PureComponent {
     }
 
     componentDidMount() {
-        console.info("UpdateNodes componentDidMount", this.props)
+        console.info("GatheringNodeSelector componentDidMount", this.props)
+        this.updateNeighbors()
         this.props.sigma.refresh()
+        console.log("Finish componentDidMount")
     }
 
     componentWillReceiveProps(props: Props) {
@@ -72,12 +74,6 @@ class GatheringNodeSelector extends React.PureComponent {
             let element = edges[key];
             element.attributes.computedProbability = undefined
         }
-        // nodes.forEach(element => {
-        //     element.attributes.computedProbability = undefined
-        // })
-        // edges.forEach(element => {
-        //     element.attributes.computedProbability = undefined
-        // })
     }
 
     updateNeighbors = function () {
