@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-export const DISCORD_LINK="https://discord.gg/FVVFvGNj"
+export const DISCORD_LINK="https://discord.gg/spdqjERKCZ"
 
 export default function About(props) {
     const classes = useStyles();
