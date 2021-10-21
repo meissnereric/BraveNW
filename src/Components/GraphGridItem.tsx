@@ -61,6 +61,7 @@ export default function GraphGridItem(props) {
         // display: 'flex',
         'backgroundColor': theme.palette.primary.main
     }
+    console.log("Path:", filePath)
 
     return (
         <Sigma renderer="canvas"
