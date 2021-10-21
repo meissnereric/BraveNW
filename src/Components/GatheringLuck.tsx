@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Button, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Grid, Typography, Box, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
-import { Theme, useTheme } from '@material-ui/core';
-import { makeStyles } from "@material-ui/styles";
+import React, { useState, useEffect, useReducer } from 'react';
+import { FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Grid, Typography, Box, Accordion, AccordionSummary, AccordionDetails, useMediaQuery, GridSize } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,26 +12,36 @@ import { TextField } from "@material-ui/core";
 import GatheringNetwork from "./GatheringNetwork"
 import { gatheringSplitRows, gatheringLabelsMap } from './FilteringData';
 import { titleCase } from './GraphConfig';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import PersistentDrawer from './PersistentDrawer';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const styles = theme => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
+        backgroundColor: theme.palette.secondary.main,
+        minHeight: '100vh',
+        minWidth: '100vw'
     },
     input: {
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.light
     },
     table: {
-        minWidth: 650,
+        minWidth: '600px',
         borderRadius: '3px',
         color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.secondary.dark,
+        margin: theme.spacing(1),
+    },
+    mobileTable: {
+        minWidth: '100%',
+        borderRadius: '3px',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.dark,
         margin: theme.spacing(1),
     },
     paper: {
         padding: theme.spacing(1),
-        textAlign: 'center',
+        // textAlign: 'center',
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.dark
     },
@@ -46,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     tableHeading: {
         backgroundColor: theme.palette.secondary.dark,
         color: theme.palette.primary.contrastText,
-        textAlign: 'center',
+        // textAlign: 'center',
         padding: theme.spacing(1),
 
     },
@@ -62,53 +71,145 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.primary.contrastText,
         margin: theme.spacing(1),
         padding: theme.spacing(1),
-
+        backgroundColor: theme.palette.secondary.dark
+    },
+    mobileLegend: {
+        minWidth: '100%',
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.dark
     },
     luckBox: {
         borderRadius: '1',
         color: theme.palette.primary.contrastText,
         margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.dark
+    },
+    mobileLuckBox: {
+        minWidth: '100%',
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.dark
+    },
+    tableContainer: {
+        backgroundColor: theme.palette.primary.main
+    },
+    highlightBox: {
+        backgroundColor: theme.palette.secondary.main,
+        padding: theme.spacing(1),
+
     }
-}));
+
+});
+
+const initLucks = {
+    armorLuck: 0,
+    toolLuck: 0,
+    amuletLuck: 0,
+    housingLuck: 0,
+    foodLuck: 0,
+    settlementLuck: 0,
+    skillLevel: 0
+}
 
 
-export default function GatheringLuck(props) {
-    const classes = useStyles();
-    const theme = useTheme();
-    const [adjNodes, setAdjNodes] = React.useState([]);
-    const [adjEdges, setAdjEdges] = React.useState([]);
-    const [selectedGatheringNode, setSelectedGatheringNode] = React.useState("oreveinfinishsmall");
-    const [luckBonus, setLuckBonus] = React.useState(0);
+type State = {
+    adjNodes: any,
+    adjEdges: any,
+    selectedGatheringNode: string,
+    luckBonus: number,
+    luckBonuses: Object,
+    firstLoad: boolean
+}
 
-    const handleLuckBonusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        var luckBonus = parseInt(event.target.value)
-        if (isNaN(luckBonus)) {
-            luckBonus = 1
+type Props = {
+    classes: any,
+    IsDesktop: boolean
+}
+
+class GatheringLuck extends React.Component<Props, State> {
+    constructor(props) {
+        super(props)
+        this.state = {
+            adjNodes: [],
+            adjEdges: [],
+            selectedGatheringNode: "oreveinfinishsmall",
+            luckBonus: 0,
+            luckBonuses: initLucks,
+            firstLoad: true
         }
-        setLuckBonus(luckBonus)
+        this.getAdjNodes = this.getAdjNodes.bind(this)
+        this.getAdjEdges = this.getAdjEdges.bind(this)
+        this.updateSelectedGatheringNode = this.updateSelectedGatheringNode.bind(this)
+        this.updateLuckBonus = this.updateLuckBonus.bind(this)
+        this.updateLuckBonuses = this.updateLuckBonuses.bind(this)
+        this.updateSelectedGatheringNode = this.updateSelectedGatheringNode.bind(this)
+        this.handleRadioChange = this.handleRadioChange.bind(this)
+
     }
 
-    const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedGatheringNode(event.target.value);
-        console.log(["Selected gathering node", event.target.value, selectedGatheringNode])
+    getAdjNodes(toKeepNodes) {
+        this.setState({ adjNodes: toKeepNodes })
+    }
+    getAdjEdges(toKeepEdges) {
+        this.setState({ adjEdges: toKeepEdges })
+    }
+    updateSelectedGatheringNode(gnode) {
+        this.setState({ selectedGatheringNode: gnode }, () => { console.log("Done gathering node updating"); this.forceUpdate(); console.log("Extra done gathering node updating"); })
+    }
+    updateLuckBonus(lb) {
+        this.setState({ luckBonus: lb },
+            () => { console.log("Done luck bonus updating", lb, this.state.luckBonus); this.forceUpdate(); console.log("Extra done luck bonus updating", lb, this.state.luckBonus); })
+    }
+    updateLuckBonuses(lbs) {
+        this.setState({ luckBonuses: lbs }, () => { console.log("Done luck bonuses updating"); })
+    }
+
+    handleLuckBonusChange = (event: any) => {
+        var lb = parseInt(event.target.value)
+        if (isNaN(lb)) {
+            lb = 0
+        }
+
+        var luckType = event.target.id
+        var cp = { ...this.state.luckBonuses }
+        cp[luckType] = lb
+        this.updateLuckBonuses(cp)
+
+        let sum = 0
+        for (let key in this.state.luckBonuses) {
+            sum = sum + this.state.luckBonuses[key];
+        }
+        this.updateLuckBonus(sum)
+        console.log(["Luck bonus", event.target.value, this.state.luckBonus])
+        console.log(["Luck bonuses", cp, this.state.luckBonuses])
+    }
+
+    handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.updateSelectedGatheringNode(event.target.value)
+        console.log(["Selected gathering node", event.target.value, this.state.selectedGatheringNode])
     }
 
 
 
-    const makeFilterList = (filterType) => {
+    makeFilterList = (classes, filterType) => {
         var makeGRow = (row) => {
             return <FormControlLabel
-                style={{ backgroundColor: row.colorHex, color: theme.palette.secondary.contrastText, margin: 2, padding: 5, textAlign: 'left' }}
+                style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
                 labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
         }
         console.log(["Rows", filterType, gatheringSplitRows])
+
         return <FormControl component="fieldset" className={classes.formControl}>
             <RadioGroup
                 aria-label="gatheringNode"
                 defaultValue="oreveinfinishsmall"
                 name="gathering-nodes-radio-group"
-                onChange={handleRadioChange}
-                value={selectedGatheringNode}
+                onChange={this.handleRadioChange}
+                value={this.state.selectedGatheringNode}
             >
 
                 <FormLabel className={classes.head} component="legend"><Typography align='left' variant='h3' className={classes.head}>Gathering Nodes</Typography></FormLabel>
@@ -131,17 +232,17 @@ export default function GatheringLuck(props) {
         </FormControl>
     }
 
-    const makeRows = (adjEdges) => {
+    makeRows = (classes, adjEdges) => {
         var rows = []
         for (let key in adjEdges) {
             let edge = adjEdges[key];
-            rows.push(<TableRow className={classes.input}>{makeRow(edge)}</TableRow>)
+            rows.push(<TableRow className={classes.input}>{this.makeRow(classes, edge)}</TableRow>)
         };
         return rows
 
     }
 
-    const makeRow = (edge) => {
+    makeRow = (classes, edge) => {
         var cells = []
         cells.push(<TableCell className={classes.input}>{titleCase(edge.attributes.targetName)}</TableCell>)
         cells.push(<TableCell className={classes.input} align="center">{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
@@ -149,38 +250,37 @@ export default function GatheringLuck(props) {
         return cells
 
     }
-    var graphReactObject = (
-        <GatheringNetwork setAdjNodes={setAdjNodes} setAdjEdges={setAdjEdges}
-            selectedGatheringNode={selectedGatheringNode} luckBonus={luckBonus}></GatheringNetwork>
-    )
 
-    var thing = (
-        <Grid container className='root' spacing={0} style={{ backgroundColor: theme.palette.secondary.main, minHeight: '100vh', minWidth: '100vw' }}
-            justifyContent="flex-start"
-            alignItems="flex-start">
-
-            <Grid container item xs={2}
-                justifyContent="flex-start"
-                alignItems="flex-start"
-                style={{ backgroundColor: theme.palette.secondary.dark }}
-                className={classes.legend}>
+    makeLegend = (isDesktop: boolean, classes: any, graphReactObject: Object) => {
+        var legend = (
+            <Box>
                 <Grid item xs={12}>
-                    {makeFilterList('Mining')}
+                    <Paper className={classes.formControl} style={{ maxHeight: '80vh', overflow: 'auto' }}>
+                        {this.makeFilterList(classes, 'Mining')}
+                    </Paper>
                 </Grid>
                 <Grid item>
                     {graphReactObject}
                 </Grid>
-            </Grid>
+            </Box>
+        )
+        return legend
 
-            <Grid container item alignItems='center' justifyContent="center" xs={6} className={classes.table} style={{ backgroundColor: theme.palette.secondary.dark }}>
-                <Grid item xs={12}>
+    }
+    makeTable = (isDesktop: boolean, classes: any) => {
+        var tableClass = classes.table
+        if(!isDesktop)
+            tableClass = classes.mobileTable
+        var table = (
+            <Box>
+                <Grid item xs={12} alignItems='center' justifyContent="center">
                     <Typography variant='h3' className={classes.tableHeading} >Probability of Items</Typography>
-                    <Typography variant='h3' className={classes.tableHeading} >{gatheringLabelsMap[selectedGatheringNode]}</Typography>
+                    <Typography variant='h3' className={classes.tableHeading} >{gatheringLabelsMap[this.state.selectedGatheringNode]}</Typography>
 
                 </Grid>
-                <Grid item>
-                    <TableContainer component={Paper} style={{ backgroundColor: theme.palette.primary.main }}>
-                        <Table className={classes.table} size="small" aria-label="gathering table" style={{ color: theme.palette.secondary.contrastText }}>
+                <Grid item alignItems='center' justifyContent="center">
+                    <TableContainer component={Paper} className={classes.tableContainer}>
+                        <Table className={tableClass} size="small" aria-label="gathering table" style={{}}>
                             <TableHead className={classes.head}>
                                 <TableRow>
                                     <TableCell align="center" className={classes.input}>Item</TableCell>
@@ -189,31 +289,229 @@ export default function GatheringLuck(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {makeRows(adjEdges)}
+                                {this.makeRows(classes, this.state.adjEdges)}
                             </TableBody>
                         </Table>
                     </TableContainer>
                 </Grid>
-            </Grid>
+            </Box >
+        )
+        return table
 
-            <Grid container item xs={2} className={classes.luckBox} style={{ backgroundColor: theme.palette.secondary.dark }}>
-                <Grid container item justifyContent="space-evenly" alignItems='flex-end' style={{ padding: '10px' }}>
-                    <Grid item>
-                        <Typography variant='h3' className={classes.tableHeading} >Luck Bonuses</Typography>
-                        <Typography>Total Luck Bonus</Typography>
-                        <TextField id="luckBonus"
-                            variant="filled" color="secondary"
-                            defaultValue={luckBonus}
-                            onChange={handleLuckBonusChange}
-                            InputProps={{
-                                className: classes.input,
-                            }}
-                        />
-                    </Grid>
+    }
+    makeLuckBox = (isDesktop: boolean, classes: any) => {
+        var luckBox = (
+            <Grid container item justifyContent="space-evenly" alignItems='flex-start' style={{ padding: '10px' }} spacing={1}>
+                <Grid item xs={12}>
+                    <Typography variant='h3' className={classes.tableHeading} >Luck Bonuses</Typography>
+                    
+                    <Typography variant='h4'>Maths References</Typography>
+                    <Typography variant='body1' className={classes.highlightBox}>1% Luck on item = 100 Luck</Typography>
+                    <Typography variant='body1' className={classes.highlightBox}><a href='https://github.com/meissnereric/BraveNW/blob/master/src/Components/GatheringNodeSelector.tsx#L103'>This</a> is the math in the code if you're interested.</Typography>
+                    <Typography variant='body1' className={classes.highlightBox}><a href='https://colab.research.google.com/drive/1HHu04Z-DTrw0FPl3BDhGLLAY1Ys9Q0mK#scrollTo=fVoQM8xGWoXx'>This</a> is a notebook I wrote a while ago with reasoning for the maths.</Typography>
+                    
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant='h4'>Total Luck Bonus: <i>{this.state.luckBonus}</i></Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Armor</Typography>
+                    <Typography>0-2500</Typography>
+                    <TextField id="armorLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Amulet</Typography>
+                    <Typography>0-955</Typography>
+                    <TextField id="amuletLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Trophies</Typography>
+                    <Typography>0-4500</Typography>
+                    <TextField id="housingLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Tradeskill Level (*10)</Typography>
+                    <Typography>0-2000</Typography>
+                    <TextField id="skillLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Tool</Typography>
+                    <Typography>0-927</Typography>
+                    <TextField id="toolLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Food</Typography>
+                    <Typography>0-2000</Typography>
+                    <TextField id="foodLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Settlement Project</Typography>
+                    <Typography>0-500</Typography>
+                    <TextField id="settlementLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
                 </Grid>
             </Grid>
-        </Grid>
-    )
-    console.log("Thing", graphReactObject)
-    return thing
+        )
+        return luckBox
+
+    }
+
+
+    render() {
+        const { classes, IsDesktop = true } = this.props;
+
+        var graphReactObject = (
+            <GatheringNetwork setAdjNodes={this.getAdjNodes} setAdjEdges={this.getAdjEdges}
+                selectedGatheringNode={this.state.selectedGatheringNode} luckBonus={this.state.luckBonus}></GatheringNetwork>
+        )
+        var legend = this.makeLegend(IsDesktop, classes, graphReactObject)
+        var table = this.makeTable(IsDesktop, classes)
+        var luckBox = this.makeLuckBox(IsDesktop, classes)
+
+        if (IsDesktop) {
+            return (
+                <Grid container spacing={0}
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    className={classes.root}>
+
+                    <Grid container item xs={3}
+                        justifyContent="flex-start"
+                        alignItems="flex-start"
+                        className={classes.legend}>
+                        {legend}
+                    </Grid>
+                    <Grid container item alignItems='center' justifyContent="center" xs={6} className={classes.table}>
+                        <Paper className={classes.formControl} style={{ maxHeight: '80vh', overflow: 'auto' }}>
+                            {table}
+                        </Paper>
+                    </Grid>
+                    <Grid container item xs={2} className={classes.luckBox}>
+                        {luckBox}
+                    </Grid>
+                </Grid>
+            )
+        }
+        else {
+            return (
+                <Grid container alignItems='flex-start' justifyContent="center"  >
+                    <Grid item xs={12}>
+                        <PersistentDrawer
+                            lLabel="Gathering Nodes"
+                            lDisplay={legend}
+                            rLabel="Luck Bonuses"
+                            rDisplay={luckBox}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        {table}
+                    </Grid>
+                </Grid>
+            )
+        }
+    }
 }
+
+export const withMediaQuery = (queries = []) => Component => props => {
+    const mediaProps = {}
+    queries.forEach(q => {
+        mediaProps[q[0]] = useMediaQuery(q[1])
+    })
+    return <Component {...mediaProps} {...props} />
+}
+
+export default withStyles(styles)(withMediaQuery([
+    ['IsDesktop', theme => theme.breakpoints.up('sm'), {
+        defaultMatches: true
+    }]
+])(GatheringLuck));

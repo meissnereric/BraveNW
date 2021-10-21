@@ -125,39 +125,39 @@ function createGatheringData(gatheringType: string, nodeId: string, nodeName: st
 }
 
 export const gatheringRows = [
-    createGatheringData('Mining', 'oreveinfinishsmall', "Iron Vein (S)", "#FFB201"),
-    createGatheringData('Mining', 'oreveinfinishmedium', "Iron Vein (M)", "#FFA202"),
-    createGatheringData('Mining', 'oreveinfinishlarge', "Iron Vein (L)", "#CC8101"),
+    createGatheringData('Mining', 'oreveinfinishsmall', "Iron Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'oreveinfinishmedium', "Iron Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'oreveinfinishlarge', "Iron Vein (L)", "#7F5800"),
 
-    createGatheringData('Mining', 'starmetaloreveinfinishsmall', "Starmetal Vein (S)", "#FFB201"),
-    createGatheringData('Mining', 'starmetaloreveinfinishmedium', "Starmetal Vein (M)", "#FFA202"),
-    createGatheringData('Mining', 'starmetaloreveinfinishlarge', "Starmetal Vein (L)", "#CC8101"),
+    createGatheringData('Mining', 'starmetaloreveinfinishsmall', "Starmetal Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'starmetaloreveinfinishmedium', "Starmetal Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'starmetaloreveinfinishlarge', "Starmetal Vein (L)", "#7F5800"),
 
-    createGatheringData('Mining', 'orichalcumoreveinfinishsmall', "Orichalcum Vein (S)", "#FFB201"),
-    createGatheringData('Mining', 'orichalcumoreveinfinishmedium', "Orichalcum Vein (M)", "#FFA202"),
-    createGatheringData('Mining', 'orichalcumoreveinfinishlarge', "Orichalcum Vein (L)", "#CC8101"),
+    createGatheringData('Mining', 'orichalcumoreveinfinishsmall', "Orichalcum Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'orichalcumoreveinfinishmedium', "Orichalcum Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'orichalcumoreveinfinishlarge', "Orichalcum Vein (L)", "#7F5800"),
 
-    createGatheringData('Mining', 'silver_small', "Silver Vein (S)", "#FFB201"),
-    createGatheringData('Mining', 'silver_medium', "Silver Vein (M)", "#FFA202"),
-    createGatheringData('Mining', 'silver_large', "Silver Vein (L)", "#CC8101"),
+    createGatheringData('Mining', 'silver_small', "Silver Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'silver_medium', "Silver Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'silver_large', "Silver Vein (L)", "#7F5800"),
 
-    createGatheringData('Mining', 'gold_small', "Gold Vein (S)", "#FFB201"),
-    createGatheringData('Mining', 'gold_medium', "Gold Vein (M)", "#FFA202"),
-    createGatheringData('Mining', 'gold_large', "Gold Vein (L)", "#CC8101"),
+    createGatheringData('Mining', 'gold_small', "Gold Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'gold_medium', "Gold Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'gold_large', "Gold Vein (L)", "#7F5800"),
 
-    createGatheringData('Mining', 'platinum_small', "Platinum Vein (S)", "#FFB201"),
-    createGatheringData('Mining', 'platinum_medium', "Platinum Vein (M)", "#FFA202"),
-    createGatheringData('Mining', 'platinum_large', "Platinum Vein (L)", "#CC8101"),
+    createGatheringData('Mining', 'platinum_small', "Platinum Vein (S)", "#CC8E00"),
+    createGatheringData('Mining', 'platinum_medium', "Platinum Vein (M)", "#996A00"),
+    createGatheringData('Mining', 'platinum_large', "Platinum Vein (L)", "#7F5800"),
 
-    createGatheringData('Mining', 'boulderfinishsmall', "Boulder (S)", "#B8B8B8"),
+    createGatheringData('Mining', 'boulderfinishsmall', "Boulder (S)", "#A8A8A8"),
     createGatheringData('Mining', 'boulderfinishmedium', "Boulder (M)", "#949494"),
     createGatheringData('Mining', 'boulderfinishlarge', "Boulder (L)", "#474747"),
 
-    createGatheringData('Mining', 'lodestonefinishsmall', "Lodestone (S)", "#B8B8B8"),
+    createGatheringData('Mining', 'lodestonefinishsmall', "Lodestone (S)", "#A8A8A8"),
     createGatheringData('Mining', 'lodestonefinishmedium', "Lodestone (M)", "#949494"),
     createGatheringData('Mining', 'lodestonefinishlarge', "Lodestone (L)", "#474747"),
 
-    createGatheringData('Mining', 'seepingstonesmall', "Seeping Stone (S)", "#B8B8B8"),
+    createGatheringData('Mining', 'seepingstonesmall', "Seeping Stone (S)", "#A8A8A8"),
     createGatheringData('Mining', 'seepingstonemedium', "Seeping Stone (M)", "#949494"),
     createGatheringData('Mining', 'seepingstonelarge', "Seeping Stone (L)", "#474747"),
 
@@ -209,9 +209,9 @@ export const gatheringRows = [
     createGatheringData('Harvesting', 'fire_plant', "Fire Plant", "#FF6333"),
     createGatheringData('Harvesting', 'air_plant', "Air Plant", "#89CFCF"),
     createGatheringData('Harvesting', 'water_plant', "Water Plant", "#5EAAFD"),
-    createGatheringData('Harvesting', 'soul_plant', "Soul Plant", "#A3D8FF"),
+    createGatheringData('Harvesting', 'soul_plant', "Soul Plant", "#93B8FF"),
     createGatheringData('Harvesting', 'life_plant', "Life Plant", "#00D38C"),
-    createGatheringData('Harvesting', 'death_plant', "Death Plant", "#777777"),
+    createGatheringData('Harvesting', 'death_plant', "Death Plant", "#555555"),
 
 ]
 

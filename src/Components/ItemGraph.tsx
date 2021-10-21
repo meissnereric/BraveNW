@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles, useTheme } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
 import Theming from './Theming';

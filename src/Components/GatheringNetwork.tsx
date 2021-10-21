@@ -54,7 +54,7 @@ export default function GatheringNetwork(props) {
 
     const matches = useMediaQuery(isDesktopQuery);
     const sigmaStyle = {
-        height: '900px', // TODO add in media query here for height on mobile
+        height: '0px', // TODO add in media query here for height on mobile
         // display: 'flex',
         'backgroundColor': theme.palette.primary.main
     }
