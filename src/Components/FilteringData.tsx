@@ -166,14 +166,8 @@ export const gatheringRows = [
     createGatheringData('Logging', 'treetiny', "Young Tree (T)", "#429030"),
     createGatheringData('Logging', 'treesmall', "Young Tree (S)", "#3A802A"),
     createGatheringData('Logging', 'treemedium', "Young Tree (M)", "#316A24"),
-    createGatheringData('Logging', 'treelarge', "Young Tree (L)", "#25501B"),
-    createGatheringData('Logging', 'treehuge', "Young Tree (H)", "#122F0A"),
-
-    createGatheringData('Logging', 'treesoftwoodtiny', "Mature Tree (T)", "#429030"),
-    createGatheringData('Logging', 'treesoftwoodsmall', "Mature Tree (S)", "#3A802A"),
-    createGatheringData('Logging', 'treesoftwoodmedium', "Mature Tree (M)", "#316A24"),
-    createGatheringData('Logging', 'treesoftwoodlarge', "Mature Tree (L)", "#25501B"),
-    createGatheringData('Logging', 'treesoftwoodhuge', "Mature Tree (H)", "#122F0A"),
+    createGatheringData('Logging', 'treelarge', "Mature Tree (L)", "#25501B"),
+    createGatheringData('Logging', 'treehuge', "Mature Tree (H)", "#122F0A"),
 
     createGatheringData('Logging', 'wyrdwoodtreetiny', "Wyrdwood Tree (T)", "#429030"),
     createGatheringData('Logging', 'wyrdwoodtreesmall', "Wyrdwood Tree (S)", "#3A802A"),
@@ -204,6 +198,10 @@ export const gatheringRows = [
     createGatheringData('Harvesting', 'hempsmallt5', "Wirefiber (S)", "#93A8FF"),
     createGatheringData('Harvesting', 'hempmediumt5', "Wirefiber (M)", "#6675B2"),
     createGatheringData('Harvesting', 'hemplarget5', "Wirefiber (L)", "#48537E"),
+
+    createGatheringData('Harvesting', 'herb_small', "Herb (S)", "#93A8FF"),
+    createGatheringData('Harvesting', 'herb_medium', "Herb (M)", "#6675B2"),
+    createGatheringData('Harvesting', 'herb_large', "Herb (L)", "#48537E"),
 
     createGatheringData('Harvesting', 'earth_plant', "Earth Plant", "#603735"),
     createGatheringData('Harvesting', 'fire_plant', "Fire Plant", "#FF6333"),
