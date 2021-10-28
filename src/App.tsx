@@ -14,6 +14,8 @@ import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, makeStyles  } from '@material-ui/styles';
 import Profile from './Components/user/Profile';
 
+// const api = require("./api/api")
+
 const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: '95vw',
@@ -26,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
 function App(props) { 
   const classes = useStyles();
   const theme = Theming.theme
+  // async function test() {
+  //   console.log(await api.getAllTestModels())
+  // }
+  // test()
   return (
     <div className="#">
       <BrowserRouter>
