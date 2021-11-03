@@ -1,7 +1,7 @@
 
 const express = require('express')
 const cors = require('cors')
-const testRouter = require('./testRoutes')
+const userRouter = require('./routers/userRouter')
 const mongoose = require('mongoose')
 
 mongoose
@@ -22,5 +22,5 @@ app.use(express.json())
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
-app.use("/api", testRouter)
+app.use("/api", userRouter)
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
