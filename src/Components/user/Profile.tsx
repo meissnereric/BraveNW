@@ -53,9 +53,6 @@ const Profile = () => {
         <img src={user.picture} alt={user.name} />
         <h2>{user.name}</h2>
         <p>{userInfo.data.email}</p>
-        {console.log("$$")}
-        {console.log(userInfo)}
-        {console.log("$$")}
       </div>
     ) || (
       <h1>PLEASE LOGIN</h1>
