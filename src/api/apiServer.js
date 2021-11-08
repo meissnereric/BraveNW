@@ -4,6 +4,10 @@ const cors = require('cors')
 const userRouter = require('./routers/userRouter')
 const mongoose = require('mongoose')
 
+const userModel = require('./models/userModel')
+
+const uemail = "evieswelch@gmail.com"
+
 mongoose
     .connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true })
     .catch(e => {
@@ -24,3 +28,9 @@ app.get('/', (req, res) => {
 })
 app.use("/api", userRouter)
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
+
+// const t = async () => {
+//     const d = await userModel.findOne({email: uemail})
+//     console.log(d)
+// }
+// t()
