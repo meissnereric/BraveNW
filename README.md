@@ -7,7 +7,7 @@ Currently it has an interactive network graph of all the recipes and materials i
 
 
 ### Acknowledgements 
-All data is taken gratefully from [nwdb.info](nwdb.info).
+Tooltips for the items are from [nwdb.info](nwdb.info).
 
 
 # Getting Started with Create React App
