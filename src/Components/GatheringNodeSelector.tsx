@@ -13,7 +13,10 @@ type State = {
     selectedGatheringNode?: string,
     luckBonus?: any,
     toKeepNodes: any,
-    toKeepEdges: any
+    toKeepEdges: any,
+    mobLevel?: any,
+    zoneLevel?: any,
+    globalModLuck?: any
 };
 
 type Props = {
@@ -24,7 +27,10 @@ type Props = {
     adjNodesSetter?: any
     adjEdgesSetter?: any
     selectedGatheringNode?: string
-    luckBonus?: any
+    luckBonus?: any,
+    mobLevel?: any,
+    zoneLevel?: any,
+    globalModLuck?: any
 };
 
 class GatheringNodeSelector extends React.PureComponent {
@@ -64,7 +70,7 @@ class GatheringNodeSelector extends React.PureComponent {
         console.log("Finish componentWillReceiveProps")
     }
 
-    _resetComputedProbs = function(nodes, edges) {
+    _resetComputedProbs = function (nodes, edges) {
         console.log("Reset", nodes, edges)
         for (let key in nodes) {
             let element = nodes[key];
@@ -84,8 +90,8 @@ class GatheringNodeSelector extends React.PureComponent {
         var res = this._neighbors(this.props.sigma.graph, nodeId, {})
         var toKeepNodes = res[0]
         var toKeepEdges = res[1]
-        this.setState({toKeepNodes: toKeepNodes})
-        this.setState({toKeepEdges: toKeepEdges})
+        this.setState({ toKeepNodes: toKeepNodes })
+        this.setState({ toKeepEdges: toKeepEdges })
 
 
         this.props.adjNodesSetter(toKeepNodes)
@@ -104,18 +110,18 @@ class GatheringNodeSelector extends React.PureComponent {
         if (maxRoll < 100000 || luckSafe) {
             luck = 0
         }
-        if(andOr === "AND"){
+        if (andOr === "AND") {
             var newProb = 1. - (nodeProb - luck) / maxRoll
-            if(newProb < 0)
+            if (newProb < 0)
                 newProb = 0.
-            if(newProb > 1.)
+            if (newProb > 1.)
                 newProb = 1.
             var finalProb = newProb * existingProb
-    
+
             return finalProb
         }
         else {
-            while(nodeProb === nextProb[0] && (nextProb[0] !== maxRoll+luck)){
+            while (nodeProb === nextProb[0] && (nextProb[0] !== maxRoll + luck)) {
                 var np1 = nextProb[1]
                 var nk = nextKeys[np1]
                 nextProb = nextProbs[nk]
@@ -123,7 +129,7 @@ class GatheringNodeSelector extends React.PureComponent {
 
             var np = nodeProb
             var nextp = nextProb[0]
-            if(np < luckBonus)
+            if (np < luckBonus)
                 np = luckBonus
             var p = (nextp - np) / maxRoll / uniformProbs[nodeProb]
             if (p < 0)
@@ -132,17 +138,17 @@ class GatheringNodeSelector extends React.PureComponent {
         }
     }
 
-    _edge_stop_recurse = function(edge, nodeId){
+    _edge_continue_recurse = function (edge, nodeId) {
         return edge.target !== nodeId
     }
-    _stop_recurse = function(adjNodes, adjEdges) {
+    _stop_recurse = function (adjNodes, adjEdges) {
         return Object.keys(adjNodes).length === 0 || Object.keys(adjEdges).length === 0
     }
 
-    _computeAdjNodes = function(graph, ogAdjEdges, nodeId){
+    _computeAdjNodes = function (graph, ogAdjEdges, nodeId) {
         var adjNodes = {}
         ogAdjEdges.forEach(element => {
-            if (this._edge_stop_recurse(element, nodeId))
+            if (this._edge_continue_recurse(element, nodeId))
                 adjNodes[element.target] = graph.nodes(nodeId)
         })
         return adjNodes
@@ -150,17 +156,18 @@ class GatheringNodeSelector extends React.PureComponent {
     }
 
 
-    _computeAdjEdges = function(graph, ogAdjEdges, nodeId){
+    _computeAdjEdges = function (graph, ogAdjEdges, nodeId) {
         var adjEdges = {}
         ogAdjEdges.forEach(element => {
-            if (this._edge_stop_recurse(element, nodeId))
+            if (this._edge_continue_recurse(element, nodeId))
                 adjEdges[element.id] = graph.edges(element.id)
         })
         return adjEdges
-
     }
 
     _neighbors = function (graph, nodeId, existingNodes) {
+        console.log("NEIGHBORS")
+
         existingNodes[nodeId] = graph.nodes(nodeId)
         var ogAdjEdges = graph.adjacentEdges(nodeId)
         var adjNodes = this._computeAdjNodes(graph, ogAdjEdges, nodeId)
@@ -176,19 +183,19 @@ class GatheringNodeSelector extends React.PureComponent {
         var i = 0
         var uniformProbs = {}
         for (let key in adjEdges) {
-            var nk = nextKeys[i+1]
+            var nk = nextKeys[i + 1]
             var nextProb = adjEdges[nk]
             var nodeProb = adjEdges[nextKeys[i]].attributes.probability
-            if(nk === -1)
-                nextProbs[key] = [100000 + this.props.luckBonus, i+1] // TODO hack, breaks if not 100000???
+            if (nk === -1)
+                nextProbs[key] = [100000 + this.props.luckBonus, i + 1] // TODO hack, breaks if not 100000???
             else
-                nextProbs[key] = [nextProb.attributes.probability, i+1]
+                nextProbs[key] = [nextProb.attributes.probability, i + 1]
 
-            if(nodeProb in uniformProbs)
+            if (nodeProb in uniformProbs)
                 uniformProbs[nodeProb] = uniformProbs[nodeProb] + 1
             else
                 uniformProbs[nodeProb] = 1
-            i = i+1
+            i = i + 1
         }
 
         if (this._stop_recurse(adjNodes, adjEdges)) {
@@ -199,9 +206,10 @@ class GatheringNodeSelector extends React.PureComponent {
             for (let key in adjEdges) {
                 let element = adjEdges[key];
                 // console.log(key, element)
-                 var sourceNode = graph.nodes(element.source)
+                var sourceNode = graph.nodes(element.source)
                 var targetNode = graph.nodes(element.target)
-                
+                console.log("Source and target node", sourceNode, targetNode)
+
                 if (element.attributes.computedProbability) {
                     // console.log(["Already has computed prob", element.attributes.computedProbability])
                 }
@@ -214,8 +222,14 @@ class GatheringNodeSelector extends React.PureComponent {
                     targetNode.attributes.computedProbability = this._computeProbability(key, nextKeys, this.props.luckBonus, sourceNode.attributes.maxroll, element.attributes.probability, existingProbability, luckSafe, andOr, nextProbs, uniformProbs)
                     element.attributes.computedProbability = targetNode.attributes.computedProbability
                     element.attributes.targetName = targetNode.label
-                    if(element.itemType === 'LootTable'){
-                        element.attributes.targetName= "[LTID]" + element.attributes.targetName
+                    console.log("Element probability ", element.attributes.targetName, targetNode.attributes.computedProbability)
+                    if (element.attributes.itemtype === 'LootTable') {
+                        console.log(["Loot table item", element.attributes.targetName])
+                    }
+                    else if (element.attributes.itemtype === 'LootBucket') {
+                        element.attributes.targetName = element.target
+                        console.log(["Loot bucket item", element.attributes.targetName])
+
                     }
                 }
 
@@ -224,12 +238,17 @@ class GatheringNodeSelector extends React.PureComponent {
             for (let key in adjEdges) {
                 let edgeElement = adjEdges[key];
                 let element = graph.nodes(edgeElement.target)
-                if (edgeElement.source === nodeId && element.attributes.itemtype === 'LootTable' && !(element.id in existingNodes)) {
-                    var subNeighbors = this._neighbors(graph, element.id, existingNodes)
-                    var subNodes = subNeighbors[0]
-                    var subEdges = subNeighbors[1]
-                    adjNodes = Object.assign({}, subNodes, adjNodes);
-                    adjEdges = Object.assign({}, subEdges, adjEdges);
+                if (edgeElement.source === nodeId && (element.attributes.itemtype === 'LootTable' || element.attributes.itemtype === 'LootBucket') && !(element.id in existingNodes)) {
+                    if (element.attributes.conditions !== undefined && element.attributes.conditions.includes('EnemyLevel')) {
+                    }
+                    else {
+                        var subNeighbors = this._neighbors(graph, element.id, existingNodes)
+                        var subNodes = subNeighbors[0]
+                        var subEdges = subNeighbors[1]
+                        adjNodes = Object.assign({}, subNodes, adjNodes);
+                        adjEdges = Object.assign({}, subEdges, adjEdges);
+
+                    }
                 }
             }
         }
@@ -240,7 +259,7 @@ class GatheringNodeSelector extends React.PureComponent {
         // for (let key in adjEdges) {
         //     let element = adjEdges[key];
         //     let targetNode = graph.nodes(element.target)
-        //     if(!(targetNode.attributes.itemtype === 'LootTable')){
+        //     if(!(targetNode.attributes.itemtype === 'LootTable' || element.attributes.itemtype === 'LootBucket')){
         //         neighbors[targetNode.id] = targetNode
         //         edges[element.id] = element
         //     }

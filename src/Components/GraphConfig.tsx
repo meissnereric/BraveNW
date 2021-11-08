@@ -1,4 +1,4 @@
-export var GRAPH_PATH = "../data/graph_10_21_2021.gexf"
+export var GRAPH_PATH = "../data/graph_10_30_2021.gexf"
 
 export function titleCase(str) {
     var splitStr = str.toLowerCase().split(' ');

@@ -25,6 +25,10 @@ const styles = theme => ({
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.light
     },
+    inputLootTable: {
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.dark
+    },
     table: {
         minWidth: '600px',
         borderRadius: '3px',
@@ -112,7 +116,7 @@ const initLucks = {
     housingLuck: 0,
     foodLuck: 0,
     settlementLuck: 0,
-    skillLevel: 0
+    skillLevel: 0,
 }
 
 
@@ -122,6 +126,9 @@ type State = {
     selectedGatheringNode: string,
     luckBonus: number,
     luckBonuses: Object,
+    mobLevel: number,
+    zoneLevel: number,
+    globalModLuck: number,
     firstLoad: boolean
 }
 
@@ -136,9 +143,12 @@ class GatheringLuck extends React.Component<Props, State> {
         this.state = {
             adjNodes: [],
             adjEdges: [],
-            selectedGatheringNode: "oreveinfinishsmall",
+            selectedGatheringNode: "wolfskinning",
             luckBonus: 0,
             luckBonuses: initLucks,
+            mobLevel: 60,
+            zoneLevel: 60,
+            globalModLuck: 0,
             firstLoad: true
         }
         this.getAdjNodes = this.getAdjNodes.bind(this)
@@ -168,6 +178,20 @@ class GatheringLuck extends React.Component<Props, State> {
         this.setState({ luckBonuses: lbs }, () => { console.log("Done luck bonuses updating"); })
     }
 
+    handleGlobalModLuckChange = (event: any) => {
+        var level = parseInt(event.target.value)
+        this.setState({ globalModLuck: level })
+    }
+
+    handleZoneLevelChange = (event: any) => {
+        var level = parseInt(event.target.value)
+        this.setState({ mobLevel: level })
+    }
+
+    handleMobLevelChange = (event: any) => {
+        var level = parseInt(event.target.value)
+        this.setState({ mobLevel: level })
+    }
     handleLuckBonusChange = (event: any) => {
         var lb = parseInt(event.target.value)
         if (isNaN(lb)) {
@@ -201,7 +225,6 @@ class GatheringLuck extends React.Component<Props, State> {
                 style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
                 labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
         }
-        console.log(["Rows", filterType, gatheringSplitRows])
 
         return <FormControl component="fieldset" className={classes.formControl}>
             <RadioGroup
@@ -225,6 +248,8 @@ class GatheringLuck extends React.Component<Props, State> {
                     <AccordionDetails>
                     </AccordionDetails>
                 </Accordion> */}
+                {gatheringSplitRows.chestOrMob.map((row) => makeGRow(row))}
+                {gatheringSplitRows.skinning.map((row) => makeGRow(row))}
                 {gatheringSplitRows.mining.map((row) => makeGRow(row))}
                 {gatheringSplitRows.logging.map((row) => makeGRow(row))}
                 {gatheringSplitRows.harvesting.map((row) => makeGRow(row))}
@@ -236,17 +261,24 @@ class GatheringLuck extends React.Component<Props, State> {
         var rows = []
         for (let key in adjEdges) {
             let edge = adjEdges[key];
-            rows.push(<TableRow className={classes.input}>{this.makeRow(classes, edge)}</TableRow>)
+            console.log("Item Type", edge.attributes.itemtype)
+            if(edge.attributes.itemtype === 'LootTable'){
+                rows.push(<TableRow className={classes.inputLootTable}>{this.makeRow(classes, edge, classes.inputLootTable)}</TableRow>)
+            }
+            else{
+                rows.push(<TableRow className={classes.input}>{this.makeRow(classes, edge, classes.input)}</TableRow>)
+
+            }
         };
         return rows
 
     }
 
-    makeRow = (classes, edge) => {
+    makeRow = (classes, edge, rowType) => {
         var cells = []
-        cells.push(<TableCell className={classes.input}>{titleCase(edge.attributes.targetName)}</TableCell>)
-        cells.push(<TableCell className={classes.input} align="center">{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
-        cells.push(<TableCell className={classes.input} align="center">{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
+        cells.push(<TableCell className={rowType}>{titleCase(edge.attributes.targetName)}</TableCell>)
+        cells.push(<TableCell className={rowType} align="center">{edge.attributes.quantitylow}-{edge.attributes.quantityhigh}</TableCell>)
+        cells.push(<TableCell className={rowType} align="center">{(edge.attributes.computedProbability * 100).toFixed(2)}%</TableCell>)
         return cells
 
     }
@@ -303,12 +335,70 @@ class GatheringLuck extends React.Component<Props, State> {
         var luckBox = (
             <Grid container item justifyContent="space-evenly" alignItems='flex-start' style={{ padding: '10px' }} spacing={1}>
                 <Grid item xs={12}>
+                    <Typography variant='h3' className={classes.tableHeading} >Monsters & Chests</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Mob Level</Typography>
+                    <Typography>1-60</Typography>
+                    <TextField id="moblevel"
+                        variant="filled" color="secondary"
+                        defaultValue={60}
+                        onChange={this.handleMobLevelChange}
+                        onBlurCapture={this.handleMobLevelChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleMobLevelChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Area Level</Typography>
+                    <Typography>1-60</Typography>
+                    <TextField id="zoneLevel"
+                        variant="filled" color="secondary"
+                        defaultValue={60}
+                        onChange={this.handleZoneLevelChange}
+                        onBlurCapture={this.handleZoneLevelChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleZoneLevelChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>Global Luck</Typography>
+                    <Typography>0+</Typography>
+                    <TextField id="globalmodluck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleGlobalModLuckChange}
+                        onBlurCapture={this.handleGlobalModLuckChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleGlobalModLuckChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
                     <Typography variant='h3' className={classes.tableHeading} >Luck Bonuses</Typography>
                     
                     <Typography variant='h4'>Maths References</Typography>
                     <Typography variant='body1' className={classes.highlightBox}>1% Luck on item = 100 Luck</Typography>
-                    <Typography variant='body1' className={classes.highlightBox}><a href='https://github.com/meissnereric/BraveNW/blob/master/src/Components/GatheringNodeSelector.tsx#L103'>This</a> is the math in the code if you're interested.</Typography>
-                    <Typography variant='body1' className={classes.highlightBox}><a href='https://colab.research.google.com/drive/1HHu04Z-DTrw0FPl3BDhGLLAY1Ys9Q0mK#scrollTo=fVoQM8xGWoXx'>This</a> is a notebook I wrote a while ago with reasoning for the maths.</Typography>
+                    <Typography variant='body1' className={classes.highlightBox}><a href='https://github.com/meissnereric/BraveNW/blob/master/src/Components/GatheringNodeSelector.tsx#L103'>This</a> is the math in the code if you're interested
+                    . <a href='https://www.reddit.com/r/newworldgame/comments/qjzf4h/i_killed_over_1000_boars_to_verify_ifhow_luck/'>This</a> is a reddit post that confirmed with data the 1% == 100 luck points theory
+                    . <a href='https://colab.research.google.com/drive/1HHu04Z-DTrw0FPl3BDhGLLAY1Ys9Q0mK#scrollTo=fVoQM8xGWoXx'>This</a> is a notebook I wrote a while ago with reasoning for the maths.</Typography>
                     
                 </Grid>
                 <Grid item xs={12}>
@@ -452,7 +542,7 @@ class GatheringLuck extends React.Component<Props, State> {
 
         var graphReactObject = (
             <GatheringNetwork setAdjNodes={this.getAdjNodes} setAdjEdges={this.getAdjEdges}
-                selectedGatheringNode={this.state.selectedGatheringNode} luckBonus={this.state.luckBonus}></GatheringNetwork>
+                selectedGatheringNode={this.state.selectedGatheringNode} luckBonus={this.state.luckBonus} mobLevel={this.state.mobLevel} zoneLevel={this.state.zoneLevel} ></GatheringNetwork>
         )
         var legend = this.makeLegend(IsDesktop, classes, graphReactObject)
         var table = this.makeTable(IsDesktop, classes)

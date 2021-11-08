@@ -125,6 +125,10 @@ function createGatheringData(gatheringType: string, nodeId: string, nodeName: st
 }
 
 export const gatheringRows = [
+    createGatheringData('ChestOrMob', 'containerlootsmall', "Small Container (Supply crate?)", "#316A24"),
+    createGatheringData('ChestOrMob', 'containerlootlarge', "Large Container (Supply stockpile?)", "#316A24"),
+    createGatheringData('ChestOrMob', 'outpostrushrewardchest', "Outpost Rush Reward Chest", "#316A24"),
+
     createGatheringData('Mining', 'oreveinfinishsmall', "Iron Vein (S)", "#CC8E00"),
     createGatheringData('Mining', 'oreveinfinishmedium', "Iron Vein (M)", "#996A00"),
     createGatheringData('Mining', 'oreveinfinishlarge', "Iron Vein (L)", "#7F5800"),
@@ -211,23 +215,35 @@ export const gatheringRows = [
     createGatheringData('Harvesting', 'life_plant', "Life Plant", "#00D38C"),
     createGatheringData('Harvesting', 'death_plant', "Death Plant", "#555555"),
 
+    createGatheringData('Skinning', 'wolfskinning', "Wolf", "#316A24"),
+    createGatheringData('Skinning', 'bearskinning', "Bear", "#316A24"),
+    createGatheringData('Skinning', 'catskinning', "Cat", "#316A24"),
+
 ]
 
 const gatheringRowsSplitter = (rows) => {
+    let chestOrMob = []
     let mining = []
     let logging = []
     let harvesting = []
+    let skinning = []
     rows.forEach(element => {
+        if (element.gatheringType === "ChestOrMob")
+            chestOrMob.push(element)
+
         if (element.gatheringType === "Mining")
             mining.push(element)
-        
+
         if (element.gatheringType === "Logging")
             logging.push(element)
 
         if (element.gatheringType === "Harvesting")
             harvesting.push(element)
+
+        if (element.gatheringType === "Skinning")
+            skinning.push(element)
     });
-    return { mining, logging, harvesting }
+    return { chestOrMob, mining, logging, harvesting, skinning }
 }
 export const gatheringSplitRows = gatheringRowsSplitter(gatheringRows)
 
