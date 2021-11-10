@@ -115,8 +115,10 @@ class GatheringNodeSelector extends React.PureComponent {
             return finalProb
         }
         else {
-            while(nodeProb === nextProb[0]){
-                nextProb = nextProbs[nextKeys[nextProb[1]]]
+            while(nodeProb === nextProb[0] && (nextProb[0] !== maxRoll+luck)){
+                var np1 = nextProb[1]
+                var nk = nextKeys[np1]
+                nextProb = nextProbs[nk]
             }
 
             var np = nodeProb
@@ -165,6 +167,8 @@ class GatheringNodeSelector extends React.PureComponent {
         var adjEdges = this._computeAdjEdges(graph, ogAdjEdges, nodeId)
         var nextKeys = []
         var nextProbs = {}
+        console.log("Adj nodes", adjNodes)
+        console.log("Adj edges", adjEdges)
         for (let key in adjEdges) {
             nextKeys.push(key)
         }
