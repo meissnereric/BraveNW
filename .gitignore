@@ -129,6 +129,5 @@ dist
 
 # AuthO config info
 autho_config.json
-=======
+
 *.swp
->>>>>>> e1ef4d0fe0fbc74af5bfdd9e520c9194bb376f9a
