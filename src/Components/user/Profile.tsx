@@ -10,7 +10,7 @@ const Profile = () => {
 
   async function getOrCreateUserData(email: string) {
     if (isAuthenticated) {
-      const dbQuery = await getUserByEmail(email)
+      const dbQuery = await getUserByEmail(email) // TODO: change this to get or create in imports
       const success = dbQuery.data.success
       const userData = dbQuery.data.data
       if (success) {
@@ -31,7 +31,7 @@ const Profile = () => {
   }
 
   if (isLoading) {
-    return <div>Loading ..</div>;
+    return <div>Loading ...</div>;
   }
 
   getOrCreateUserData(user.email)
