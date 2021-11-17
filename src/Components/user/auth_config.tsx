@@ -6,15 +6,23 @@ export default function getConfig(): any {
   // is what you get sometimes by using the Auth0 sample download tool from the quickstart page, if you
   // don't have an API).
   // If this resolves to `null`, the API page changes to show some helpful info about what to do
-  // with the audience.
-  const audience =
-    configJson.audience && configJson.audience !== "YOUR_API_IDENTIFIER"
-      ? configJson.audience
-      : null;
+  // // with the audience.
+  // const audience =
+  //   configJson.audience && configJson.audience !== "YOUR_API_IDENTIFIER"
+  //     ? configJson.audience
+  //     : null;
+
+  // return {
+  //   domain: configJson.domain,
+  //   clientId: configJson.clientId,
+  //   ...(audience ? { audience } : null),
+  // };
+
+  const audience = null;
 
   return {
-    domain: configJson.domain,
-    clientId: configJson.clientId,
+    domain: "configJson.domain",
+    clientId: "configJson.clientId",
     ...(audience ? { audience } : null),
   };
 }
