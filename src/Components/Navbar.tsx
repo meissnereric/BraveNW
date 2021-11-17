@@ -114,6 +114,10 @@ function SimpleMenu() {
           <MenuItem onClick={handleClose}>
             <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to={DISCORD_LINK}><FaDiscord />Discord</Button>
           </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/warboard'>War Board</Button>
+          </MenuItem>
+
         </Menu>
 
       </div>
@@ -122,6 +126,7 @@ function SimpleMenu() {
   else {
     return (
       <div>
+        <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/warboard'>War Board</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/item_list">Recipe Network</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/arbitrage">Reagent Conversions</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/gathering_luck">Gathering Luck</Button>
