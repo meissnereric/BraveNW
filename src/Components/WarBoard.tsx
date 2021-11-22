@@ -230,12 +230,46 @@ class WarBoard extends React.Component<Props, State> {
         </Accordion>
     }
 
+    makeFactions = (classes, filterType) => {
+        var makeGRow = (row) => {
+            return <FormControlLabel
+                style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
+                labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
+        }
+
+        return <Accordion className={classes.formControl}>
+            <AccordionSummary
+                expandIcon={<ExpandMore />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+            >
+                <Typography>Servers</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <FormControl component="fieldset" className={classes.formControl}>
+                    <RadioGroup
+                        aria-label="gatheringNode"
+                        defaultValue="oreveinfinishsmall"
+                        name="gathering-nodes-radio-group"
+                        onChange={this.handleRadioChange}
+                        value={this.state.selectedGatheringNode}
+                    >
+
+                        <FormLabel className={classes.head} component="legend"><Typography align='left' variant='h3' className={classes.head}>Characters</Typography></FormLabel>
+
+                        {gatheringSplitRows.mining.map((row) => makeGRow(row))}
+                    </RadioGroup>
+                </FormControl>
+            </AccordionDetails>
+        </Accordion>
+    }
+
     makeLegend = (isDesktop: boolean, classes: any) => {
         var legend = (
             <Box>
                 <Grid item xs={12}>
                     <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
-                        {this.makeFilterList(classes, 'Mining')}
+                        {this.makeServerList(classes, 'Mining')}
                     </Paper>
                 </Grid>
             </Box>
