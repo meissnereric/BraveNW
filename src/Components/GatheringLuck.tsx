@@ -112,7 +112,8 @@ const initLucks = {
     housingLuck: 0,
     foodLuck: 0,
     settlementLuck: 0,
-    skillLevel: 0
+    skillLevel: 0,
+    pvpFlagged: 0,
 }
 
 
@@ -426,6 +427,25 @@ class GatheringLuck extends React.Component<Props, State> {
                     <Typography>Settlement Project</Typography>
                     <Typography>0-500</Typography>
                     <TextField id="settlementLuck"
+                        variant="filled" color="secondary"
+                        defaultValue={0}
+                        onChange={this.handleLuckBonusChange}
+                        onBlurCapture={this.handleLuckBonusChange}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                this.handleLuckBonusChange(ev)
+                            }
+                        }}
+                        InputProps={{
+                            className: classes.input,
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>PvP Flagged</Typography>
+                    <Typography>0 - Off</Typography>
+                    <Typography>3000 - On</Typography>
+                    <TextField id="pvpFlagged"
                         variant="filled" color="secondary"
                         defaultValue={0}
                         onChange={this.handleLuckBonusChange}
