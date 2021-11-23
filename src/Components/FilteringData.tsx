@@ -162,6 +162,14 @@ export const gatheringRows = [
     createGatheringData('Mining', 'seepingstonelarge', "Seeping Stone (L)", "#474747"),
 
     createGatheringData('Mining', 'singlestone', "Flint", "#949494"),
+    
+    createGatheringData('Mining', 'earth_stone', "Earth Stone", "#603735"),
+    createGatheringData('Mining', 'fire_stone', "Fire Stone", "#FF6333"),
+    createGatheringData('Mining', 'air_stone', "Air Stone", "#89CFCF"),
+    createGatheringData('Mining', 'water_stone', "Water Stone", "#5EAAFD"),
+    createGatheringData('Mining', 'soul_stone', "Soul Stone", "#93B8FF"),
+    createGatheringData('Mining', 'life_stone', "Life Stone", "#00D38C"),
+    createGatheringData('Mining', 'death_stone', "Death Stone", "#555555"),
 
     createGatheringData('Logging', 'treetiny', "Young Tree (T)", "#429030"),
     createGatheringData('Logging', 'treesmall', "Young Tree (S)", "#3A802A"),
@@ -210,6 +218,7 @@ export const gatheringRows = [
     createGatheringData('Harvesting', 'soul_plant', "Soul Plant", "#93B8FF"),
     createGatheringData('Harvesting', 'life_plant', "Life Plant", "#00D38C"),
     createGatheringData('Harvesting', 'death_plant', "Death Plant", "#555555"),
+
 
 ]
 
