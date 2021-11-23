@@ -70,6 +70,14 @@ const styles = theme => ({
         margin: theme.spacing(1),
         padding: theme.spacing(1),
     },
+    warGroupPaper: {
+        margin: theme.spacing(1),
+        // padding: theme.spacing(1),
+        // textAlign: 'center',
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light
+    },
     formControl: {
         borderRadius: '1',
         color: theme.palette.primary.contrastText,
@@ -140,7 +148,7 @@ type State = {
     adjEdges: any,
     selectedServer: string,
     selectedFaction: string,
-    warBoardConfiguration: Object,
+    warBoardConfiguration: any,
     luckBonus: number,
     luckBonuses: Object,
     firstLoad: boolean
@@ -345,8 +353,7 @@ class WarBoard extends React.Component<Props, State> {
         console.log(this.state.selectedServer, this.state.selectedFaction)
         console.log(characters, serverChars, factionChars)
         let characterRows = factionChars["characters"].map((row) => makeCharacterLegendRow(row))
-        return (characterRows
-        )
+        return (characterRows)
     }
 
     makeLegend = (isDesktop: boolean, classes: any, characters: any) => {
@@ -364,17 +371,56 @@ class WarBoard extends React.Component<Props, State> {
         return legend
 
     }
+
+    makeWarBoxes = (classes: any) => {
+        let wbConfig = this.state.warBoardConfiguration
+        console.log("Warboard default", wbConfig)
+        return (
+            <Grid container spacing={0}
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                direction='column'
+                className={classes.root}>
+                {/* <Typography>Tdksfadsa</Typography> */}
+                {wbConfig.map(function (row, i) {
+                    return <Grid item>
+                        {/* <Typography>Tdksfadsa</Typography> */}
+                        {row.map(function (column, j) {
+                            return <Grid container item spacing={1}
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            direction='column'
+                            className={classes.warGroupPaper}>
+                                {/* <Typography>Tdksfadsa {[i, j]}</Typography> */}
+                                {column.map(function (groupSlot, k) {
+                                    return <Grid item xs={12} className={classes.character}>
+                                        <Typography>{wbConfig[i][j][k].name}</Typography>
+                                    </Grid>
+                                })}
+                            </Grid>
+                        })}
+                    </Grid>
+                })}
+            </Grid>
+        )
+
+    }
+
     makeWarBoard = (isDesktop: boolean, classes: any) => {
+        let warBoxes = this.makeWarBoxes(classes)
         var legend = (
             <Box>
                 <Grid item xs={12}>
                     <Grid>
-                    <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
-                        <Typography>War Board.</Typography>
-                    </Paper>
+                        <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
+                            <Typography>War Board.</Typography>
+                        </Paper>
                     </Grid>
                     <Grid>
-
+                        <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
+                            <Typography>War Board.</Typography>
+                            {warBoxes}
+                        </Paper>
                     </Grid>
                 </Grid>
             </Box>
