@@ -11,10 +11,12 @@ import Paper from '@material-ui/core/Paper';
 import { TextField } from "@material-ui/core";
 import GatheringNetwork from "./GatheringNetwork"
 // import { ser, gatheringLabelsMap } from './FilteringData';
-import { serversSplitRows } from './WarBoardData';
+import { serversSplitRows, defaultWarBoard } from './WarBoardData';
 import { titleCase } from './GraphConfig';
 import PersistentDrawer from './PersistentDrawer';
 import { ExpandMore } from '@material-ui/icons';
+import { Select } from '@material-ui/core';
+import { MenuItem } from '@material-ui/core';
 
 const styles = theme => ({
     root: {
@@ -132,11 +134,13 @@ const initLucks = {
 }
 
 
+
 type State = {
     adjNodes: any,
     adjEdges: any,
     selectedServer: string,
     selectedFaction: string,
+    warBoardConfiguration: Object,
     luckBonus: number,
     luckBonuses: Object,
     firstLoad: boolean
@@ -155,6 +159,7 @@ class WarBoard extends React.Component<Props, State> {
             adjEdges: [],
             selectedServer: "Xibalba",
             selectedFaction: "Covenant",
+            warBoardConfiguration: defaultWarBoard,
             luckBonus: 0,
             luckBonuses: initLucks,
             firstLoad: true
@@ -300,6 +305,7 @@ class WarBoard extends React.Component<Props, State> {
     }
 
     makeFactions = (classes) => {
+
         return <FormControl component="fieldset" className={classes.formControl}>
             <RadioGroup
                 aria-label="servers"
@@ -362,9 +368,14 @@ class WarBoard extends React.Component<Props, State> {
         var legend = (
             <Box>
                 <Grid item xs={12}>
+                    <Grid>
                     <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
                         <Typography>War Board.</Typography>
                     </Paper>
+                    </Grid>
+                    <Grid>
+
+                    </Grid>
                 </Grid>
             </Box>
         )

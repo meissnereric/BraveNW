@@ -55,3 +55,81 @@ const serversRowSplitter = (rows) => {
     return { uswest, useast, eucentral, apsoutheast, saeast}
 }
 export const serversSplitRows = serversRowSplitter(serverRows)
+
+
+export const defaultWarBoard = {
+    1: {
+        1: {
+            1: {name: "Gertrude 1 1 1"},
+            2: {name: "Gertrude 1 1 2"},
+            3: {name: "Gertrude 1 1 3"},
+            4: {name: "Gertrude 1 1 4"},
+            5: {name: "Gertrude 1 1 5"},
+        },
+        2: {
+            1: {name: "Gertrude 1 2 1"},
+            2: {name: "Gertrude 1 2 2"},
+            3: {name: "Gertrude 1 2 3"},
+            4: {name: "Gertrude 1 2 4"},
+            5: {name: "Gertrude 1 2 5"},
+        },
+        3: {
+            1: {name: "Gertrude 1 3 1"},
+            2: {name: "Gertrude 1 3 2"},
+            3: {name: "Gertrude 1 3 3"},
+            4: {name: "Gertrude 1 3 4"},
+            5: {name: "Gertrude 1 3 5"},
+        },
+        4: {
+            1: {name: "Gertrude 1 4 1"},
+            2: {name: "Gertrude 1 4 2"},
+            3: {name: "Gertrude 1 4 3"},
+            4: {name: "Gertrude 1 4 4"},
+            5: {name: "Gertrude 1 4 5"},
+        },
+        5: {
+            1: {name: "Gertrude 1 5 1"},
+            2: {name: "Gertrude 1 5 2"},
+            3: {name: "Gertrude 1 5 3"},
+            4: {name: "Gertrude 1 5 4"},
+            5: {name: "Gertrude 1 5 5"},
+        },
+    },
+    2: {
+        1: {
+            1: {name: "Gertrude 2 1 1"},
+            2: {name: "Gertrude 2 1 2"},
+            3: {name: "Gertrude 2 1 3"},
+            4: {name: "Gertrude 2 1 4"},
+            5: {name: "Gertrude 2 1 5"},
+        },
+        2: {
+            1: {name: "Gertrude 2 2 1"},
+            2: {name: "Gertrude 2 2 2"},
+            3: {name: "Gertrude 2 2 3"},
+            4: {name: "Gertrude 2 2 4"},
+            5: {name: "Gertrude 2 2 5"},
+        },
+        3: {
+            1: {name: "Gertrude 2 3 1"},
+            2: {name: "Gertrude 2 3 2"},
+            3: {name: "Gertrude 2 3 3"},
+            4: {name: "Gertrude 2 3 4"},
+            5: {name: "Gertrude 2 3 5"},
+        },
+        4: {
+            1: {name: "Gertrude 2 4 1"},
+            2: {name: "Gertrude 2 4 2"},
+            3: {name: "Gertrude 2 4 3"},
+            4: {name: "Gertrude 2 4 4"},
+            5: {name: "Gertrude 2 4 5"},
+        },
+        5: {
+            1: {name: "Gertrude 2 5 1"},
+            2: {name: "Gertrude 2 5 2"},
+            3: {name: "Gertrude 2 5 3"},
+            4: {name: "Gertrude 2 5 4"},
+            5: {name: "Gertrude 2 5 5"},
+        },
+    },
+}
