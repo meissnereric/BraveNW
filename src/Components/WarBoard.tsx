@@ -10,7 +10,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { TextField } from "@material-ui/core";
 import GatheringNetwork from "./GatheringNetwork"
-import { gatheringSplitRows, gatheringLabelsMap } from './FilteringData';
+// import { ser, gatheringLabelsMap } from './FilteringData';
+import { serversSplitRows } from './WarBoardData';
 import { titleCase } from './GraphConfig';
 import PersistentDrawer from './PersistentDrawer';
 import { ExpandMore } from '@material-ui/icons';
@@ -60,7 +61,21 @@ const styles = theme => ({
         padding: theme.spacing(1),
 
     },
+    character: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.dark,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+    },
     formControl: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+    },
+    serverFormControl: {
         borderRadius: '1',
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.light,
@@ -120,7 +135,8 @@ const initLucks = {
 type State = {
     adjNodes: any,
     adjEdges: any,
-    selectedGatheringNode: string,
+    selectedServer: string,
+    selectedFaction: string,
     luckBonus: number,
     luckBonuses: Object,
     firstLoad: boolean
@@ -137,17 +153,18 @@ class WarBoard extends React.Component<Props, State> {
         this.state = {
             adjNodes: [],
             adjEdges: [],
-            selectedGatheringNode: "oreveinfinishsmall",
+            selectedServer: "Xibalba",
+            selectedFaction: "Covenant",
             luckBonus: 0,
             luckBonuses: initLucks,
             firstLoad: true
         }
         this.getAdjNodes = this.getAdjNodes.bind(this)
         this.getAdjEdges = this.getAdjEdges.bind(this)
-        this.updateSelectedGatheringNode = this.updateSelectedGatheringNode.bind(this)
+        this.updateSelectedServer = this.updateSelectedServer.bind(this)
+        this.updateSelectedFaction = this.updateSelectedFaction.bind(this)
         this.updateLuckBonus = this.updateLuckBonus.bind(this)
         this.updateLuckBonuses = this.updateLuckBonuses.bind(this)
-        this.updateSelectedGatheringNode = this.updateSelectedGatheringNode.bind(this)
         this.handleRadioChange = this.handleRadioChange.bind(this)
 
     }
@@ -158,8 +175,11 @@ class WarBoard extends React.Component<Props, State> {
     getAdjEdges(toKeepEdges) {
         this.setState({ adjEdges: toKeepEdges })
     }
-    updateSelectedGatheringNode(gnode) {
-        this.setState({ selectedGatheringNode: gnode }, () => { console.log("Done gathering node updating"); this.forceUpdate(); console.log("Extra done gathering node updating"); })
+    updateSelectedServer(server) {
+        this.setState({ selectedServer: server }, () => { console.log("Done server update"); this.forceUpdate(); })
+    }
+    updateSelectedFaction(faction) {
+        this.setState({ selectedFaction: faction }, () => { console.log("Done faction update"); this.forceUpdate(); })
     }
     updateLuckBonus(lb) {
         this.setState({ luckBonus: lb },
@@ -190,20 +210,76 @@ class WarBoard extends React.Component<Props, State> {
     }
 
     handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.updateSelectedGatheringNode(event.target.value)
-        console.log(["Selected gathering node", event.target.value, this.state.selectedGatheringNode])
+        this.updateSelectedServer(event.target.value)
+        console.log(["Selected server", event.target.value, this.state.selectedServer])
     }
 
 
+    handleFactionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.updateSelectedFaction(event.target.value)
+        console.log(["Selected faction", event.target.value, this.state.selectedFaction])
+    }
 
-    makeServerList = (classes, filterType) => {
+    makeServerAccordian = (classes, region) => {
         var makeGRow = (row) => {
             return <FormControlLabel
                 style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
-                labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
+                labelPlacement='end' className={classes.input} value={row.server} control={<Radio />} label={row.server} />
         }
 
+        let defaultValue = ''
+        let title = ''
+        if (region == 'uswest') {
+            defaultValue = 'Xibalba'
+            title = 'US West'
+        }
+        else if (region == 'useast') {
+            defaultValue = 'Xibalba'
+            title = 'US East'
+        }
+        else if (region == 'eucentral') {
+            defaultValue = 'Xibalba'
+            title = 'EU Central'
+        }
+        else if (region == 'apsoutheast') {
+            defaultValue = 'Xibalba'
+            title = 'AP Southeast'
+        }
+        else if (region == 'saeast') {
+            defaultValue = 'Xibalba'
+            title = 'SA East'
+        }
+
+        let groupName = "servers-" + region + "-radio-group"
         return <Accordion className={classes.formControl}>
+            <AccordionSummary
+                expandIcon={<ExpandMore />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+            >
+                <Typography>{title}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <FormControl component="fieldset" className={classes.formControl}>
+                    <RadioGroup
+                        aria-label="servers"
+                        defaultValue={defaultValue}
+                        name={groupName}
+                        onChange={this.handleRadioChange}
+                        value={this.state.selectedServer}
+                    >
+
+                        {/* <FormLabel className={classes.head} component="legend"><Typography align='left' variant='h3' className={classes.head}>{title}</Typography></FormLabel> */}
+                        {serversSplitRows[region].map((row) => makeGRow(row))}
+                    </RadioGroup>
+                </FormControl>
+            </AccordionDetails>
+        </Accordion>
+
+    }
+
+    makeServerList = (classes) => {
+        return <Accordion className={classes.serverFormControl}>
             <AccordionSummary
                 expandIcon={<ExpandMore />}
                 aria-controls="panel1a-content"
@@ -212,64 +288,69 @@ class WarBoard extends React.Component<Props, State> {
                 <Typography>Servers</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <FormControl component="fieldset" className={classes.formControl}>
-                    <RadioGroup
-                        aria-label="gatheringNode"
-                        defaultValue="oreveinfinishsmall"
-                        name="gathering-nodes-radio-group"
-                        onChange={this.handleRadioChange}
-                        value={this.state.selectedGatheringNode}
-                    >
-
-                        <FormLabel className={classes.head} component="legend"><Typography align='left' variant='h3' className={classes.head}>Characters</Typography></FormLabel>
-
-                        {gatheringSplitRows.mining.map((row) => makeGRow(row))}
-                    </RadioGroup>
-                </FormControl>
+                <Grid>
+                    <Grid item> {this.makeServerAccordian(classes, 'uswest')}</Grid>
+                    {this.makeServerAccordian(classes, 'useast')}
+                    {this.makeServerAccordian(classes, 'eucentral')}
+                    {this.makeServerAccordian(classes, 'apsoutheast')}
+                    {this.makeServerAccordian(classes, 'saeast')}
+                </Grid>
             </AccordionDetails>
         </Accordion>
     }
 
-    makeFactions = (classes, filterType) => {
-        var makeGRow = (row) => {
-            return <FormControlLabel
-                style={{ backgroundColor: row.colorHex, color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
-                labelPlacement='end' className={classes.input} value={row.nodeId} control={<Radio />} label={row.nodeName} />
-        }
-
-        return <Accordion className={classes.formControl}>
-            <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
+    makeFactions = (classes) => {
+        return <FormControl component="fieldset" className={classes.formControl}>
+            <RadioGroup
+                aria-label="servers"
+                defaultValue="Covenant"
+                name="factions-radio-group"
+                onChange={this.handleFactionChange}
+                value={this.state.selectedFaction}
             >
-                <Typography>Servers</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <FormControl component="fieldset" className={classes.formControl}>
-                    <RadioGroup
-                        aria-label="gatheringNode"
-                        defaultValue="oreveinfinishsmall"
-                        name="gathering-nodes-radio-group"
-                        onChange={this.handleRadioChange}
-                        value={this.state.selectedGatheringNode}
-                    >
 
-                        <FormLabel className={classes.head} component="legend"><Typography align='left' variant='h3' className={classes.head}>Characters</Typography></FormLabel>
-
-                        {gatheringSplitRows.mining.map((row) => makeGRow(row))}
-                    </RadioGroup>
-                </FormControl>
-            </AccordionDetails>
-        </Accordion>
+                <FormLabel className={classes.head} component="legend">
+                    <Typography align='left' variant='h3' className={classes.head}>Faction</Typography>
+                </FormLabel>
+                <FormControlLabel
+                    style={{ backgroundColor: "orange   ", color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
+                    labelPlacement='end' className={classes.input}
+                    value="Covenant" control={<Radio />} label="Covenant" />
+                <FormControlLabel
+                    style={{ backgroundColor: "green", color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
+                    labelPlacement='end' className={classes.input}
+                    value="Marauders" control={<Radio />} label="Marauders" />
+                <FormControlLabel
+                    style={{ backgroundColor: "purple", color: 'white', margin: 2, padding: 5 }} // , textAlign: 'left' 
+                    labelPlacement='end' className={classes.input}
+                    value="Syndicate" control={<Radio />} label="Syndicate" />
+            </RadioGroup>
+        </FormControl>
     }
 
-    makeLegend = (isDesktop: boolean, classes: any) => {
+    displayUsers = (classes, characters) => {
+        var makeCharacterLegendRow = (character) => {
+            return <Box>
+                <Typography className={classes.character}>{character.name}</Typography>
+            </Box>
+        }
+        let serverChars = characters[this.state.selectedServer]
+        let factionChars = serverChars[this.state.selectedFaction]
+        console.log(this.state.selectedServer, this.state.selectedFaction)
+        console.log(characters, serverChars, factionChars)
+        let characterRows = factionChars["characters"].map((row) => makeCharacterLegendRow(row))
+        return (characterRows
+        )
+    }
+
+    makeLegend = (isDesktop: boolean, classes: any, characters: any) => {
         var legend = (
             <Box>
                 <Grid item xs={12}>
                     <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
-                        {this.makeServerList(classes, 'Mining')}
+                        {this.makeServerList(classes)}
+                        {this.makeFactions(classes)}
+                        {this.displayUsers(classes, characters)}
                     </Paper>
                 </Grid>
             </Box>
@@ -293,8 +374,28 @@ class WarBoard extends React.Component<Props, State> {
 
     render() {
         const { classes, IsDesktop = true } = this.props;
+        let characters = {
+            "Xibalba":
+            {
+                "Covenant":
+                    { "characters": [{ name: "Xibalba Yellow Gertrude" }] },
+                "Marauders":
+                    { "characters": [{ name: "Xibalba Green Getrude" }] },
+                "Syndicate":
+                    { "characters": [{ name: "Xibalba Purple Getrude" }] },
+            },
+            "Orofena":
+            {
+                "Covenant":
+                    { "characters": [{ name: "Orofena Yellow Gertrude" }] },
+                "Marauders":
+                    { "characters": [{ name: "Orofena Green Getrude" }] },
+                "Syndicate":
+                    { "characters": [{ name: "Orofena Purple Getrude" }] },
+            }
+        }
 
-        var legend = this.makeLegend(IsDesktop, classes)
+        var legend = this.makeLegend(IsDesktop, classes, characters)
         var warBoard = this.makeWarBoard(IsDesktop, classes)
 
         if (IsDesktop) {
