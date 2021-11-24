@@ -64,17 +64,22 @@ const styles = theme => ({
 
     },
     character: {
-        borderRadius: '1',
+        // borderRadius: '1',
+        minWidth: '100%',
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.dark,
         margin: theme.spacing(1),
         padding: theme.spacing(1),
     },
+    warRowPaper: {
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary.main
+    },
     warGroupPaper: {
         margin: theme.spacing(1),
-        // padding: theme.spacing(1),
-        // textAlign: 'center',
-        borderRadius: '1',
+        padding: theme.spacing(1),
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.light
     },
@@ -376,30 +381,61 @@ class WarBoard extends React.Component<Props, State> {
         let wbConfig = this.state.warBoardConfiguration
         console.log("Warboard default", wbConfig)
         return (
-            <Grid container spacing={0}
-                justifyContent="flex-start"
-                alignItems="flex-start"
+            // Outer Grid for entire war board - 1 of these
+            <Grid container item spacing={1}
+                justifyContent="space-evenly"
+                alignItems="center"
                 direction='column'
+                style={{ padding: '10px' }}
                 className={classes.root}>
-                {/* <Typography>Tdksfadsa</Typography> */}
                 {wbConfig.map(function (row, i) {
-                    return <Grid item>
-                        {/* <Typography>Tdksfadsa</Typography> */}
+                    // return <Grid item>
+                    // Row Container - 2 of these 
+                    return <Grid container item
+                        spacing={1}
+                        justifyContent="space-evenly"
+                        alignItems="center"
+                        direction='row'
+                        className={classes.warRowPaper}>
+
+                        {/* War Group Grid - 5 of these in each row */}
                         {row.map(function (column, j) {
-                            return <Grid container item spacing={1}
-                            justifyContent="flex-start"
-                            alignItems="flex-start"
-                            direction='column'
-                            className={classes.warGroupPaper}>
-                                {/* <Typography>Tdksfadsa {[i, j]}</Typography> */}
+                            return <Grid container item xs={2} direction='column'
+                                className={classes.warGroupPaper}>
+                                <Grid item xs={2} className={classes.character}>
+                                    <Typography variant='h4'> Group {j+1}</Typography>
+                                </Grid>
                                 {column.map(function (groupSlot, k) {
-                                    return <Grid item xs={12} className={classes.character}>
+
+                                    {/* Character slot inside a war group - 5 of these in each war group */ }
+                                    return <Grid item xs={2} className={classes.character}>
                                         <Typography>{wbConfig[i][j][k].name}</Typography>
                                     </Grid>
                                 })}
                             </Grid>
                         })}
+                        {/* <Grid container item xs={2} direction='column'>
+                                <Grid item  xs={2}>
+                                    hello22
+                                </Grid>
+                                <Grid item  xs={2}>
+                                    hello33 
+                                </Grid>
+                            </Grid>
+                            <Grid item  xs={2}>
+                                hello2
+                            </Grid>
+                            <Grid item xs={2}>
+                                hello
+                            </Grid>
+                            <Grid item  xs={2}>
+                                hello2
+                            </Grid>
+                            <Grid item xs={2}>
+                                hello
+                            </Grid> */}
                     </Grid>
+                    // </Grid>
                 })}
             </Grid>
         )
