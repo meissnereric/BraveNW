@@ -1,22 +1,11 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React from 'react';
 import { FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Grid, Typography, Box, Accordion, AccordionSummary, AccordionDetails, useMediaQuery, GridSize } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { TextField } from "@material-ui/core";
-import GatheringNetwork from "./GatheringNetwork"
-// import { ser, gatheringLabelsMap } from './FilteringData';
-import { serversSplitRows, defaultWarBoard } from './WarBoardData';
-import { titleCase } from './GraphConfig';
+import { serversSplitRows, defaultWarBoard, testCharacters, testCompanies } from './WarBoardData';
 import PersistentDrawer from './PersistentDrawer';
 import { ExpandMore } from '@material-ui/icons';
-import { Select } from '@material-ui/core';
-import { MenuItem } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 const styles = theme => ({
     root: {
@@ -36,36 +25,40 @@ const styles = theme => ({
         backgroundColor: theme.palette.secondary.dark,
         margin: theme.spacing(1),
     },
-    mobileTable: {
-        minWidth: '100%',
-        borderRadius: '3px',
-        color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.secondary.dark,
-        margin: theme.spacing(1),
-    },
-    paper: {
-        padding: theme.spacing(1),
-        // textAlign: 'center',
-        color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.secondary.dark
-    },
-    title: {
-
-    },
     head: {
         backgroundColor: theme.palette.secondary.light,
         color: theme.palette.primary.contrastText,
     },
-    tableHeading: {
-        backgroundColor: theme.palette.secondary.dark,
-        color: theme.palette.primary.contrastText,
-        // textAlign: 'center',
-        padding: theme.spacing(1),
-
-    },
-    character: {
-        // borderRadius: '1',
+    charactersBox: {
         minWidth: '100%',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.dark,
+        // topMargin: theme.spacing(1),
+        padding: theme.spacing(1),
+    },
+    characterBox: {
+        minWidth: '93%',
+        backgroundColor: theme.palette.secondary.main,
+    },
+    characterName: {
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(1)
+    },
+    role: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(1),
+    },
+    company: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(1),
+    },
+    warBoardCharacterBox: {
+        minWidth: '93%',
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.dark,
         margin: theme.spacing(1),
@@ -82,6 +75,28 @@ const styles = theme => ({
         padding: theme.spacing(1),
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.secondary.light
+    },
+    warBoardTitle: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.dark,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+    },
+    warBoardBacking: {
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+    },
+    factionsBox: {
+        minWidth: '93%',
+        borderRadius: '1',
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
     },
     formControl: {
         borderRadius: '1',
@@ -103,60 +118,14 @@ const styles = theme => ({
         margin: theme.spacing(1),
         padding: theme.spacing(1),
         backgroundColor: theme.palette.secondary.dark
-    },
-    mobileLegend: {
-        minWidth: '100%',
-        borderRadius: '1',
-        color: theme.palette.primary.contrastText,
-        margin: theme.spacing(1),
-        padding: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.dark
-    },
-    luckBox: {
-        borderRadius: '1',
-        color: theme.palette.primary.contrastText,
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.dark
-    },
-    mobileLuckBox: {
-        minWidth: '100%',
-        borderRadius: '1',
-        color: theme.palette.primary.contrastText,
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.dark
-    },
-    tableContainer: {
-        backgroundColor: theme.palette.primary.main
-    },
-    highlightBox: {
-        backgroundColor: theme.palette.secondary.main,
-        padding: theme.spacing(1),
-
     }
 
 });
 
-const initLucks = {
-    armorLuck: 0,
-    toolLuck: 0,
-    amuletLuck: 0,
-    housingLuck: 0,
-    foodLuck: 0,
-    settlementLuck: 0,
-    skillLevel: 0
-}
-
-
-
 type State = {
-    adjNodes: any,
-    adjEdges: any,
     selectedServer: string,
     selectedFaction: string,
     warBoardConfiguration: any,
-    luckBonus: number,
-    luckBonuses: Object,
-    firstLoad: boolean
 }
 
 type Props = {
@@ -168,66 +137,45 @@ class WarBoard extends React.Component<Props, State> {
     constructor(props) {
         super(props)
         this.state = {
-            adjNodes: [],
-            adjEdges: [],
-            selectedServer: "Xibalba",
-            selectedFaction: "Covenant",
+            selectedServer: "Orofena",
+            selectedFaction: "Syndicate",
             warBoardConfiguration: defaultWarBoard,
-            luckBonus: 0,
-            luckBonuses: initLucks,
-            firstLoad: true
         }
-        this.getAdjNodes = this.getAdjNodes.bind(this)
-        this.getAdjEdges = this.getAdjEdges.bind(this)
         this.updateSelectedServer = this.updateSelectedServer.bind(this)
         this.updateSelectedFaction = this.updateSelectedFaction.bind(this)
-        this.updateLuckBonus = this.updateLuckBonus.bind(this)
-        this.updateLuckBonuses = this.updateLuckBonuses.bind(this)
-        this.handleRadioChange = this.handleRadioChange.bind(this)
-
+        this.updateWarBoard = this.updateWarBoard.bind(this)
     }
 
-    getAdjNodes(toKeepNodes) {
-        this.setState({ adjNodes: toKeepNodes })
-    }
-    getAdjEdges(toKeepEdges) {
-        this.setState({ adjEdges: toKeepEdges })
-    }
     updateSelectedServer(server) {
         this.setState({ selectedServer: server }, () => { console.log("Done server update"); this.forceUpdate(); })
     }
     updateSelectedFaction(faction) {
         this.setState({ selectedFaction: faction }, () => { console.log("Done faction update"); this.forceUpdate(); })
     }
-    updateLuckBonus(lb) {
-        this.setState({ luckBonus: lb },
-            () => { console.log("Done luck bonus updating", lb, this.state.luckBonus); this.forceUpdate(); console.log("Extra done luck bonus updating", lb, this.state.luckBonus); })
-    }
-    updateLuckBonuses(lbs) {
-        this.setState({ luckBonuses: lbs }, () => { console.log("Done luck bonuses updating"); })
+    updateWarBoard(wb) {
+        this.setState({ warBoardConfiguration: wb }, () => { console.log("Done war board updating", wb); })
     }
 
-    handleLuckBonusChange = (event: any) => {
-        var lb = parseInt(event.target.value)
-        if (isNaN(lb)) {
-            lb = 0
-        }
 
-        var luckType = event.target.id
-        var cp = { ...this.state.luckBonuses }
-        cp[luckType] = lb
-        this.updateLuckBonuses(cp)
+    handleWarBoardChange = (event: any) => {
+        var warBoardEntry = event.target.value
+        var warBoardSlot = event.target.id
+        console.log('wbentry', warBoardEntry)
+        console.log('wbSlot', warBoardSlot)
+        var i = warBoardSlot[3]
+        var j = warBoardSlot[4]
+        var k = warBoardSlot[5]
+        console.log('ijk', i,j,k)
 
-        let sum = 0
-        for (let key in this.state.luckBonuses) {
-            sum = sum + this.state.luckBonuses[key];
-        }
-        this.updateLuckBonus(sum)
-        console.log(["Luck bonus", event.target.value, this.state.luckBonus])
-        console.log(["Luck bonuses", cp, this.state.luckBonuses])
+        var cp = [ ...this.state.warBoardConfiguration ]
+        console.log("Cp before", cp)
+        cp[i][j][k] = {"name": warBoardEntry}
+        console.log("Cp after ", cp)
+        this.updateWarBoard(cp)
     }
 
-    handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+    handleServerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.updateSelectedServer(event.target.value)
         console.log(["Selected server", event.target.value, this.state.selectedServer])
     }
@@ -252,7 +200,7 @@ class WarBoard extends React.Component<Props, State> {
             title = 'US West'
         }
         else if (region == 'useast') {
-            defaultValue = 'Xibalba'
+            defaultValue = 'Orofena'
             title = 'US East'
         }
         else if (region == 'eucentral') {
@@ -283,7 +231,7 @@ class WarBoard extends React.Component<Props, State> {
                         aria-label="servers"
                         defaultValue={defaultValue}
                         name={groupName}
-                        onChange={this.handleRadioChange}
+                        onChange={this.handleServerChange}
                         value={this.state.selectedServer}
                     >
 
@@ -319,7 +267,7 @@ class WarBoard extends React.Component<Props, State> {
 
     makeFactions = (classes) => {
 
-        return <FormControl component="fieldset" className={classes.formControl}>
+        return <FormControl component="fieldset" className={classes.factionsBox}>
             <RadioGroup
                 aria-label="servers"
                 defaultValue="Covenant"
@@ -347,11 +295,23 @@ class WarBoard extends React.Component<Props, State> {
         </FormControl>
     }
 
-    displayUsers = (classes, characters) => {
+    displayUsers = (classes, characters, companies) => {
         var makeCharacterLegendRow = (character) => {
-            return <Box>
-                <Typography className={classes.character}>{character.name}</Typography>
-            </Box>
+            return <Grid container className={classes.charactersBox}>
+                <Box className={classes.characterBox}>
+                    <Grid item className={classes.role}>
+                        {character.role}
+                    </Grid>
+                    <Grid item>
+                        <Typography className={classes.characterName}>
+                            {character.name}
+                        </Typography>
+                    </Grid>
+                    <Grid item className={classes.company}>
+                        {companies[character.company].abbreviation}
+                    </Grid>
+                </Box>
+            </Grid>
         }
         let serverChars = characters[this.state.selectedServer]
         let factionChars = serverChars[this.state.selectedFaction]
@@ -361,14 +321,14 @@ class WarBoard extends React.Component<Props, State> {
         return (characterRows)
     }
 
-    makeLegend = (isDesktop: boolean, classes: any, characters: any) => {
+    makeLegend = (isDesktop: boolean, classes: any, characters: any, companies: any) => {
         var legend = (
             <Box>
                 <Grid item xs={12}>
-                    <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
+                    <Paper className={classes.warBoardTitle} style={{ overflow: 'auto' }}>
                         {this.makeServerList(classes)}
                         {this.makeFactions(classes)}
-                        {this.displayUsers(classes, characters)}
+                        {this.displayUsers(classes, characters, companies)}
                     </Paper>
                 </Grid>
             </Box>
@@ -379,6 +339,7 @@ class WarBoard extends React.Component<Props, State> {
 
     makeWarBoxes = (classes: any) => {
         let wbConfig = this.state.warBoardConfiguration
+        let handleWBConfigChange = this.handleWarBoardChange
         console.log("Warboard default", wbConfig)
         return (
             // Outer Grid for entire war board - 1 of these
@@ -402,40 +363,34 @@ class WarBoard extends React.Component<Props, State> {
                         {row.map(function (column, j) {
                             return <Grid container item xs={2} direction='column'
                                 className={classes.warGroupPaper}>
-                                <Grid item xs={2} className={classes.character}>
-                                    <Typography variant='h4'> Group {j+1}</Typography>
+                                <Grid item xs={2} className={classes.warBoardCharacterBox}>
+                                    <Typography variant='h3'> Group {j + 1}</Typography>
                                 </Grid>
                                 {column.map(function (groupSlot, k) {
 
                                     {/* Character slot inside a war group - 5 of these in each war group */ }
-                                    return <Grid item xs={2} className={classes.character}>
-                                        <Typography>{wbConfig[i][j][k].name}</Typography>
+                                    return <Grid item xs={2} className={classes.warBoardCharacterBox}>
+                                        {/* <Typography>{wbConfig[i][j][k].name}</Typography> */}
+
+                                        <TextField id={"wb-" + i + j + k}
+                                            variant="filled" color="secondary"
+                                            defaultValue={wbConfig[i][j][k].name}
+                                            // onChange={handleWBConfigChange}
+                                            onBlurCapture={handleWBConfigChange}
+                                            onKeyPress={(ev) => {
+                                                if (ev.key === 'Enter') {
+                                                    handleWBConfigChange(ev)
+                                                }
+                                            }}
+                                            InputProps={{
+                                                className: classes.input,
+                                            }}
+                                        />
                                     </Grid>
                                 })}
                             </Grid>
                         })}
-                        {/* <Grid container item xs={2} direction='column'>
-                                <Grid item  xs={2}>
-                                    hello22
-                                </Grid>
-                                <Grid item  xs={2}>
-                                    hello33 
-                                </Grid>
-                            </Grid>
-                            <Grid item  xs={2}>
-                                hello2
-                            </Grid>
-                            <Grid item xs={2}>
-                                hello
-                            </Grid>
-                            <Grid item  xs={2}>
-                                hello2
-                            </Grid>
-                            <Grid item xs={2}>
-                                hello
-                            </Grid> */}
                     </Grid>
-                    // </Grid>
                 })}
             </Grid>
         )
@@ -444,51 +399,48 @@ class WarBoard extends React.Component<Props, State> {
 
     makeWarBoard = (isDesktop: boolean, classes: any) => {
         let warBoxes = this.makeWarBoxes(classes)
-        var legend = (
+        var warBoard = (
             <Box>
                 <Grid item xs={12}>
                     <Grid>
-                        <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
-                            <Typography>War Board.</Typography>
+                        <Paper className={classes.warBoardTitle} style={{ overflow: 'auto' }}>
+
+                        <TextField id={"warboard-title"}
+                                            variant="filled" color="secondary"
+                                            defaultValue={"War Board - Default War"}
+                                            // onChange={handleWBConfigChange}
+                                            // onBlurCapture={handleWBConfigChange}
+                                            // onKeyPress={(ev) => {
+                                            //     if (ev.key === 'Enter') {
+                                            //         handleWBConfigChange(ev)
+                                            //     }
+                                            // }}
+                                            InputProps={{
+                                                className: classes.input,
+                                            }}
+                                        />
+                            <Typography variant='h4'>Cutlass Keys War - Black Powder Trading Company - 11/26/2021</Typography>
                         </Paper>
                     </Grid>
                     <Grid>
-                        <Paper className={classes.formControl} style={{ overflow: 'auto' }}>
-                            <Typography>War Board.</Typography>
+                        <Paper className={classes.warBoardBacking} style={{ overflow: 'auto' }}>
                             {warBoxes}
                         </Paper>
                     </Grid>
                 </Grid>
             </Box>
         )
-        return legend
+        return warBoard
 
     }
 
     render() {
         const { classes, IsDesktop = true } = this.props;
-        let characters = {
-            "Xibalba":
-            {
-                "Covenant":
-                    { "characters": [{ name: "Xibalba Yellow Gertrude" }] },
-                "Marauders":
-                    { "characters": [{ name: "Xibalba Green Getrude" }] },
-                "Syndicate":
-                    { "characters": [{ name: "Xibalba Purple Getrude" }] },
-            },
-            "Orofena":
-            {
-                "Covenant":
-                    { "characters": [{ name: "Orofena Yellow Gertrude" }] },
-                "Marauders":
-                    { "characters": [{ name: "Orofena Green Getrude" }] },
-                "Syndicate":
-                    { "characters": [{ name: "Orofena Purple Getrude" }] },
-            }
-        }
 
-        var legend = this.makeLegend(IsDesktop, classes, characters)
+        let characters = testCharacters
+        let companies = testCompanies
+
+        var legend = this.makeLegend(IsDesktop, classes, characters, companies)
         var warBoard = this.makeWarBoard(IsDesktop, classes)
 
         if (IsDesktop) {
