@@ -12,6 +12,9 @@ import '@fontsource/roboto';
 import Theming from './Components/Theming';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, makeStyles  } from '@material-ui/styles';
+import Profile from './Components/user/Profile';
+
+// const api = require("./api/api")
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
 function App(props) { 
   const classes = useStyles();
   const theme = Theming.theme
+  // async function test() {
+  //   console.log(await api.getAllTestModels())
+  // }
+  // test()
   return (
     <div className="#">
       <BrowserRouter>
@@ -52,6 +59,8 @@ function App(props) {
                 <Route exact path="/arbitrage" component={Arbitrage}></Route>
                 <Route exact path="/gathering_luck" component={GatheringLuck}></Route>
                 <Route exact path="/item_list" component={ItemGraph}></Route>
+                <Route exact path="/profile" component={Profile} />
+
               </Switch>
             </Grid>
           </Grid>

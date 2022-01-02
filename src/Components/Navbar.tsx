@@ -15,9 +15,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { isDesktopQuery } from './MobileSwitch';
+import { useAuth0 } from "@auth0/auth0-react";
 import { DISCORD_LINK } from './About';
 import { FaDiscord } from 'react-icons/fa';
 
+import UserAuth from './user/UserAuth';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -39,14 +41,30 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 }));
 
+
 function SimpleMenu() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const { isAuthenticated } = useAuth0()
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const getProfileLink = () => {
+    if (isAuthenticated) {
+      if (isDesktop) {
+        return (
+          <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/profile'>profile</Button>
+        )
+      }
+      if (!isDesktop) {
+        return (
+          <MenuItem onClick={handleClose}>
+            <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/profile'>profile</Button>
+          </MenuItem>
+        )
+      }
+    }
+  }
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -73,6 +91,10 @@ function SimpleMenu() {
           onClose={handleClose}
           classes={{ paper: classes.paperMenu }}
         >
+          <MenuItem onClick={handleClose}>
+            {UserAuth(classes.menuButton)}
+          </MenuItem>
+          {getProfileLink()}
 
           <MenuItem onClick={handleClose}>
             <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/item_list">Recipe Network</Button>
@@ -92,7 +114,6 @@ function SimpleMenu() {
           <MenuItem onClick={handleClose}>
             <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to={DISCORD_LINK}><FaDiscord />Discord</Button>
           </MenuItem>
-
         </Menu>
 
       </div>
@@ -106,6 +127,8 @@ function SimpleMenu() {
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to="/gathering_luck">Gathering Luck</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/infographics'>Infographics</Button>
         <Button variant="contained" className={classes.menuButton} color="secondary" component={Link} to='/about'>About</Button>
+        {getProfileLink()}
+        {UserAuth(classes.menuButton)}
         <Button variant="contained" className={classes.menuButton} color="secondary" href={DISCORD_LINK}><FaDiscord /> Discord</Button>
       </div>
     )
